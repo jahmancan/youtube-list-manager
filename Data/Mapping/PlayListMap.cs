@@ -8,14 +8,21 @@ namespace YouTubeListManager.Data.Mapping
     {
         public PlayListMap()
         {
-            ToTable("YouTubeList");
+            ToTable("PlayList");
             HasKey(t => t.Id);
 
             Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            Property(t => t.Title).HasMaxLength(500);
+            Property(t => t.Title).HasMaxLength(255);
+            Property(t => t.UserId);
 
-            HasRequired(t => t.User).WithMany(t => t.PlayLists);
-            HasMany(t => t.Tracks).WithMany(t => t.PlayLists);
+            HasOptional(t => t.User).WithMany(t => t.PlayLists).HasForeignKey(t => t.UserId);
+            HasMany(t => t.Tracks).WithMany(t => t.PlayLists)
+                .Map(m =>
+                {
+                    m.ToTable("PlayListTrack");
+                    m.MapLeftKey("PlayListId");
+                    m.MapRightKey("TrackId");
+                });
         }
     }
 }

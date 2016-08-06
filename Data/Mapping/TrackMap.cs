@@ -8,16 +8,14 @@ namespace YouTubeListManager.Data.Mapping
     {
         public TrackMap()
         {
-            ToTable("YouTubeTrack");
+            ToTable("Track");
             HasKey(t => t.Id);
 
             Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            Property(t => t.Author).HasMaxLength(500);
-            Property(t => t.Title).HasMaxLength(500);
+            Property(t => t.Title);
             Property(t => t.Duration);
             Property(t => t.Live);
-
-            HasMany(t => t.PlayLists).WithMany(t => t.Tracks);
+            Property(t => t.ThumbnailUrl);
         }
     }
 }

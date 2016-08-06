@@ -8,6 +8,7 @@ using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using Data;
 using Microsoft.Practices.Unity;
+using YouTubeListAPI.Business.Service;
 using YouTubeListManager.Controllers;
 using YouTubeListManager.Data.Repository;
 using UnityDependencyResolver = Microsoft.Practices.Unity.Mvc.UnityDependencyResolver;
@@ -26,6 +27,7 @@ namespace YouTubeListManager
             container.RegisterType<DbContext, YouTubeListManagerContext>(new InjectionConstructor(connectionString));
             container.RegisterType(typeof (IRepository<>), typeof (Repository<>));
             container.RegisterType<IRepositoryStore, RepositoryStore>();
+            container.RegisterType<IYouTubeListService, YouTubeListListService>();
 
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
 

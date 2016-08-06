@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="Domain\User.cs" />
     <Compile Include="Domain\PlayList.cs" />
-    <Compile Include="Domain\YouTubeTrack.cs" />
+    <Compile Include="Domain\Track.cs" />
     <Compile Include="Extension\DbEntityValidationExceptionExtension.cs" />
     <Compile Include="Mapping\UserMap.cs" />
     <Compile Include="Mapping\PlayListMap.cs" />
