@@ -15,14 +15,14 @@ namespace Data
             Database.Initialize(true);
         }
 
-        public DbSet<YouTubeTrack> YouTubeTracks { get; set; }
-        public DbSet<YouTubeList> YouTubeLists { get; set; }
+        public DbSet<Track> YouTubeTracks { get; set; }
+        public DbSet<PlayList> YouTubeLists { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new YouTubeTrackMap());
-            modelBuilder.Configurations.Add(new YouTubeListMap());
+            modelBuilder.Configurations.Add(new TrackMap());
+            modelBuilder.Configurations.Add(new PlayListMap());
             modelBuilder.Configurations.Add(new UserMap());
         }
     }

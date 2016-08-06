@@ -4,20 +4,18 @@ using YouTubeListManager.Data.Domain;
 
 namespace YouTubeListManager.Data.Mapping
 {
-    public class YouTubeTrackMap : EntityTypeConfiguration<YouTubeTrack>
+    public class PlayListMap : EntityTypeConfiguration<PlayList>
     {
-        public YouTubeTrackMap()
+        public PlayListMap()
         {
-            ToTable("YouTubeTrack");
+            ToTable("YouTubeList");
             HasKey(t => t.Id);
 
             Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            Property(t => t.Author).HasMaxLength(500);
             Property(t => t.Title).HasMaxLength(500);
-            Property(t => t.Duration);
-            Property(t => t.Live);
 
-            HasOptional(t => t.YouTubeList).WithMany(t => t.YouTubeTracks);
+            HasRequired(t => t.User).WithMany(t => t.PlayLists);
+            HasMany(t => t.Tracks).WithMany(t => t.PlayLists);
         }
     }
 }

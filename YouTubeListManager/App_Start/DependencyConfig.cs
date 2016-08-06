@@ -27,8 +27,6 @@ namespace YouTubeListManager
             container.RegisterType(typeof (IRepository<>), typeof (Repository<>));
             container.RegisterType<IRepositoryStore, RepositoryStore>();
 
-            container.RegisterType(typeof(HomeController));
-
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));

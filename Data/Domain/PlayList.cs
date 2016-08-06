@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace YouTubeListManager.Data.Domain
 {
-    public class YouTubeList
+    public class PlayList
     {
         public int Id { get; set; }
-        public string YouTubeListId { get; set; }
+        public string Hash { get; set; }
         public string Title { get; set; }
 
         public virtual User User { get; set; }
-        public virtual ICollection<YouTubeTrack> YouTubeTracks { get; set; }
+        public virtual ICollection<Track> Tracks { get; set; }
 
-        public YouTubeList()
+        public PlayList()
         {
-            YouTubeTracks = new List<YouTubeTrack>();
+            Tracks = new List<Track>();
         }
     }
 }

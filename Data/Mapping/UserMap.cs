@@ -14,7 +14,7 @@ namespace YouTubeListManager.Data.Mapping
             Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Property(t => t.Name).IsRequired();
 
-            HasMany(t => t.YouTubeLists).WithRequired(t => t.User);
+            HasMany(t => t.PlayLists).WithRequired(t => t.User);
         }
     }
 }
