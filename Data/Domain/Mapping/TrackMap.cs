@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
-using YouTubeListManager.Data.Domain;
 
-namespace YouTubeListManager.Data.Mapping
+namespace YouTubeListManager.Data.Domain.Mapping
 {
     public class TrackMap : EntityTypeConfiguration<Track>
     {

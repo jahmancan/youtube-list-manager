@@ -1,8 +1,8 @@
 ﻿using System.Data.Entity;
 using YouTubeListManager.Data.Domain;
-using YouTubeListManager.Data.Mapping;
+using YouTubeListManager.Data.Domain.Mapping;
 
-namespace Data
+namespace YouTubeListManager.Data
 {
     public class YouTubeListManagerContext : DbContext
     {

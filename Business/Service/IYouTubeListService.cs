@@ -5,7 +5,11 @@ namespace YouTubeListAPI.Business.Service
 {
     public interface IYouTubeListService
     {
-        IList<Track> GetTracksBy(string playListId, int maxResults = 50);
-        IEnumerable<PlayList> GetPlaylists(int maxResults = 50);
+        IEnumerable<Track> GetTracksBy(string playListId);
+        IEnumerable<PlayList> GetPlaylists(string playListId = default(string), bool withTracks = false);
+
+        IEnumerable<Track> ShowSuggestions(string title);
+
+        void UpdateLists(IEnumerable<PlayList> playLists);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity.Validation;
-using Data;
 using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Data.Extension;
 
@@ -18,7 +17,7 @@ namespace YouTubeListManager.Data.Repository
         }
 
         public IRepository<Track> TrackRepository { get; private set; }
-        public IRepository<PlayList> PlayListRepository { get; private set; }
+        public IPlayListRepository PlayListRepository { get; private set; }
         public IRepository<User> UserRepository { get; private set; }
 
         public void SaveChanges()
@@ -37,7 +36,7 @@ namespace YouTubeListManager.Data.Repository
         private void Initialze()
         {
             TrackRepository = new Repository<Track>(context);
-            PlayListRepository = new Repository<PlayList>(context);
+            PlayListRepository = new PlayListRepository(context);
             UserRepository = new Repository<User>(context);
         }
     }

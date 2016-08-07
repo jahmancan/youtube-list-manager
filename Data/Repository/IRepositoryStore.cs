@@ -5,7 +5,7 @@ namespace YouTubeListManager.Data.Repository
     public interface IRepositoryStore
     {
         IRepository<Track> TrackRepository { get; }
-        IRepository<PlayList> PlayListRepository { get; }
+        IPlayListRepository PlayListRepository { get; }
         IRepository<User> UserRepository { get; }
 
         void SaveChanges();

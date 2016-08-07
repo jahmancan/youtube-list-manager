@@ -81,7 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Service\IYouTubeListService.cs" />
-    <Compile Include="Service\YouTubeListListService.cs" />
+    <Compile Include="Service\YouTubeListService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +94,10 @@
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{13327070-7592-496c-8bc2-3f31854e3cd8}</Project>
       <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logger\Logger.csproj">
+      <Project>{E43AEBAF-CBDF-4EE7-B8A7-87E57DF7DF68}</Project>
+      <Name>Logger</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

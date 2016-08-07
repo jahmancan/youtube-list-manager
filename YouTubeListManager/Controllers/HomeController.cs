@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -28,7 +29,16 @@ namespace YouTubeListManager.Controllers
 
         public ActionResult Index()
         {
-            var lists = youTubeListService.GetPlaylists();
+            //var lists = youTubeListService.GetPlaylists();
+            //var suggestions = youTubeListService.ShowSuggestions("Reece Hughes - I Mua (Nahko and Medicine for the People Cover)");
+            var playList = new PlayList
+            {
+                Title = "t",
+                Hash = "PLBCE49952BEED058B",
+                PrivacyStatus = PrivacyStatus.Private,
+            };
+            var list = new List<PlayList>() {playList};
+            youTubeListService.UpdateLists(list);
             List<Track> tracks = repositoryStore.TrackRepository.GetAll().ToList();
             ViewBag.Title = "Home Page";
 

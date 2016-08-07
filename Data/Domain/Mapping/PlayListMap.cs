@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
-using YouTubeListManager.Data.Domain;
 
-namespace YouTubeListManager.Data.Mapping
+namespace YouTubeListManager.Data.Domain.Mapping
 {
     public class PlayListMap : EntityTypeConfiguration<PlayList>
     {
@@ -14,6 +13,7 @@ namespace YouTubeListManager.Data.Mapping
             Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Property(t => t.Title).HasMaxLength(255);
             Property(t => t.UserId);
+            Property(t => t.PrivacyStatus);
 
             HasOptional(t => t.User).WithMany(t => t.PlayLists).HasForeignKey(t => t.UserId);
             HasMany(t => t.Tracks).WithMany(t => t.PlayLists)
