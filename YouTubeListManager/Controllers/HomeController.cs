@@ -28,7 +28,7 @@ namespace YouTubeListManager.Controllers
 
         public ActionResult Index()
         {
-            var lists = youTubeListService.GetPlaylists(5);
+            var lists = youTubeListService.GetPlaylists();
             List<Track> tracks = repositoryStore.TrackRepository.GetAll().ToList();
             ViewBag.Title = "Home Page";
 

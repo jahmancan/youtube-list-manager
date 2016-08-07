@@ -25,13 +25,16 @@ namespace YouTubeListAPI.Business.Service
         private YouTubeService YouTubeService => youTubeService ?? (youTubeService = InitializeService());
 
         //todo: refactor to async
-        public IList<Track> GetTracksBy(string playListId)
+        public IList<Track> GetTracksBy(string playListId, int maxResults = 50)
         {
             if (string.IsNullOrEmpty(playListId))
                 throw new Exception("PlayListId can not be empty");
+            if (maxResults > 50)
+                throw new Exception("Google can not retrieve more than 50 items per request");
 
             PlaylistItemsResource.ListRequest request  = YouTubeService.PlaylistItems.List("snippet, contentDetails");
             request.PlaylistId = playListId;
+            request.MaxResults = maxResults;
             try
             {
                 var tracks = new List<Track>();
@@ -65,8 +68,11 @@ namespace YouTubeListAPI.Business.Service
         }
 
         //todo: refactor to async
-        public IEnumerable<PlayList> GetPlaylists(int maxResults = 100)
+        public IEnumerable<PlayList> GetPlaylists(int maxResults = 50)
         {
+            if (maxResults > 50)
+                throw new Exception("Google can not retrieve more than 50 items per request");
+
             PlaylistsResource.ListRequest request = YouTubeService.Playlists.List("snippet");
             request.MaxResults = maxResults;
             request.Mine = true;
@@ -125,8 +131,6 @@ namespace YouTubeListAPI.Business.Service
                 {
                     userCredential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                         GoogleClientSecrets.Load(stream).Secrets,
-                        // This OAuth 2.0 access scope allows for full read/write access to the
-                        // authenticated user's account.
                         new[] {YouTubeService.Scope.Youtube},
                         "user",
                         CancellationToken.None,
