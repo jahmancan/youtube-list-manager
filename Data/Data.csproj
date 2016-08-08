@@ -47,14 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\PrivacyStatus.cs" />
+    <Compile Include="Domain\Mapping\PlayListItemMap.cs" />
+    <Compile Include="Domain\Mapping\PrivacyStatus.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Domain\PlayList.cs" />
-    <Compile Include="Domain\Track.cs" />
+    <Compile Include="Domain\PlayListItem.cs" />
+    <Compile Include="Domain\VideoInfo.cs" />
     <Compile Include="Extension\DbEntityValidationExceptionExtension.cs" />
     <Compile Include="Domain\Mapping\UserMap.cs" />
     <Compile Include="Domain\Mapping\PlayListMap.cs" />
-    <Compile Include="Domain\Mapping\TrackMap.cs" />
+    <Compile Include="Domain\Mapping\VideoInfoMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IPlayListRepository.cs" />
     <Compile Include="Repository\IRepository.cs" />

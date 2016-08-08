@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace YouTubeListManager.Data.Domain
 {
-    public class Track
+    public class VideoInfo
     {
         public int Id { get; set; }
         public string Hash { get; set; }
@@ -11,11 +15,11 @@ namespace YouTubeListManager.Data.Domain
         public bool Live { get; set; }
         public string ThumbnailUrl { get; set; }
 
-        public virtual ICollection<PlayList> PlayLists { get; set; }
+        public virtual ICollection<PlayListItem> PlayListItems { get; set; }
 
-        public Track()
+        public VideoInfo()
         {
-            PlayLists = new List<PlayList>();
+            PlayListItems = new List<PlayListItem>();
         }
     }
 }

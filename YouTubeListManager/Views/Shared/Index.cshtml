@@ -1,9 +1,10 @@
-﻿@model List<YouTubeListManager.Data.Domain.Track>
+﻿@model YouTubeListManager.Data.Domain.PlayList
+List: @Model.Title
+Privacy: @Model.PrivacyStatus
 
-List:
 <ul>
-    @foreach (var track in Model)
+    @foreach (var playListItem in Model.PlayListItems)
     {
-        <li>@track.Author - @track.Title : @track.Duration</li>
+        <li>@playListItem.VideoInfo.Title : @playListItem.VideoInfo.Duration</li>
     }
 </ul>

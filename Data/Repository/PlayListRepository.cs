@@ -13,9 +13,19 @@ namespace YouTubeListManager.Data.Repository
         {
         }
 
-        public void Update(PlayList playList)
+        public void InsertUpdate(PlayList playList)
         {
+            PlayList foundPlayList = FindBy(p => p.Hash == playList.Hash).FirstOrDefault();
+            if (foundPlayList == null)
+            {
+                foundPlayList = Create();
+                Insert(foundPlayList);
+            }
             
+            foundPlayList.Hash = playList.Hash;
+            foundPlayList.Title = playList.Title;
+            foundPlayList.PrivacyStatus = playList.PrivacyStatus;
+            foundPlayList.UserId = playList.UserId;
         }
     }
 }

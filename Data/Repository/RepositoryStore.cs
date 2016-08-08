@@ -16,9 +16,10 @@ namespace YouTubeListManager.Data.Repository
             Initialze();
         }
 
-        public IRepository<Track> TrackRepository { get; private set; }
+        public IRepository<PlayListItem> PlayListItemRepository { get; private set; }
         public IPlayListRepository PlayListRepository { get; private set; }
         public IRepository<User> UserRepository { get; private set; }
+        public IRepository<VideoInfo> VideoInfoRepository { get; private set; }
 
         public void SaveChanges()
         {
@@ -35,9 +36,10 @@ namespace YouTubeListManager.Data.Repository
 
         private void Initialze()
         {
-            TrackRepository = new Repository<Track>(context);
+            PlayListItemRepository = new Repository<PlayListItem>(context);
             PlayListRepository = new PlayListRepository(context);
             UserRepository = new Repository<User>(context);
+            VideoInfoRepository = new Repository<VideoInfo>(context);
         }
     }
 }

@@ -4,6 +4,6 @@ namespace YouTubeListManager.Data.Repository
 {
     public interface IPlayListRepository : IRepository<PlayList>
     {
-        void Update(PlayList playList);
+        void InsertUpdate(PlayList playList);
     }
 }
