@@ -1,24 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Services;
-using Google.Apis.Util.Store;
-using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
+using YouTubeListAPI.Business.Extensions;
 using YouTubeListManager.Data.Domain;
-using YouTubeListManager.Data.Repository;
 using YouTubeListManager.Logger;
+
 using YouTubePlayList = Google.Apis.YouTube.v3.Data.Playlist;
+using YouTubePlayListItem = Google.Apis.YouTube.v3.Data.PlaylistItem;
 
 namespace YouTubeListAPI.Business.Service
 {
-    public class YouTubeListService : IYouTubeListService
+    public class YouTubeListService : YouTubeApiService, IYouTubeListService
     {
-        private const string ServiceName = "YouTubeListAPI";
         private const string UnavailableVideoDescription = "This video is unavailable.";
         private const string PrivateVideoDescription = "This video is private.";
         private const string DeleteVideoTitle = "Deleted video";
@@ -26,29 +21,10 @@ namespace YouTubeListAPI.Business.Service
         private const string VideoKind = "youtube#video";
         private const int MaxResults = 50;
 
-        private const string TitleCleanerPattern = @"(\(|\[)[\w\s]+?(\)|\])";
-        private static readonly Regex TitleCleaneRegex = new Regex(TitleCleanerPattern);
-
-        private const string MediaExtensionCleanerPattern = @"\.(mpg|mpeg|mp3|mp4|wma|avi|mov|mkv)";
-        private static readonly Regex MediaExtensionCleaneRegex = new Regex(MediaExtensionCleanerPattern, RegexOptions.IgnoreCase);
-
-        private const string MinutesGroupName = "minutes";
-        private const string SecondsGroupName = "seconds";
-        private static readonly string namedDurationPattern = $@"PT(?<{MinutesGroupName}>\d+)M(?<{SecondsGroupName}>\d+)S";
-        private static readonly Regex NamedDurationRegex = new Regex(namedDurationPattern, RegexOptions.IgnoreCase);
-
-        private readonly INlogLogger logger;
-        private readonly IRepositoryStore repositoryStore;
-
-        private YouTubeService youTubeService;
-
-        public YouTubeListService(IRepositoryStore repositoryStore, INlogLogger logger)
+        public YouTubeListService(INlogLogger logger) : base(logger)
         {
-            this.repositoryStore = repositoryStore;
-            this.logger = logger;
         }
 
-        private YouTubeService YouTubeService => youTubeService ?? (youTubeService = InitializeService());
 
         public IEnumerable<PlayListItem> GetPlayListItems(string playListId, bool withVideoInfo = true)
         {
@@ -119,7 +95,7 @@ namespace YouTubeListAPI.Business.Service
         {
             var request = YouTubeService.Search.List("id, snippet");
             request.MaxResults = MaxResults;
-            request.Q = MediaExtensionCleaneRegex.Replace(TitleCleaneRegex.Replace(title, string.Empty), string.Empty);
+            request.Q = title.CleanTitle();
 
             try
             {
@@ -139,9 +115,9 @@ namespace YouTubeListAPI.Business.Service
                         {
                             Hash = v.Id,
                             Title = v.Snippet.Title,
-                            ThumbnailUrl = GetThumbnailUrl(v.Snippet.Thumbnails),
+                            ThumbnailUrl = v.Snippet.Thumbnails.GetThumbnailUrl(),
                             Live = true,
-                            Duration = GetDurationFromVideoInfo(v)
+                            Duration = v.GetDurationFromVideoInfo()
                         });
 
                     playListItems.AddRange(currentPlayListItems);
@@ -157,113 +133,13 @@ namespace YouTubeListAPI.Business.Service
             }
         }
 
-        public void UpdateLists(IEnumerable<PlayList> playLists)
-        {
-            foreach (var playList in playLists)
-            {
-                UpdateList(playList);
-
-                repositoryStore.PlayListRepository.InsertUpdate(playList);
-                repositoryStore.SaveChanges();
-            }
-        }
-
-        private Video GetVideoInfo(string hash)
-        {
-            var request = YouTubeService.Videos.List("contentDetails, snippet, status");
-            request.Id = hash;
-
-            try
-            {
-                var taskResponse = request.ExecuteAsync(CancellationToken.None);
-                var result = taskResponse.Result;
-                if (result.Items.Count == 0)
-                    return null;
-
-                return result.Items[0];
-            }
-            catch (Exception exception)
-            {
-                const string error = "Your get video by ID request could not been served!";
-                logger.LogError(error, exception);
-                throw;
-            }
-        }
-
-        private YouTubePlayList GetPlayList(string hash)
-        {
-            var request = YouTubeService.Playlists.List("snippet, contentDetails, status");
-            request.MaxResults = MaxResults;
-            request.Id = hash;
-            try
-            {
-                var taskResponse = request.ExecuteAsync(CancellationToken.None);
-                var result = taskResponse.Result;
-                if (result.Items.Count == 0)
-                    return null;
-
-                return result.Items[0];
-            }
-            catch (Exception exception)
-            {
-                const string error = "Your get playlist request could not been served!";
-                logger.LogError(error, exception);
-                throw;
-            }
-        }
-
-        private void UpdateList(PlayList playList)
-        {
-            var youTubePlaylist = GetPlayList(playList.Hash);
-            if (youTubePlaylist == null) return;
-
-            youTubePlaylist.Snippet.Title = playList.Title;
-            youTubePlaylist.Status.PrivacyStatus = Enum.GetName(typeof (PrivacyStatus), playList.PrivacyStatus).ToLower();
-
-            try
-            {
-                var request = youTubeService.Playlists.Update(youTubePlaylist, "snippet, status, contentDetails");
-                request.ExecuteAsync();
-            }
-            catch (Exception e)
-            {
-                const string error = "Your update playlist request could not been served!";
-                logger.LogError(error, e);
-                throw;
-            }
-        }
-
-        private static string GetThumbnailUrl(ThumbnailDetails thumbnailDetails)
-        {
-            if (thumbnailDetails == null)
-                return string.Empty;
-
-            return (thumbnailDetails.Standard != null) ? thumbnailDetails.Standard.Url : thumbnailDetails.Default__.Url;
-        }
-
         private int GetDuration(PlaylistItemContentDetails contentDetails)
         {
             var videoInfo = GetVideoInfo(contentDetails.VideoId);
             if (videoInfo == null) return 0;
 
-            return GetDurationFromVideoInfo(videoInfo);
+            return videoInfo.GetDurationFromVideoInfo();
         }
-
-        private static int GetDurationFromVideoInfo(Video videoInfo)
-        {
-            var duration = videoInfo.ContentDetails.Duration;
-
-            if (NamedDurationRegex.IsMatch(duration))
-            {
-                var match = NamedDurationRegex.Match(duration);
-                var minutes = int.Parse(match.Groups[MinutesGroupName].Value);
-                var seconds = int.Parse(match.Groups[SecondsGroupName].Value);
-                return (int) new TimeSpan(0, minutes, seconds).TotalSeconds;
-            }
-
-            return 0;
-        }
-
 
         private void PopulatePlayListItems(List<PlayListItem> playListItems,
             PlaylistItemListResponse playlistItemListResponse, bool withVideoInfo)
@@ -284,7 +160,7 @@ namespace YouTubeListAPI.Business.Service
                         Hash = playListItem.ContentDetails.VideoId,
                         Title = playListItem.Snippet.Title,
                         Duration = withVideoInfo ? GetDuration(playListItem.ContentDetails) : 0,
-                        ThumbnailUrl = GetThumbnailUrl(playListItem.Snippet.Thumbnails),
+                        ThumbnailUrl = playListItem.Snippet.Thumbnails.GetThumbnailUrl(),
                         Live = true
                     }
                 })
@@ -306,48 +182,6 @@ namespace YouTubeListAPI.Business.Service
                         withPlayListItems ? GetPlayListItems(playList.Id).ToList() : new List<PlayListItem>()
                 });
             playLists.AddRange(currentPlayLists);
-        }
-
-        private YouTubeService InitializeService()
-        {
-            var userCredential = Authenticate();
-            var initializer = new BaseClientService.Initializer
-            {
-                HttpClientInitializer = userCredential,
-                ApplicationName = ServiceName
-            };
-
-            return new YouTubeService(initializer);
-        }
-
-        private UserCredential Authenticate()
-        {
-            var configFilePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
-            configFilePath += @"\bin\config.json";
-
-            try
-            {
-                UserCredential userCredential;
-
-                using (var stream = new FileStream(configFilePath, FileMode.Open, FileAccess.Read))
-                {
-                    userCredential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                        GoogleClientSecrets.Load(stream).Secrets,
-                        new[] {YouTubeService.Scope.Youtube},
-                        "user",
-                        CancellationToken.None,
-                        new FileDataStore(ServiceName)
-                        ).Result;
-                }
-
-                return userCredential;
-            }
-            catch (Exception exception)
-            {
-                const string error = "Application could not be authenticated! Check if it is offline!";
-                logger.LogError(error, exception);
-                throw;
-            }
         }
     }
 }

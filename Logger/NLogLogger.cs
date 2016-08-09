@@ -3,7 +3,7 @@ using NLog;
 
 namespace YouTubeListManager.Logger
 {
-    public class NLogLogger : INlogLogger
+    public class NlogLogger : INlogLogger
     {
         private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
         

@@ -8,6 +8,5 @@ namespace YouTubeListAPI.Business.Service
         IEnumerable<PlayListItem> GetPlayListItems(string playListId, bool withVideoInfo = true);
         IEnumerable<PlayList> GetPlaylists(string playListId = default(string), bool withPlayListItems = false);
         IEnumerable<VideoInfo> ShowSuggestions(string title);
-        void UpdateLists(IEnumerable<PlayList> playLists);
     }
 }

@@ -18,13 +18,13 @@ namespace YouTubeListManager.Controllers
 {
     public class HomeController : Controller
     {
-        private IRepositoryStore repositoryStore;
         private IYouTubeListService youTubeListService;
+        private IYouTubeUpdateService youTubeUpdateService;
 
-        public HomeController(IRepositoryStore repositoryStore, IYouTubeListService youTubeListService)
+        public HomeController(IYouTubeListService youTubeListService, IYouTubeUpdateService youTubeUpdateService)
         {
-            this.repositoryStore = repositoryStore;
             this.youTubeListService = youTubeListService;
+            this.youTubeUpdateService = youTubeUpdateService;
         }
 
         public ActionResult Index()
@@ -40,8 +40,7 @@ namespace YouTubeListManager.Controllers
                 PlayListItems = youTubeListService.GetPlayListItems(playListId).ToList()
             };
             var list = new List<PlayList>() { playList };
-            youTubeListService.UpdateLists(list);
-            List<PlayListItem> tracks = repositoryStore.PlayListItemRepository.GetAll().ToList();
+            youTubeUpdateService.UpdatePlayLists(list);
             ViewBag.Title = "Home Page";
 
             return View(playList);

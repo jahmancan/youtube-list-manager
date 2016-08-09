@@ -26,13 +26,14 @@ namespace YouTubeListManager
             IUnityContainer container = new UnityContainer();
             string connectionString = ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
 
-            container.RegisterType<INlogLogger, NLogLogger>();
+            container.RegisterType<INlogLogger, NlogLogger>();
 
             container.RegisterType<DbContext, YouTubeListManagerContext>(new InjectionConstructor(connectionString));
             container.RegisterType(typeof (IRepository<>), typeof (Repository<>));
             container.RegisterType<IRepositoryStore, RepositoryStore>();
             container.RegisterType<IYouTubeListService, YouTubeListService>();
-            
+            container.RegisterType<IYouTubeUpdateService, YouTubeUpdateService>();
+
 
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
 

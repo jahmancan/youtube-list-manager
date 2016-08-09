@@ -44,5 +44,10 @@ namespace YouTubeListManager.Data.Repository
         {
             Set.Add(entity);
         }
+
+        public virtual void Reload(TEntity entity)
+        {
+            Context.Entry(entity).Reload();
+        }
     }
 }

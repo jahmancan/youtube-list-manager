@@ -58,10 +58,8 @@
     <Compile Include="Domain\Mapping\PlayListMap.cs" />
     <Compile Include="Domain\Mapping\VideoInfoMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\IPlayListRepository.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\IRepositoryStore.cs" />
-    <Compile Include="Repository\PlayListRepository.cs" />
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="Repository\RepositoryStore.cs" />
     <Compile Include="YouTubeListManagerContext.cs" />
