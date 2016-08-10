@@ -14,7 +14,7 @@ namespace YouTubeListAPI.Business.Service
     {
         private readonly IRepositoryStore repositoryStore;
 
-        public YouTubeUpdateService(INlogLogger logger, IRepositoryStore repositoryStore) : base(logger)
+        public YouTubeUpdateService(INlogLogger logger, IYouTubeServiceProvider youTubeServiceProvider, IRepositoryStore repositoryStore) : base(logger, youTubeServiceProvider)
         {
             this.repositoryStore = repositoryStore;
         }
@@ -111,7 +111,7 @@ namespace YouTubeListAPI.Business.Service
 
             try
             {
-                var request = YouTubeService.PlaylistItems.Update(youTubePlayListItem, "snippet, status, contentDetails");
+                var request = youTubeService.PlaylistItems.Update(youTubePlayListItem, "snippet, status, contentDetails");
                 request.ExecuteAsync(CancellationToken.None);
             }
             catch (Exception exception)
@@ -122,7 +122,7 @@ namespace YouTubeListAPI.Business.Service
 
         private void UpdateYouTubePlayList(PlayList playList)
         {
-            var youTubePlaylist = GetPlayList(playList.Hash);
+            var youTubePlaylist = GetYouTubePlayList(playList.Hash);
             if (youTubePlaylist == null) return;
 
             youTubePlaylist.Snippet.Title = playList.Title;
@@ -131,7 +131,7 @@ namespace YouTubeListAPI.Business.Service
 
             try
             {
-                var request = YouTubeService.Playlists.Update(youTubePlaylist, "snippet, status, contentDetails");
+                var request = youTubeService.Playlists.Update(youTubePlaylist, "snippet, status, contentDetails");
                 request.ExecuteAsync(CancellationToken.None);
             }
             catch (Exception e)

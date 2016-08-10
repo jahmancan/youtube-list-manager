@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Google.Apis.Logging;
 using Microsoft.Practices.Unity;
 using YouTubeListAPI.Business.Service;
+using YouTubeListManager.Common.Bootstraper;
 using YouTubeListManager.Controllers;
 using YouTubeListManager.Data;
 using YouTubeListManager.Data.Repository;
@@ -24,19 +25,17 @@ namespace YouTubeListManager
         public static void Register()
         {
             IUnityContainer container = new UnityContainer();
-            string connectionString = ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
 
             container.RegisterType<INlogLogger, NlogLogger>();
 
+            string connectionString = ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
             container.RegisterType<DbContext, YouTubeListManagerContext>(new InjectionConstructor(connectionString));
-            container.RegisterType(typeof (IRepository<>), typeof (Repository<>));
-            container.RegisterType<IRepositoryStore, RepositoryStore>();
-            container.RegisterType<IYouTubeListService, YouTubeListService>();
-            container.RegisterType<IYouTubeUpdateService, YouTubeUpdateService>();
 
+            DependencyConfigHelper.Register(container);
+
+            container.RegisterType<IYouTubeServiceProvider, YouTubeServiceProvider>();
 
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
-
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         } 
     }
