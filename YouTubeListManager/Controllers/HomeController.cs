@@ -29,21 +29,21 @@ namespace YouTubeListManager.Controllers
 
         public ActionResult Index()
         {
-            var lists = youTubeListService.GetPlaylists();
-            var suggestions = youTubeListService.ShowSuggestions("Reece Hughes - I Mua (Nahko and Medicine for the People Cover)");
-            const string playListId = "PLBCE49952BEED058B";
-            var playList = new PlayList
-            {
-                Title = "t",
-                Hash = playListId,
-                PrivacyStatus = PrivacyStatus.Private,
-                PlayListItems = youTubeListService.GetPlayListItems(playListId).ToList()
-            };
-            var list = new List<PlayList>() { playList };
-            youTubeUpdateService.UpdatePlayLists(list);
+            var lists = youTubeListService.GetPlaylists(string.Empty);
+            var suggestions = youTubeListService.ShowSuggestions(string.Empty, "Reece Hughes - I Mua (Nahko and Medicine for the People Cover)");
+            //const string playListId = "PLBCE49952BEED058B";
+            //var playList = new PlayList
+            //{
+            //    Title = "t",
+            //    Hash = playListId,
+            //    PrivacyStatus = PrivacyStatus.Private,
+            //    PlayListItems = youTubeListService.GetPlayListItems(string.Empty, playListId).ToList()
+            //};
+            //var list = new List<PlayList>() { playList };
+            //youTubeUpdateService.UpdatePlayLists(list);
             ViewBag.Title = "Home Page";
 
-            return View(playList);
+            return View();
         }
     }
 }

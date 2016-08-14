@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
@@ -12,24 +9,28 @@ using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListManager.Logger;
 
-namespace YouTubeListAPI.Business.Service
+namespace YouTubeListAPI.Business.Service.Wrapper
 {
-    public abstract class YouTubeApiServiceWrapper
+    public abstract class YouTubeApiServiceWrapper : IYouTubeApiServiceWrapper
     {
+        private const string ServiceName = "YouTubeListAPI";
+
         protected YouTubeService youTubeService;
 
         protected INlogLogger logger;
-        private IYouTubeServiceProvider youTubeServiceProvider;
+        protected YouTubeService YouTubeService => youTubeService ?? (youTubeService = InitializeService());
 
-        protected YouTubeApiServiceWrapper(INlogLogger logger, IYouTubeServiceProvider youTubeServiceProvider)
+        public YouTubeApiServiceWrapper()
         {
-            this.logger = logger;
-            this.youTubeServiceProvider = youTubeServiceProvider;
-
-            youTubeService = this.youTubeServiceProvider.GetInstance();
+            
         }
 
-        protected Video GetVideo(string hash)
+        protected YouTubeApiServiceWrapper(INlogLogger logger)
+        {
+            this.logger = logger;
+        }
+
+        public Video GetVideo(string hash)
         {
             var request = youTubeService.Videos.List("contentDetails, snippet, status");
             request.Id = hash;
@@ -51,7 +52,7 @@ namespace YouTubeListAPI.Business.Service
             }
         }
 
-        protected PlaylistItem GetPlayListItem(string hash)
+        public PlaylistItem GetPlayListItem(string hash)
         {
             PlaylistItemsResource.ListRequest request = youTubeService.PlaylistItems.List("snippet, contentDetails, status");
             request.Id = hash;
@@ -72,7 +73,7 @@ namespace YouTubeListAPI.Business.Service
             }
         }
 
-        protected Playlist GetYouTubePlayList(string hash)
+        public Playlist GetYouTubePlayList(string hash)
         {
             var request = youTubeService.Playlists.List("snippet, contentDetails, status");
             request.Id = hash;
@@ -92,5 +93,49 @@ namespace YouTubeListAPI.Business.Service
                 throw;
             }
         }
+
+
+        private YouTubeService InitializeService()
+        {
+            var userCredential = Authenticate();
+            var initializer = new BaseClientService.Initializer
+            {
+                HttpClientInitializer = userCredential,
+                ApplicationName = ServiceName
+            };
+
+            return new YouTubeService(initializer);
+        }
+
+        private UserCredential Authenticate()
+        {
+            var configFilePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
+            configFilePath += @"\bin\config.json";
+
+            try
+            {
+                UserCredential userCredential;
+
+                using (var stream = new FileStream(configFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    userCredential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                        GoogleClientSecrets.Load(stream).Secrets,
+                        new[] { YouTubeService.Scope.Youtube },
+                        "user",
+                        CancellationToken.None,
+                        new FileDataStore(ServiceName)
+                        ).Result;
+                }
+
+                return userCredential;
+            }
+            catch (Exception exception)
+            {
+                const string error = "Application could not be authenticated! Check if it is offline!";
+                logger.LogError(error, exception);
+                throw;
+            }
+        }
+
     }
 }

@@ -83,14 +83,25 @@
     <Compile Include="Extensions\ThumbnailDetailsExtension.cs" />
     <Compile Include="Extensions\TitleExtension.cs" />
     <Compile Include="Extensions\VideoExtension.cs" />
-    <Compile Include="Service\IYouTubeServiceProvider.cs" />
+    <Compile Include="IYouTubeListManagerCache.cs" />
+    <Compile Include="Service\Response\IPlayListItemResponseService.cs" />
+    <Compile Include="Service\Response\ISearchListResponseService.cs" />
+    <Compile Include="Service\Response\ResponseEventArgs.cs" />
+    <Compile Include="Service\Response\PlaylistItemResponseService.cs" />
+    <Compile Include="Service\Response\SearchListResponseService.cs" />
+    <Compile Include="YouTubeListManagerCache.cs" />
+    <Compile Include="Service\Wrapper\IYouTubeApiListServiceWrapper.cs" />
+    <Compile Include="Service\Wrapper\IYouTubeApiServiceWrapper.cs" />
     <Compile Include="Service\IYouTubeUpdateService.cs" />
     <Compile Include="Service\IYouTubeListService.cs" />
-    <Compile Include="Service\YouTubeApiService.cs" />
-    <Compile Include="Service\YouTubeListService.cs" />
+    <Compile Include="Service\Response\IPlaylistResponseService.cs" />
+    <Compile Include="Service\Response\PlaylistResponseService.cs" />
+    <Compile Include="Service\Response\ResponseService.cs" />
+    <Compile Include="Service\Wrapper\YouTubeApiServiceWrapper.cs" />
+    <Compile Include="Service\YouTubeListManagerService.cs" />
+    <Compile Include="Service\Wrapper\YouTubeApiListServiceWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\YouTubeServiceProvider.cs" />
-    <Compile Include="Service\YouTubeUpdateService.cs" />
+    <Compile Include="Service\Wrapper\YouTubeApiUpdateServiceWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.json">

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Practices.Unity;
+using YouTubeListAPI.Business;
 using YouTubeListAPI.Business.Service;
+using YouTubeListAPI.Business.Service.Response;
+using YouTubeListAPI.Business.Service.Wrapper;
 using YouTubeListManager.Data.Repository;
-using YouTubeListManager.Logger;
 
 namespace YouTubeListManager.Common.Bootstraper
 {
@@ -11,8 +13,12 @@ namespace YouTubeListManager.Common.Bootstraper
         {
             container.RegisterType(typeof(IRepository<>), typeof(Repository<>));
             container.RegisterType<IRepositoryStore, RepositoryStore>();
-            container.RegisterType<IYouTubeListService, YouTubeListServiceWrapper>();
-            container.RegisterType<IYouTubeUpdateService, YouTubeUpdateServiceWrapper>();
+            container.RegisterType<IYouTubeListManagerCache, YouTubeListManagerCache>();
+            container.RegisterType<IPlaylistResponseService, PlaylistResponseService>();
+            container.RegisterType<IPlaylistItemResponseService, PlaylistItemResponseService>();
+            container.RegisterType<ISearchListResponseService, SearchListResponseService>();
+            container.RegisterType<IYouTubeUpdateService, YouTubeApiUpdateServiceWrapper>();
+            container.RegisterType<IYouTubeListService, YouTubeListManagerService>();
         }
     }
 }

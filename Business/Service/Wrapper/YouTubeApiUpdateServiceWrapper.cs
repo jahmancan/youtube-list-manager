@@ -6,15 +6,15 @@ using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Data.Repository;
 using YouTubeListManager.Logger;
 
-using YouTubePlayListItem = Google.Apis.YouTube.v3.Data.PlaylistItem;
-
-namespace YouTubeListAPI.Business.Service
+namespace YouTubeListAPI.Business.Service.Wrapper
 {
-    public class YouTubeUpdateService : YouTubeApiService, IYouTubeUpdateService
+    public class YouTubeApiUpdateServiceWrapper : YouTubeApiServiceWrapper, IYouTubeUpdateService
     {
         private readonly IRepositoryStore repositoryStore;
 
-        public YouTubeUpdateService(INlogLogger logger, IYouTubeServiceProvider youTubeServiceProvider, IRepositoryStore repositoryStore) : base(logger, youTubeServiceProvider)
+        public YouTubeApiUpdateServiceWrapper(
+            INlogLogger logger,
+            IRepositoryStore repositoryStore) : base(logger)
         {
             this.repositoryStore = repositoryStore;
         }

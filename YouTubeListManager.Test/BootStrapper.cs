@@ -29,10 +29,6 @@ namespace YouTubeListManager.Test
             container.RegisterType<DbContext, YouTubeListManagerContext>(new InjectionConstructor(connectionString));
 
             DependencyConfigHelper.Register(container);
-
-            Mock<IYouTubeServiceProvider> youTubeServiceProviderMock = new Mock<IYouTubeServiceProvider>();
-            youTubeServiceProviderMock.Setup(p => p.GetInstance()).Returns(youTubeServiceMock.Object);
-            container.RegisterInstance(youTubeServiceProviderMock.Object);
         }
     }
 }
