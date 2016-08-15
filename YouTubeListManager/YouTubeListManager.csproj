@@ -360,6 +360,10 @@
       <Project>{e43aebaf-cbdf-4ee7-b8a7-87e57df7df68}</Project>
       <Name>Logger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\YouTubeListManager.Common\YouTubeListManager.Common.csproj">
+      <Project>{49BB1FB8-F8F5-4D3C-87DB-0F6DB9EC821B}</Project>
+      <Name>YouTubeListManager.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

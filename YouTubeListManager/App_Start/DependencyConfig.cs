@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data.Entity;
-using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using System.Web.Mvc;
-using Google.Apis.Logging;
 using Microsoft.Practices.Unity;
-using YouTubeListAPI.Business.Service;
-using YouTubeListManager.Controllers;
+using YouTubeListAPI.Business.Service.Wrapper;
+using YouTubeListManager.Common.Bootstraper;
 using YouTubeListManager.Data;
-using YouTubeListManager.Data.Repository;
 using YouTubeListManager.Logger;
 using UnityDependencyResolver = Microsoft.Practices.Unity.Mvc.UnityDependencyResolver;
 
@@ -24,19 +18,17 @@ namespace YouTubeListManager
         public static void Register()
         {
             IUnityContainer container = new UnityContainer();
-            string connectionString = ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
 
             container.RegisterType<INlogLogger, NlogLogger>();
 
+            string connectionString = ConfigurationManager.ConnectionStrings[ConnectionKey].ConnectionString;
             container.RegisterType<DbContext, YouTubeListManagerContext>(new InjectionConstructor(connectionString));
-            container.RegisterType(typeof (IRepository<>), typeof (Repository<>));
-            container.RegisterType<IRepositoryStore, RepositoryStore>();
-            container.RegisterType<IYouTubeListService, YouTubeListService>();
-            container.RegisterType<IYouTubeUpdateService, YouTubeUpdateService>();
 
+            container.RegisterType<IYouTubeApiListServiceWrapper, YouTubeApiListServiceWrapper>();
+
+            DependencyConfigHelper.Register(container);
 
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
-
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         } 
     }

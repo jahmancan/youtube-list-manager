@@ -18,29 +18,27 @@ namespace YouTubeListManager.Controllers
 {
     public class HomeController : Controller
     {
-        private IYouTubeListService youTubeListService;
-        private IYouTubeUpdateService youTubeUpdateService;
+        private IYouTubeListManagerService youTubeListManagerService;
 
-        public HomeController(IYouTubeListService youTubeListService, IYouTubeUpdateService youTubeUpdateService)
+        public HomeController(IYouTubeListManagerService youTubeListManagerService)
         {
-            this.youTubeListService = youTubeListService;
-            this.youTubeUpdateService = youTubeUpdateService;
+            this.youTubeListManagerService = youTubeListManagerService;
         }
 
         public ActionResult Index()
         {
-            var lists = youTubeListService.GetPlaylists();
-            var suggestions = youTubeListService.ShowSuggestions("Reece Hughes - I Mua (Nahko and Medicine for the People Cover)");
+            var lists = youTubeListManagerService.GetPlaylists(string.Empty);
+            var suggestions = youTubeListManagerService.ShowSuggestions(string.Empty, "Reece Hughes - I Mua (Nahko and Medicine for the People Cover)");
             const string playListId = "PLBCE49952BEED058B";
             var playList = new PlayList
             {
                 Title = "t",
                 Hash = playListId,
                 PrivacyStatus = PrivacyStatus.Private,
-                PlayListItems = youTubeListService.GetPlayListItems(playListId).ToList()
+                PlayListItems = youTubeListManagerService.GetPlayListItems(string.Empty, playListId).ToList()
             };
             var list = new List<PlayList>() { playList };
-            youTubeUpdateService.UpdatePlayLists(list);
+            youTubeListManagerService.UpdatePlayLists(list);
             ViewBag.Title = "Home Page";
 
             return View(playList);
