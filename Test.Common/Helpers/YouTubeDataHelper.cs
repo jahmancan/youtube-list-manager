@@ -21,7 +21,7 @@ namespace YouTubeListManager.Test.Common.Helpers
             return playLisyListResponse;
         }
 
-        public static PlaylistItemListResponse CreatePlaylistItemListResponse(List<PlayListItem> playListItems)
+        public static PlaylistItemListResponse CreatePlaylistItemListResponse(List<PlaylistItemTestObject> playListItems)
         {
             var playlistItemListResponse = new PlaylistItemListResponse
             {
@@ -41,14 +41,16 @@ namespace YouTubeListManager.Test.Common.Helpers
             };
         }
 
-        public static YouTubePlayListItem CreatePlaylistItem(PlayListItem playListItem)
+        public static YouTubePlayListItem CreatePlaylistItem(PlaylistItemTestObject playListItem)
         {
             return new YouTubePlayListItem
             {
                 Id = playListItem.Hash,
                 Snippet = new PlaylistItemSnippet
                 {
-                    Position = playListItem.Position
+                    Position = playListItem.Position,
+                    Title = playListItem.Title,
+                    Description = playListItem.Description
                 },
                 ContentDetails = new PlaylistItemContentDetails
                 {
@@ -107,38 +109,6 @@ namespace YouTubeListManager.Test.Common.Helpers
                     break;
             }
             return thumbnailDetails;
-        }
-
-        public static string CreateRandomHash()
-        {
-            var Characters = new List<char>
-            {
-                'a',
-                'b',
-                'c',
-                'd',
-                'e',
-                'f',
-                '1',
-                '2',
-                '3',
-                '4',
-                '5',
-                '6',
-                '7',
-                '8',
-                '9',
-                '0'
-            };
-            var characterCount = Characters.Count;
-
-            var hash = string.Empty;
-            for (var i = 0; i < 8; i++)
-            {
-                hash += Characters[new Random().Next(characterCount)];
-            }
-
-            return hash;
         }
     }
 }

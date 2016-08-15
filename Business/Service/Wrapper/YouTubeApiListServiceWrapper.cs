@@ -16,7 +16,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         private const int MaxResults = 50;
 
         public event EventHandler<ResponseEventArgs<PlaylistListResponse>> PlaylistFetched;
-        private void OnPlayListFetched(Task<PlaylistListResponse> response)
+        private void OnPlayListFetched(Task<PlaylistListResponse> response) 
         {
             //if (PlaylistFetched == null) return;
 

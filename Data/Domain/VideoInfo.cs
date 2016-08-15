@@ -20,6 +20,7 @@ namespace YouTubeListManager.Data.Domain
         public int Duration { get; set; }
         public bool Live { get; set; }
         public string ThumbnailUrl { get; set; }
+        public PrivacyStatus PrivacyStatus { get; set; }
 
         public virtual ICollection<PlayListItem> PlayListItems { get; set; }
 

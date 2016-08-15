@@ -30,7 +30,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             this.logger = logger;
         }
 
-        public Video GetVideo(string hash)
+        public virtual Video GetVideo(string hash)
         {
             var request = youTubeService.Videos.List("contentDetails, snippet, status");
             request.Id = hash;
@@ -52,7 +52,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        public PlaylistItem GetPlayListItem(string hash)
+        public virtual PlaylistItem GetPlayListItem(string hash)
         {
             PlaylistItemsResource.ListRequest request = youTubeService.PlaylistItems.List("snippet, contentDetails, status");
             request.Id = hash;
@@ -73,7 +73,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        public Playlist GetYouTubePlayList(string hash)
+        public virtual Playlist GetYouTubePlayList(string hash)
         {
             var request = youTubeService.Playlists.List("snippet, contentDetails, status");
             request.Id = hash;

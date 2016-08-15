@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="Helpers\TestDbHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestDomain\PlaylistItemTestObject.cs" />
     <Compile Include="TestDomain\ThumbnailDetailsType.cs" />
     <Compile Include="TestDomain\VideoInfoTestObject.cs" />
     <Compile Include="Helpers\YouTubeDataHelper.cs" />
@@ -120,6 +121,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Business\Business.csproj">
+      <Project>{8AFCDE18-D184-4AD8-826A-AF05CB762B56}</Project>
+      <Name>Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{13327070-7592-496c-8bc2-3f31854e3cd8}</Project>
       <Name>Data</Name>

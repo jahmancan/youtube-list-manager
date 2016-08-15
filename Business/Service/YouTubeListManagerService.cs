@@ -65,7 +65,7 @@ namespace YouTubeListAPI.Business.Service
                         Live = true
                     }
                 })
-                .OrderBy(v => v.Position);
+                .OrderBy(v => v.Position).ToList();
 
             youTubeListManagerCache.PlayListItems[playListId].AddRange(currentSearchItems);
 
@@ -94,10 +94,9 @@ namespace YouTubeListAPI.Business.Service
                 {
                     Hash = playList.Id,
                     Title = playList.Snippet.Title,
-                    PlayListItems = new List<PlayListItem>()
-                    //todo: refactor this...
-                    //withPlayListItems ? GetPlayListItems(string.Empty, playList.Id).ToList() : new List<PlayListItem>()
-                });
+                    PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), playList.Status.PrivacyStatus, true),
+                    PlayListItems = withPlayListItems ? GetPlayListItems(string.Empty, playList.Id).ToList() : new List<PlayListItem>()
+                }).ToList();
             youTubeListManagerCache.PlayLists.AddRange(currentPlayLists);
 
             return currentPlayLists;
@@ -119,7 +118,7 @@ namespace YouTubeListAPI.Business.Service
                     ThumbnailUrl = v.Snippet.Thumbnails.GetThumbnailUrl(),
                     Live = true,
                     Duration = v.GetDurationFromVideoInfo()
-                });
+                }).ToList();
 
             youTubeListManagerCache.SearchList[title].AddRange(currentPlayListItems);
             return currentPlayListItems;
