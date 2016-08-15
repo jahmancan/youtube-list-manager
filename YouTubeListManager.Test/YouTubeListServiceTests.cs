@@ -23,8 +23,6 @@ namespace YouTubeListManager.Test
         private const string TestPlayListHash = "PLFueGfLR79HBcAc9qWgtLLLkGEr8zMjO4";
         private IYouTubeListManagerService context;
 
-        private IYouTubeApiListServiceWrapper wrapperMock;
-
         [TestMethod]
         public void TestListOneSpecificPlayList()
         {
