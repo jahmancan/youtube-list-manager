@@ -100,7 +100,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
 
         private void ExecuteAsyncRequestPlayLists(string requestToken, string playListId)
         {
-            PlaylistsResource.ListRequest request = YouTubeService.Playlists.List("snippet");
+            PlaylistsResource.ListRequest request = YouTubeService.Playlists.List("snippet, status");
             request.MaxResults = MaxResults;
             request.PageToken = requestToken;
 

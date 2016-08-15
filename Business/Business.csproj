@@ -89,11 +89,12 @@
     <Compile Include="Service\Response\ResponseEventArgs.cs" />
     <Compile Include="Service\Response\PlaylistItemResponseService.cs" />
     <Compile Include="Service\Response\SearchListResponseService.cs" />
+    <Compile Include="Service\Wrapper\IYouTubeApiUpdateServiceWrapper.cs" />
+    <Compile Include="Service\Wrapper\UpdateEventArgs.cs" />
     <Compile Include="YouTubeListManagerCache.cs" />
     <Compile Include="Service\Wrapper\IYouTubeApiListServiceWrapper.cs" />
     <Compile Include="Service\Wrapper\IYouTubeApiServiceWrapper.cs" />
-    <Compile Include="Service\IYouTubeUpdateService.cs" />
-    <Compile Include="Service\IYouTubeListService.cs" />
+    <Compile Include="Service\IYouTubeListManagerService.cs" />
     <Compile Include="Service\Response\IPlaylistResponseService.cs" />
     <Compile Include="Service\Response\PlaylistResponseService.cs" />
     <Compile Include="Service\Response\ResponseService.cs" />

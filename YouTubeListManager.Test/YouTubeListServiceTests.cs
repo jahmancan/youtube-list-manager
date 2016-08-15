@@ -11,6 +11,7 @@ using YouTubeListAPI.Business.Service;
 using YouTubeListAPI.Business.Service.Response;
 using YouTubeListAPI.Business.Service.Wrapper;
 using YouTubeListManager.Data.Domain;
+using YouTubeListManager.Data.Repository;
 using YouTubeListManager.Test.Common.Helpers;
 using YouTubeListManager.Test.Common.TestDomain;
 
@@ -20,7 +21,7 @@ namespace YouTubeListManager.Test
     public class YouTubeListServiceTests : BootStrapper
     {
         private const string TestPlayListHash = "PLFueGfLR79HBcAc9qWgtLLLkGEr8zMjO4";
-        private IYouTubeListService context;
+        private IYouTubeListManagerService context;
 
         private IYouTubeApiListServiceWrapper wrapperMock;
 
@@ -44,7 +45,7 @@ namespace YouTubeListManager.Test
             responseServiceMock.Setup(m => m.GetResponse(It.IsAny<string>(), It.IsAny<string>())).Returns(task);
             container.RegisterInstance(responseServiceMock.Object);
 
-            context = container.Resolve<IYouTubeListService>();
+            context = container.Resolve<IYouTubeListManagerService>();
 
             var playLists = context.GetPlaylists(string.Empty);
 
@@ -100,7 +101,7 @@ namespace YouTubeListManager.Test
             var cache = container.Resolve<IYouTubeListManagerCache>();
             cache.PlayLists.Add(dummyPlayListExisting);
 
-            context = container.Resolve<IYouTubeListService>(new ParameterOverride("youTubeListManagerCache", cache));
+            context = container.Resolve<IYouTubeListManagerService>(new ParameterOverride("youTubeListManagerCache", cache));
 
             var playLists = context.GetPlaylists(string.Empty);
 
@@ -199,7 +200,7 @@ namespace YouTubeListManager.Test
             playlistItemResponseServiceMock.Setup(m => m.GetResponse(string.Empty, TestPlayListHash)).Returns(playlistItemListTaskResponse);
             container.RegisterInstance(playlistItemResponseServiceMock.Object);
 
-            context = container.Resolve<IYouTubeListService>();
+            context = container.Resolve<IYouTubeListManagerService>();
 
             var playList = context.GetPlayList(TestPlayListHash);
 
@@ -334,7 +335,7 @@ namespace YouTubeListManager.Test
             playlistItemResponseServiceMock.Setup(m => m.GetResponse(string.Empty, TestPlayListHash)).Returns(playlistItemListTaskResponse);
             container.RegisterInstance(playlistItemResponseServiceMock.Object);
 
-            context = container.Resolve<IYouTubeListService>();
+            context = container.Resolve<IYouTubeListManagerService>();
 
             var playList = context.GetPlayList(TestPlayListHash);
 
@@ -354,6 +355,37 @@ namespace YouTubeListManager.Test
 
             foundPlayListItem = playList.PlayListItems.FirstOrDefault(i => i.Hash == dummyPlayListItem3.Hash);
             Assert.IsNull(foundPlayListItem);
+        }
+
+        [TestMethod]
+        public void TestUpdatePlayList()
+        {
+            var dummyPlayList = new PlayList
+            {
+                Id = 1,
+                Hash = TestPlayListHash,
+                Title = "Test",
+                PrivacyStatus = PrivacyStatus.Private
+            };
+
+            var serviceMock = new Mock<IYouTubeApiListServiceWrapper>();
+            container.RegisterInstance(serviceMock.Object);
+            
+            var serviceWrapperUpdateMock = new Mock<IYouTubeApiUpdateServiceWrapper>();
+            serviceWrapperUpdateMock.Setup(m => m.UpdatePlayLists(It.IsAny<List<PlayList>>()))
+                .Raises(m => m.PlaylistUpdated += null, new UpdatePlayListEventArgs(dummyPlayList));
+            container.RegisterInstance(serviceWrapperUpdateMock.Object);
+
+            context = container.Resolve<IYouTubeListManagerService>();
+
+            context.UpdatePlayLists(new List<PlayList> {dummyPlayList});
+
+            var repositoryStore = container.Resolve<IRepositoryStore>();
+            var foundPlayList = repositoryStore.PlayListRepository.FindBy(pl => pl.Hash == dummyPlayList.Hash).FirstOrDefault();
+
+            Assert.IsNotNull(foundPlayList);
+            Assert.AreEqual(dummyPlayList.PrivacyStatus, foundPlayList.PrivacyStatus);
+            Assert.AreEqual(dummyPlayList.Title, foundPlayList.Title);
         }
     }
 }

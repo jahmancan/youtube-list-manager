@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListAPI.Business.Extensions;
 using YouTubeListAPI.Business.Service.Response;
 using YouTubeListAPI.Business.Service.Wrapper;
 using YouTubeListManager.Data.Domain;
+using YouTubeListManager.Data.Repository;
 
 namespace YouTubeListAPI.Business.Service
 {
-    public class YouTubeListManagerService : IYouTubeListService
+    public class YouTubeListManagerManagerService : IYouTubeListManagerService
     {
         private const string UnavailableVideoDescription = VideoInfo.UnavailableVideoDescription;
         private const string PrivateVideoDescription = VideoInfo.PrivateVideoDescription;
@@ -19,18 +19,22 @@ namespace YouTubeListAPI.Business.Service
         private const string PrivateVideoTitle = VideoInfo.PrivateVideoTitle;
         private const string VideoKind = VideoInfo.VideoKind;
 
+        private IRepositoryStore repositoryStore;
         private IYouTubeApiListServiceWrapper youTubeApiListServiceWrapper;
+        private IYouTubeApiUpdateServiceWrapper youTubeApiUpdateServiceWrapper;
         private IPlaylistResponseService playlistResponseService;
         private IPlaylistItemResponseService playlistItemResponseService;
         private ISearchListResponseService searchListResponseService;
         private IYouTubeListManagerCache youTubeListManagerCache;
 
-        public YouTubeListManagerService(
+        public YouTubeListManagerManagerService(
             IYouTubeListManagerCache youTubeListManagerCache,
             IPlaylistResponseService playlistResponseService,
             IPlaylistItemResponseService playlistItemResponseService,
             ISearchListResponseService searchListResponseService,
-            IYouTubeApiListServiceWrapper youTubeApiListServiceWrapper
+            IYouTubeApiListServiceWrapper youTubeApiListServiceWrapper,
+            IYouTubeApiUpdateServiceWrapper youTubeApiUpdateServiceWrapper,
+            IRepositoryStore repositoryStore
             )
         {
             this.youTubeListManagerCache = youTubeListManagerCache;
@@ -38,6 +42,11 @@ namespace YouTubeListAPI.Business.Service
             this.playlistItemResponseService = playlistItemResponseService;
             this.searchListResponseService = searchListResponseService;
             this.youTubeApiListServiceWrapper = youTubeApiListServiceWrapper;
+            this.youTubeApiUpdateServiceWrapper = youTubeApiUpdateServiceWrapper;
+            this.repositoryStore = repositoryStore;
+
+            this.youTubeApiUpdateServiceWrapper.PlaylistUpdated += PlaylistUpdated;
+            this.youTubeApiUpdateServiceWrapper.PlaylistItemUpdated += PlaylistItemUpdated;
         }
 
         public IEnumerable<PlayListItem> GetPlayListItems(string requestToken, string playListId)
@@ -124,12 +133,93 @@ namespace YouTubeListAPI.Business.Service
             return currentPlayListItems;
         }
 
+        public void UpdatePlayLists(IEnumerable<PlayList> playLists)
+        {
+            youTubeApiUpdateServiceWrapper.UpdatePlayLists(playLists);
+        }
+
         private int GetDuration(PlaylistItemContentDetails contentDetails)
         {
             var videoInfo = youTubeApiListServiceWrapper.GetVideo(contentDetails.VideoId);
             if (videoInfo == null) return 0;
 
             return videoInfo.GetDurationFromVideoInfo();
+        }
+
+        private void PlaylistUpdated(object sender, UpdatePlayListEventArgs eventArgs)
+        {
+            InsertUpdatePlayList(eventArgs.PlayList);
+        }
+
+        private void InsertUpdatePlayList(PlayList playList)
+        {
+            PlayList foundPlayList = repositoryStore.PlayListRepository.FindBy(p => p.Hash == playList.Hash).FirstOrDefault();
+            if (foundPlayList == null)
+            {
+                foundPlayList = repositoryStore.PlayListRepository.Create();
+                repositoryStore.PlayListRepository.Insert(foundPlayList);
+            }
+
+            foundPlayList.Hash = playList.Hash;
+            foundPlayList.Title = playList.Title;
+            foundPlayList.PrivacyStatus = playList.PrivacyStatus;
+            foundPlayList.UserId = playList.UserId;
+            repositoryStore.SaveChanges();
+
+            //todo: check reload
+            youTubeApiUpdateServiceWrapper.UpdatePlaylistItems(foundPlayList, playList.PlayListItems);
+        }
+
+        private void PlaylistItemUpdated(object sender, UpdatePlayListItemEventArgs eventArgs)
+        {
+            InsertUpdatePlayListItem(eventArgs.PlayList, eventArgs.PlayListItem);
+
+            InsertUpdateVideoInfo(eventArgs.PlayListItem.VideoInfo);    
+        }
+
+        private void InsertUpdatePlayListItem(PlayList playList, PlayListItem playListItem)
+        {
+            var foundPlayListItem =
+                repositoryStore.PlayListItemRepository.FindBy(pli => pli.Hash == playListItem.Hash).FirstOrDefault();
+            if (foundPlayListItem == null)
+            {
+                foundPlayListItem = repositoryStore.PlayListItemRepository.Create();
+                repositoryStore.PlayListItemRepository.Insert(foundPlayListItem);
+            }
+
+            foundPlayListItem.Hash = playListItem.Hash;
+            foundPlayListItem.Position = playListItem.Position;
+
+            foundPlayListItem.VideoInfo =
+                repositoryStore.VideoInfoRepository.FindBy(vi => vi.Hash == playListItem.VideoInfo.Hash).First();
+            foundPlayListItem.VideoInfoId = foundPlayListItem.VideoInfo.Id;
+
+            foundPlayListItem.PlayList =
+                repositoryStore.PlayListRepository.FindBy(pl => pl.Hash == playList.Hash).First();
+            foundPlayListItem.PlayListId = foundPlayListItem.PlayList.Id;
+
+            repositoryStore.SaveChanges();
+        }
+
+        private void InsertUpdateVideoInfo(VideoInfo videoInfo)
+        {
+            var foundVideoInfo =
+                    repositoryStore.VideoInfoRepository.FindBy(vi => vi.Hash == videoInfo.Hash)
+                        .FirstOrDefault();
+
+            if (foundVideoInfo == null)
+            {
+                foundVideoInfo = repositoryStore.VideoInfoRepository.Create();
+                repositoryStore.VideoInfoRepository.Insert(foundVideoInfo);
+            }
+
+            foundVideoInfo.Hash = videoInfo.Hash;
+            foundVideoInfo.Duration = videoInfo.Duration;
+            foundVideoInfo.Live = videoInfo.Live;
+            foundVideoInfo.Title = videoInfo.Title;
+            foundVideoInfo.ThumbnailUrl = videoInfo.ThumbnailUrl;
+
+            repositoryStore.SaveChanges();
         }
     }
 }
