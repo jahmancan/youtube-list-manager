@@ -35,7 +35,7 @@ namespace YouTubeListManager.Controllers
                 Title = "t",
                 Hash = playListId,
                 PrivacyStatus = PrivacyStatus.Private,
-                PlayListItems = youTubeListManagerService.GetPlayListItems(string.Empty, playListId).ToList()
+                PlayListItems = youTubeListManagerService.GetPlayListItems(string.Empty, playListId).Response.ToList()
             };
             var list = new List<PlayList>() { playList };
             youTubeListManagerService.UpdatePlayLists(list);

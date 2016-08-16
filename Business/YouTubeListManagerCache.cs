@@ -7,7 +7,7 @@ namespace YouTubeListAPI.Business
     {
         public List<PlayList> PlayLists { get; }
         public Dictionary<string, List<PlayListItem>> PlayListItems { get; }
-        public Dictionary<string, List<VideoInfo>> SearchList { get; }
+        public Dictionary<string, List<VideoInfo>> SearchList { get; private set; }
 
         public YouTubeListManagerCache()
         {
@@ -19,7 +19,10 @@ namespace YouTubeListAPI.Business
         public List<VideoInfo> GetSearchList(string title)
         {
             if (!SearchList.ContainsKey(title))
+            {
+                SearchList = new Dictionary<string, List<VideoInfo>>();
                 SearchList[title] = new List<VideoInfo>();
+            }
 
             return SearchList[title];
         }

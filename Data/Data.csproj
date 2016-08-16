@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Mapping\PlayListItemMap.cs" />
-    <Compile Include="Domain\Mapping\PrivacyStatus.cs" />
+    <Compile Include="Domain\PrivacyStatus.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Domain\PlayList.cs" />
     <Compile Include="Domain\PlayListItem.cs" />

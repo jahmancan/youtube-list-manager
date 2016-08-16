@@ -84,6 +84,7 @@
     <Compile Include="Extensions\TitleExtension.cs" />
     <Compile Include="Extensions\VideoExtension.cs" />
     <Compile Include="IYouTubeListManagerCache.cs" />
+    <Compile Include="Service\ServiceResponse.cs" />
     <Compile Include="Service\Response\IPlayListItemResponseService.cs" />
     <Compile Include="Service\Response\ISearchListResponseService.cs" />
     <Compile Include="Service\Response\ResponseEventArgs.cs" />
