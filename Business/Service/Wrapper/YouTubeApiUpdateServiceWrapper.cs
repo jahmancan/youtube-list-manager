@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Google.Apis.YouTube.v3.Data;
 using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Logger;
+
+using YouTubePlayListItem = Google.Apis.YouTube.v3.Data.PlaylistItem;
 
 namespace YouTubeListAPI.Business.Service.Wrapper
 {
@@ -34,19 +37,71 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         {
             foreach (var playListItem in playListItems)
             {
-                UpdateYouTubePlayListItem(playListItem);
+                InsertUpdateYouTubePlayListItem(playListItem);
 
                 OnPlayListItemUpdated(playList, playListItem);
             }
         }
 
-        private void UpdateYouTubePlayListItem(PlayListItem playListItem)
+        private void InsertUpdateYouTubePlayListItem(PlayListItem playListItem)
         {
-            var youTubePlayListItem = GetPlayListItem(playListItem.Hash);
+            PlaylistItem youTubePlayListItem = GetPlayListItem(playListItem.Hash);
+            if (youTubePlayListItem == null)
+            {
+                InsertPlaylistItem(playListItem);
+            }
+            else
+            {
+                UpdatePlaylistItem(youTubePlayListItem);
+            }
+
+            
+        }
+
+        private void InsertPlaylistItem(PlayListItem playListItem)
+        {
+            var youTubePlaylistItem = new YouTubePlayListItem
+            {
+                Snippet = new PlaylistItemSnippet
+                {
+                    PlaylistId = playListItem.PlayList.Hash,
+                    Position = playListItem.Position,
+                    Title = playListItem.VideoInfo.Title,
+                    Thumbnails = new ThumbnailDetails
+                    {
+                        Standard = new Thumbnail
+                        {
+                            Url = playListItem.VideoInfo.ThumbnailUrl
+                        },
+                        Default__ = new Thumbnail
+                        {
+                            Url = playListItem.VideoInfo.ThumbnailUrl
+                        }
+                    },
+                    ResourceId = new ResourceId
+                    {
+                        Kind = VideoInfo.VideoKind,
+                        VideoId = playListItem.VideoInfo.Hash
+                    }
+                }
+            };
 
             try
             {
-                var request = youTubeService.PlaylistItems.Update(youTubePlayListItem, "snippet, status, contentDetails");
+                var request = youTubeService.PlaylistItems.Insert(youTubePlaylistItem, "snippet");
+                request.ExecuteAsync(CancellationToken.None);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError("Your update playlist request could not been served!", exception);
+            }
+        }
+
+        private void UpdatePlaylistItem(YouTubePlayListItem playlistItem)
+        {
+            try
+            {
+                var request = youTubeService.PlaylistItems.Update(playlistItem, "snippet, status, contentDetails");
                 request.ExecuteAsync(CancellationToken.None);
             }
             catch (Exception exception)
@@ -61,8 +116,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             if (youTubePlaylist == null) return;
 
             youTubePlaylist.Snippet.Title = playList.Title;
-            youTubePlaylist.Status.PrivacyStatus =
-                Enum.GetName(typeof (PrivacyStatus), playList.PrivacyStatus).ToLower();
+            youTubePlaylist.Status.PrivacyStatus = Enum.GetName(typeof (PrivacyStatus), playList.PrivacyStatus).ToLower();
 
             try
             {

@@ -1,35 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
 using YouTubeListManager.Data.Domain;
 
 namespace YouTubeListAPI.Business
 {
     public class YouTubeListManagerCache : IYouTubeListManagerCache
     {
-        public List<PlayList> PlayLists { get; }
-        public Dictionary<string, List<PlayListItem>> PlayListItems { get; }
-        public Dictionary<string, List<VideoInfo>> SearchList { get; }
+        private const string playListCacheKey = "playlist";
 
-        public YouTubeListManagerCache()
+        public List<PlayList> GetPlayLists()
         {
-            PlayLists = new List<PlayList>();
-            PlayListItems = new Dictionary<string, List<PlayListItem>>();
-            SearchList = new Dictionary<string, List<VideoInfo>>();
+            return Get<PlayList>(playListCacheKey);
         }
 
-        public List<VideoInfo> GetSearchList(string title)
+        public List<T> Get<T>(string cacheKey) where T : class
         {
-            if (!SearchList.ContainsKey(title))
-                SearchList[title] = new List<VideoInfo>();
-
-            return SearchList[title];
+            var cachedItems = HttpRuntime.Cache[cacheKey] as List<T>;
+            if (cachedItems == null)
+            {
+                var items = new List<T>();
+                HttpRuntime.Cache.Insert(cacheKey, items, null, DateTime.Now.AddHours(1), TimeSpan.Zero);
+                return items;
+            }
+            return cachedItems;
         }
 
-        public List<PlayListItem> GetPlayListItems(string playListId)
+        public void AddPlayLists(IEnumerable<PlayList> playLists)
         {
-            if (!PlayListItems.ContainsKey(playListId))
-                PlayListItems[playListId] = new List<PlayListItem>();
+            Add(playListCacheKey, playLists);
+        }
 
-            return PlayListItems[playListId];
-        } 
+        public void Add<T>(string title, IEnumerable<T> items) where T : class
+        {
+            Get<T>(title).AddRange(items);
+        }
+
+        
     }
 }
