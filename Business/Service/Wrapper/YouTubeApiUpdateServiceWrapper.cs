@@ -45,17 +45,11 @@ namespace YouTubeListAPI.Business.Service.Wrapper
 
         private void InsertUpdateYouTubePlayListItem(PlayListItem playListItem)
         {
-            PlaylistItem youTubePlayListItem = GetPlayListItem(playListItem.Hash);
+            YouTubePlayListItem youTubePlayListItem = GetPlayListItem(playListItem.Hash);
             if (youTubePlayListItem == null)
-            {
                 InsertPlaylistItem(playListItem);
-            }
             else
-            {
                 UpdatePlaylistItem(youTubePlayListItem);
-            }
-
-            
         }
 
         private void InsertPlaylistItem(PlayListItem playListItem)
