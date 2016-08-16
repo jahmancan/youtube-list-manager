@@ -13,7 +13,7 @@ namespace YouTubeListManager.Common.Bootstraper
         {
             container.RegisterType(typeof(IRepository<>), typeof(Repository<>));
             container.RegisterType<IRepositoryStore, RepositoryStore>();
-            container.RegisterType<IYouTubeListManagerCache, YouTubeListManagerCache>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IYouTubeListManagerCache, YouTubeListManagerCache>();
             container.RegisterType<IPlaylistResponseService, PlaylistResponseService>();
             container.RegisterType<IPlaylistItemResponseService, PlaylistItemResponseService>();
             container.RegisterType<ISearchListResponseService, SearchListResponseService>();
