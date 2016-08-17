@@ -114,7 +114,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
 
             try
             {
-                var request = youTubeService.Playlists.Update(youTubePlaylist, "snippet, status, contentDetails");
+                var request = YouTubeService.Playlists.Update(youTubePlaylist, "snippet, status");
                 request.ExecuteAsync(CancellationToken.None);
 
                 OnPlaylistUpdated(playList);

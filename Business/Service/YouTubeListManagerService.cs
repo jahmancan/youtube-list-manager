@@ -90,9 +90,9 @@ namespace YouTubeListAPI.Business.Service
 
         private static bool IsPlaylistItemStillValid(PlaylistItemSnippet snippet)
         {
-            return snippet.Title != VideoInfo.DeleteVideoTitle 
+            return snippet.Title != VideoInfo.DeleteVideoTitle
                 && snippet.Title != VideoInfo.PrivateVideoTitle
-                && snippet.Description != VideoInfo.UnavailableVideoDescription 
+                && snippet.Description != VideoInfo.UnavailableVideoDescription
                 && snippet.Description != VideoInfo.PrivateVideoDescription;
         }
 
@@ -117,6 +117,8 @@ namespace YouTubeListAPI.Business.Service
                 {
                     Hash = playList.Id,
                     Title = playList.Snippet.Title,
+                    ItemCount = playList.ContentDetails.ItemCount,
+                    ThumbnailUrl = playList.Snippet.Thumbnails.GetThumbnailUrl(),
                     PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), playList.Status.PrivacyStatus, true),
                     PlayListItems = withPlayListItems ? GetPlayListItems(string.Empty, playList.Id).Response.ToList() : new List<PlayListItem>()
                 }).ToList();
@@ -129,7 +131,6 @@ namespace YouTubeListAPI.Business.Service
 
         public ServiceResponse<List<VideoInfo>> ShowSuggestions(string requestToken, string title)
         {
-            youTubeApiListServiceWrapper.ExecuteAsyncRequestSearch(requestToken, title);
             Task<SearchListResponse> taskResponse = searchListResponseService.GetResponse(requestToken, title);
 
             var uniqueHashes = youTubeListManagerCache.Get<VideoInfo>(title).Select(t => t.Hash).Distinct();
@@ -181,10 +182,10 @@ namespace YouTubeListAPI.Business.Service
             foundPlayList.Hash = playList.Hash;
             foundPlayList.Title = playList.Title;
             foundPlayList.PrivacyStatus = playList.PrivacyStatus;
+            foundPlayList.ThumbnailUrl = playList.ThumbnailUrl;
             foundPlayList.UserId = playList.UserId;
             repositoryStore.SaveChanges();
 
-            //todo: check reload
             youTubeApiUpdateServiceWrapper.UpdatePlaylistItems(foundPlayList, playList.PlayListItems);
         }
 
@@ -192,13 +193,14 @@ namespace YouTubeListAPI.Business.Service
         {
             InsertUpdatePlayListItem(eventArgs.PlayList, eventArgs.PlayListItem);
 
-            InsertUpdateVideoInfo(eventArgs.PlayListItem.VideoInfo);    
+            InsertUpdateVideoInfo(eventArgs.PlayListItem.VideoInfo);
         }
 
         private void InsertUpdatePlayListItem(PlayList playList, PlayListItem playListItem)
         {
-            var foundPlayListItem =
-                repositoryStore.PlayListItemRepository.FindBy(pli => pli.Hash == playListItem.Hash).FirstOrDefault();
+            InsertUpdateVideoInfo(playListItem.VideoInfo);
+
+            var foundPlayListItem = repositoryStore.PlayListItemRepository.FindBy(pli => pli.Hash == playListItem.Hash).FirstOrDefault();
             if (foundPlayListItem == null)
             {
                 foundPlayListItem = repositoryStore.PlayListItemRepository.Create();
@@ -208,12 +210,10 @@ namespace YouTubeListAPI.Business.Service
             foundPlayListItem.Hash = playListItem.Hash;
             foundPlayListItem.Position = playListItem.Position;
 
-            foundPlayListItem.VideoInfo =
-                repositoryStore.VideoInfoRepository.FindBy(vi => vi.Hash == playListItem.VideoInfo.Hash).First();
+            foundPlayListItem.VideoInfo = repositoryStore.VideoInfoRepository.FindBy(vi => vi.Hash == playListItem.VideoInfo.Hash).First();
             foundPlayListItem.VideoInfoId = foundPlayListItem.VideoInfo.Id;
 
-            foundPlayListItem.PlayList =
-                repositoryStore.PlayListRepository.FindBy(pl => pl.Hash == playList.Hash).First();
+            foundPlayListItem.PlayList = repositoryStore.PlayListRepository.FindBy(pl => pl.Hash == playList.Hash).First();
             foundPlayListItem.PlayListId = foundPlayListItem.PlayList.Id;
 
             repositoryStore.SaveChanges();
@@ -221,9 +221,7 @@ namespace YouTubeListAPI.Business.Service
 
         private void InsertUpdateVideoInfo(VideoInfo videoInfo)
         {
-            var foundVideoInfo =
-                    repositoryStore.VideoInfoRepository.FindBy(vi => vi.Hash == videoInfo.Hash)
-                        .FirstOrDefault();
+            var foundVideoInfo = repositoryStore.VideoInfoRepository.FindBy(vi => vi.Hash == videoInfo.Hash).FirstOrDefault();
 
             if (foundVideoInfo == null)
             {

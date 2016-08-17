@@ -14,7 +14,10 @@ namespace YouTubeListManager.Data.Domain.Mapping
             Property(t => t.Hash);
             Property(t => t.Title).HasMaxLength(255);
             Property(t => t.UserId);
+            Property(t => t.ThumbnailUrl);
             Property(t => t.PrivacyStatus);
+
+            Ignore(t => t.ItemCount);
 
             HasOptional(t => t.User).WithMany(t => t.PlayLists).HasForeignKey(t => t.UserId);
             HasMany(t => t.PlayListItems).WithRequired(t => t.PlayList);

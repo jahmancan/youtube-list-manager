@@ -13,12 +13,19 @@ namespace YouTubeListAPI.Business.Service.Response
 
         public Task<PlaylistListResponse> GetResponse(string requestToken, string playListId)
         {
-            if (string.IsNullOrEmpty(playListId))
-                youTubeApiListServiceWrapper.ExcuteAsyncRequestPlayLists(requestToken);
-            else
-                youTubeApiListServiceWrapper.ExecuteAsyncRequestPlayList(requestToken, playListId);
+            try
+            {
+                if (string.IsNullOrEmpty(playListId))
+                    youTubeApiListServiceWrapper.ExcuteAsyncRequestPlayLists(requestToken);
+                else
+                    youTubeApiListServiceWrapper.ExecuteAsyncRequestPlayList(requestToken, playListId);
 
-            return response;
+                return response;
+            }
+            finally
+            {
+                youTubeApiListServiceWrapper.PlaylistFetched -= PlayListFetched;
+            }
         }
 
         private void PlayListFetched(object sender, ResponseEventArgs<PlaylistListResponse> eventArgs)

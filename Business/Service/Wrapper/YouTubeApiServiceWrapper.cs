@@ -32,7 +32,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
 
         public virtual Video GetVideo(string hash)
         {
-            var request = youTubeService.Videos.List("contentDetails, snippet, status");
+            var request = YouTubeService.Videos.List("contentDetails, snippet, status");
             request.Id = hash;
 
             try
@@ -54,7 +54,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
 
         public virtual PlaylistItem GetPlayListItem(string hash)
         {
-            PlaylistItemsResource.ListRequest request = youTubeService.PlaylistItems.List("snippet, contentDetails, status");
+            PlaylistItemsResource.ListRequest request = YouTubeService.PlaylistItems.List("snippet, contentDetails, status");
             request.Id = hash;
             try
             {
@@ -75,7 +75,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
 
         public virtual Playlist GetYouTubePlayList(string hash)
         {
-            var request = youTubeService.Playlists.List("snippet, contentDetails, status");
+            var request = YouTubeService.Playlists.List("snippet, contentDetails, status");
             request.Id = hash;
             try
             {

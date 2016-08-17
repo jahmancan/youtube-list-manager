@@ -20,7 +20,7 @@ namespace YouTubeListAPI.Business
             if (cachedItems == null)
             {
                 var items = new List<T>();
-                HttpRuntime.Cache.Insert(cacheKey, items, null, DateTime.Now.AddHours(1), TimeSpan.Zero);
+                HttpRuntime.Cache.Insert(cacheKey, items, null, DateTime.Now.AddMinutes(2), TimeSpan.Zero);
                 return items;
             }
             return cachedItems;
@@ -35,7 +35,5 @@ namespace YouTubeListAPI.Business
         {
             Get<T>(title).AddRange(items);
         }
-
-        
     }
 }
