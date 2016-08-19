@@ -2,9 +2,8 @@
 
 namespace YouTubeListManager.Test.Common.TestDomain
 {
-    public class VideoInfoTestObject : VideoInfo, ITestThumbnailObject
+    public class PlayListTestObject : PlayList, ITestThumbnailObject
     {
         public ThumbnailDetailsType ThumbnailDetailsType { get; set; }
-        public string Description { get; set; }
     }
 }

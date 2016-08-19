@@ -11,7 +11,7 @@ namespace YouTubeListManager.Test.Common.Helpers
 {
     public static class YouTubeDataTestHelper
     {
-        public static PlaylistListResponse CreatePlayListResponse(List<PlayList> playLists)
+        public static PlaylistListResponse CreatePlayListResponse(List<PlayListTestObject> playLists)
         {
             var playLisyListResponse = new PlaylistListResponse
             {
@@ -30,14 +30,15 @@ namespace YouTubeListManager.Test.Common.Helpers
             return playlistItemListResponse;
         }
 
-        public static YouTubePlayList CreatePlayList(PlayList playList)
+        public static YouTubePlayList CreatePlayList(PlayListTestObject playList)
         {
             return new YouTubePlayList
             {
                 Id = playList.Hash,
                 Status =
                     new PlaylistStatus {PrivacyStatus = Enum.GetName(typeof (PrivacyStatus), playList.PrivacyStatus)},
-                Snippet = new PlaylistSnippet {Title = playList.Title}
+                Snippet = new PlaylistSnippet {Title = playList.Title, Thumbnails = CreateThumbnailDetails(playList)},
+                ContentDetails = new PlaylistContentDetails { ItemCount = 2}
             };
         }
 
@@ -93,16 +94,16 @@ namespace YouTubeListManager.Test.Common.Helpers
             return string.Format("PT{0}M{1}S", duration.Minutes, duration.Seconds);
         }
 
-        private static ThumbnailDetails CreateThumbnailDetails(VideoInfoTestObject videoInfo)
+        private static ThumbnailDetails CreateThumbnailDetails<TTestObject>(TTestObject thumbnailObject) where TTestObject : ITestThumbnailObject
         {
             var thumbnailDetails = new ThumbnailDetails();
-            switch (videoInfo.ThumbnailDetailsType)
+            switch (thumbnailObject.ThumbnailDetailsType)
             {
                 case ThumbnailDetailsType.Default:
-                    thumbnailDetails.Default__ = new Thumbnail {Url = videoInfo.ThumbnailUrl};
+                    thumbnailDetails.Default__ = new Thumbnail {Url = thumbnailObject.ThumbnailUrl};
                     break;
                 case ThumbnailDetailsType.Standard:
-                    thumbnailDetails.Standard = new Thumbnail {Url = videoInfo.ThumbnailUrl};
+                    thumbnailDetails.Standard = new Thumbnail {Url = thumbnailObject.ThumbnailUrl};
                     break;
                 default:
                     thumbnailDetails = null;

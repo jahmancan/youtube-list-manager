@@ -26,15 +26,17 @@ namespace YouTubeListManager.Test
         [TestMethod]
         public void TestListOneSpecificPlayList()
         {
-            var dummyPlayList = new PlayList
+            var dummyPlayList = new PlayListTestObject
             {
                 Id = 1,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1),
                 Title = "Test",
-                PrivacyStatus = PrivacyStatus.Private
+                PrivacyStatus = PrivacyStatus.Private,
+                ThumbnailUrl = "dummyUrl2",
+                ThumbnailDetailsType = ThumbnailDetailsType.Standard,
             };
 
-            var response = YouTubeDataTestHelper.CreatePlayListResponse(new List<PlayList> {dummyPlayList});
+            var response = YouTubeDataTestHelper.CreatePlayListResponse(new List<PlayListTestObject> {dummyPlayList});
             var task = Task.FromResult(response);
 
             var serviceWrapperListMock = new Mock<IYouTubeApiListServiceWrapper>();
@@ -57,32 +59,38 @@ namespace YouTubeListManager.Test
         [TestMethod]
         public void TestReturnNewPlayListsOnly()
         {
-            var dummyPlayList1 = new PlayList
+            var dummyPlayList1 = new PlayListTestObject
             {
                 Id = 1,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1),
                 Title = "Test",
-                PrivacyStatus = PrivacyStatus.Private
+                PrivacyStatus = PrivacyStatus.Private,
+                ThumbnailUrl = "dummyUrl1",
+                ThumbnailDetailsType = ThumbnailDetailsType.Standard,
             };
 
-            var dummyPlayList2 = new PlayList
+            var dummyPlayList2 = new PlayListTestObject
             {
                 Id = 2,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(2),
                 Title = "Test",
-                PrivacyStatus = PrivacyStatus.Private
+                PrivacyStatus = PrivacyStatus.Private,
+                ThumbnailUrl = "dummyUrl2",
+                ThumbnailDetailsType = ThumbnailDetailsType.Standard,
             };
 
-            var dummyPlayListExisting = new PlayList
+            var dummyPlayListExisting = new PlayListTestObject
             {
                 Id = 3,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(3),
                 Title = "Test",
-                PrivacyStatus = PrivacyStatus.Private
+                PrivacyStatus = PrivacyStatus.Private,
+                ThumbnailUrl = "dummyUrl3",
+                ThumbnailDetailsType = ThumbnailDetailsType.Standard,
             };
 
             var response =
-                YouTubeDataTestHelper.CreatePlayListResponse(new List<PlayList>
+                YouTubeDataTestHelper.CreatePlayListResponse(new List<PlayListTestObject>
                 {
                     dummyPlayList1,
                     dummyPlayList2,
@@ -144,12 +152,14 @@ namespace YouTubeListManager.Test
             var videoStore = new List<VideoInfoTestObject> {dummyVideo1, dummyVideo2};
 
             string expectedHash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1);
-            var dummyPlayList = new PlayList
+            var dummyPlayList = new PlayListTestObject
             {
                 Id = 1,
                 Hash = expectedHash,
                 Title = "Test",
-                PrivacyStatus = PrivacyStatus.Private
+                PrivacyStatus = PrivacyStatus.Private,
+                ThumbnailUrl = "dummyUrl",
+                ThumbnailDetailsType = ThumbnailDetailsType.Standard
             };
 
             var dummyPlayListItem1 = new PlaylistItemTestObject
@@ -174,7 +184,7 @@ namespace YouTubeListManager.Test
                 VideoInfo = dummyVideo2
             };
 
-            var response = YouTubeDataTestHelper.CreatePlayListResponse(new List<PlayList> { dummyPlayList });
+            var response = YouTubeDataTestHelper.CreatePlayListResponse(new List<PlayListTestObject> { dummyPlayList });
             var task = Task.FromResult(response);
 
             var serviceWrapperListMock = new Mock<IYouTubeApiListServiceWrapper>();
@@ -264,12 +274,13 @@ namespace YouTubeListManager.Test
             var videoStore = new List<VideoInfoTestObject> { dummyVideo1, dummyVideo2, dummyVideo3 };
 
             var expectedHash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1);
-            var dummyPlayList = new PlayList
+            var dummyPlayList = new PlayListTestObject
             {
                 Id = 1,
                 Hash = expectedHash,
                 Title = "Test",
                 PrivacyStatus = PrivacyStatus.Private
+                
             };
 
             var dummyPlayListItem1 = new PlaylistItemTestObject
@@ -311,7 +322,7 @@ namespace YouTubeListManager.Test
                 Description = VideoInfo.PrivateVideoDescription
             };
 
-            var response = YouTubeDataTestHelper.CreatePlayListResponse(new List<PlayList> { dummyPlayList });
+            var response = YouTubeDataTestHelper.CreatePlayListResponse(new List<PlayListTestObject> { dummyPlayList });
             var task = Task.FromResult(response);
 
             var serviceWrapperListMock = new Mock<IYouTubeApiListServiceWrapper>();
