@@ -28,7 +28,7 @@ namespace YouTubeListManager.Controllers.Api
         }
 
         //todo: implement save
-        public ActionResult SavePlayList()
+        public ActionResult Save(PlayList playList)
         {
             return new BadRequest();
         }

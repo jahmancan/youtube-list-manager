@@ -1,0 +1,19 @@
+﻿<div class="module-wrapper" data-ng-controller="playListController">
+    <div class="header">
+        <h2>PlayLists <span class="count">{{model.length}}</span></h2>
+    </div>
+    <div class="container playlist-container">
+        <ul class="item-list">
+            <li class="item" data-ng-repeat="playlist in model">
+                <div class="item-wrapper">
+                    <div data-ng-click="selectPlaylist(playlist.Hash)" class="image" style="background: url('{{playlist.ThumbnailUrl}}') center no-repeat">
+                        <div class="extra-info">playlist.ItemCount</div>
+                        <div class="item-footer">
+                            <div class="title">{{playlist.Title}}</div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

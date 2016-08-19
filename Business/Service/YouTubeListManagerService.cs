@@ -96,11 +96,13 @@ namespace YouTubeListAPI.Business.Service
                 && snippet.Description != VideoInfo.PrivateVideoDescription;
         }
 
+        //todo: refactor this >> return service response
         public PlayList GetPlayList(string playListId)
         {
             return GetPlayLists(string.Empty, true, playListId).Response.FirstOrDefault();
         }
 
+        //todo: refactor service response
         public ServiceResponse<List<PlayList>> GetPlaylists(string requestToken)
         {
             return GetPlayLists(requestToken, false, string.Empty);
@@ -120,6 +122,7 @@ namespace YouTubeListAPI.Business.Service
                     ItemCount = playList.ContentDetails.ItemCount,
                     ThumbnailUrl = playList.Snippet.Thumbnails.GetThumbnailUrl(),
                     PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), playList.Status.PrivacyStatus, true),
+                    //todo: fix this...
                     PlayListItems = withPlayListItems ? GetPlayListItems(string.Empty, playList.Id).Response.ToList() : new List<PlayListItem>()
                 }).ToList();
             youTubeListManagerCache.AddPlayLists(currentPlayLists);
