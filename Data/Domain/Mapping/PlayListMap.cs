@@ -18,6 +18,7 @@ namespace YouTubeListManager.Data.Domain.Mapping
             Property(t => t.PrivacyStatus);
 
             Ignore(t => t.ItemCount);
+            Ignore(t => t.PlayListItemsNextPageToken);
 
             HasOptional(t => t.User).WithMany(t => t.PlayLists).HasForeignKey(t => t.UserId);
             HasMany(t => t.PlayListItems).WithRequired(t => t.PlayList);

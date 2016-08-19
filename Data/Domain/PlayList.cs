@@ -16,6 +16,7 @@ namespace YouTubeListManager.Data.Domain
         public PrivacyStatus PrivacyStatus { get; set; }
         public string ThumbnailUrl { get; set; }
         public long? ItemCount { get; set; }
+        public string PlayListItemsNextPageToken { get; set; }
 
 
         public int? UserId { get; set; }

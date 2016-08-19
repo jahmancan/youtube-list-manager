@@ -9,6 +9,8 @@ using YouTubeListAPI.Business.Service.Wrapper;
 using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Data.Repository;
 
+using YouTubePlayList = Google.Apis.YouTube.v3.Data.Playlist;
+
 namespace YouTubeListAPI.Business.Service
 {
     public class YouTubeListManagerManagerService : IYouTubeListManagerService
@@ -96,13 +98,11 @@ namespace YouTubeListAPI.Business.Service
                 && snippet.Description != VideoInfo.PrivateVideoDescription;
         }
 
-        //todo: refactor this >> return service response
         public PlayList GetPlayList(string playListId)
         {
             return GetPlayLists(string.Empty, true, playListId).Response.FirstOrDefault();
         }
 
-        //todo: refactor service response
         public ServiceResponse<List<PlayList>> GetPlaylists(string requestToken)
         {
             return GetPlayLists(requestToken, false, string.Empty);
@@ -115,21 +115,38 @@ namespace YouTubeListAPI.Business.Service
             var playListIds = youTubeListManagerCache.GetPlayLists().Select(pl => pl.Hash).Distinct();
             var currentPlayLists = taskResponse.Result.Items
                 .Where(i => !playListIds.Contains(i.Id))
-                .Select(playList => new PlayList
-                {
-                    Hash = playList.Id,
-                    Title = playList.Snippet.Title,
-                    ItemCount = playList.ContentDetails.ItemCount,
-                    ThumbnailUrl = playList.Snippet.Thumbnails.GetThumbnailUrl(),
-                    PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), playList.Status.PrivacyStatus, true),
-                    //todo: fix this...
-                    PlayListItems = withPlayListItems ? GetPlayListItems(string.Empty, playList.Id).Response.ToList() : new List<PlayListItem>()
-                }).ToList();
+                .Select(playList => CreatePlayList(playList, withPlayListItems)).ToList();
             youTubeListManagerCache.AddPlayLists(currentPlayLists);
 
             var serviceResponse = new ServiceResponse<List<PlayList>>(taskResponse.Result.NextPageToken, currentPlayLists);
 
             return serviceResponse;
+        }
+
+        private PlayList CreatePlayList(YouTubePlayList youTubePlayList, bool withPlayListItems)
+        {
+            string innerNextPageToken = string.Empty;
+            var playListItems = new List<PlayListItem>();
+
+            if (withPlayListItems)
+            {
+                ServiceResponse<List<PlayListItem>> playListItemResponse = GetPlayListItems(innerNextPageToken, youTubePlayList.Id);
+                innerNextPageToken = playListItemResponse.NextPageToken;
+                playListItems = playListItemResponse.Response;
+            }
+
+            var playList = new PlayList
+            {
+                Hash = youTubePlayList.Id,
+                Title = youTubePlayList.Snippet.Title,
+                ItemCount = youTubePlayList.ContentDetails.ItemCount,
+                ThumbnailUrl = youTubePlayList.Snippet.Thumbnails.GetThumbnailUrl(),
+                PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), youTubePlayList.Status.PrivacyStatus, true),
+                PlayListItems = playListItems,
+                PlayListItemsNextPageToken = innerNextPageToken
+            };
+
+            return playList;
         }
 
         public ServiceResponse<List<VideoInfo>> ShowSuggestions(string requestToken, string title)
