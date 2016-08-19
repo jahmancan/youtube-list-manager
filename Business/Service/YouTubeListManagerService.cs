@@ -118,6 +118,9 @@ namespace YouTubeListAPI.Business.Service
                 .Select(playList => CreatePlayList(playList, withPlayListItems)).ToList();
             youTubeListManagerCache.AddPlayLists(currentPlayLists);
 
+            if (string.IsNullOrEmpty(requestToken) && !currentPlayLists.Any())
+                currentPlayLists = youTubeListManagerCache.GetPlayLists();
+
             var serviceResponse = new ServiceResponse<List<PlayList>>(taskResponse.Result.NextPageToken, currentPlayLists);
 
             return serviceResponse;

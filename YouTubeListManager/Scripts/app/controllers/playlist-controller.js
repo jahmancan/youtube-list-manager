@@ -18,7 +18,7 @@
                     if (playlists.length > 0)
                         $scope.model = $scope.model.concat(playlists);
 
-                    if (nextPageToken === "") {
+                    if (nextPageToken !== null) {
                         youTubeListManagerDataService.getAllPlaylists(nextPageToken).then(function (response) {
                             getPlayListItemsAsync(response);
                         });
