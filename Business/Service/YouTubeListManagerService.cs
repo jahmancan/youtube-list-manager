@@ -75,19 +75,39 @@ namespace YouTubeListAPI.Business.Service
 
         private List<PlayListItem> SynchronizeItems(IEnumerable<PlayListItem> playListItems)
         {
-            var unavailableVideoItems = playListItems.Where(i => !i.VideoInfo.Live).Select(i => i.VideoInfo.Hash);
+            var unavailableVideoHashList = playListItems.Where(i => !i.VideoInfo.Live).Select(i => i.VideoInfo.Hash);
 
-            if (!unavailableVideoItems.Any())
+            if (!unavailableVideoHashList.Any())
                 return playListItems.ToList();
 
-            var playListDictionary = playListItems.Select(i => new KeyValuePair<string, PlayListItem>(i.VideoInfo.Hash, i))
+            var foundVideoList = repositoryStore.VideoInfoRepository.FindBy(v => unavailableVideoHashList.Contains(v.Hash));
+            if (!foundVideoList.Any())
+                return GetCleanPlaylist(playListItems);
+
+            Dictionary<string, PlayListItem> playListDictionary = playListItems.Select(i => new KeyValuePair<string, PlayListItem>(i.VideoInfo.Hash, i))
                 .ToDictionary(i => i.Key, i => i.Value);
-            var foundVideoList = repositoryStore.VideoInfoRepository.FindBy(v => unavailableVideoItems.Contains(v.Hash));
 
             foreach (VideoInfo video in foundVideoList)
                 playListDictionary[video.Hash].VideoInfo.Title = video.Title;
 
             return playListDictionary.Select(d => d.Value).ToList();
+        }
+
+        private List<PlayListItem> GetCleanPlaylist(IEnumerable<PlayListItem> playListItems)
+        {
+            int indexReduction = 0;
+            var cleanedPlayListItems = new List<PlayListItem>();
+            foreach (var playListItem in playListItems)
+            {
+                if (!playListItem.VideoInfo.Live)
+                    indexReduction++;
+                else
+                {
+                    playListItem.Position -= indexReduction;
+                    cleanedPlayListItems.Add(playListItem);
+                }
+            }
+            return cleanedPlayListItems;
         }
 
         private static bool IsPlaylistItemStillValid(PlaylistItemSnippet snippet)
@@ -147,6 +167,7 @@ namespace YouTubeListAPI.Business.Service
                 ThumbnailUrl = youTubePlayList.Snippet.Thumbnails.GetThumbnailUrl(),
                 PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), youTubePlayList.Status.PrivacyStatus, true)
             };
+
             if (withPlayListItems)
                 PopulatePlayListWithPlayListItems(playList);
 

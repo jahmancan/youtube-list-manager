@@ -87,6 +87,19 @@ namespace YouTubeListManager.Test.Common.Helpers
             };
         }
 
+        public static VideoInfo CreateVideoInfo(this VideoInfoTestObject videoInfo)
+        {
+            return new VideoInfo
+            {
+                Hash = videoInfo.Hash,
+                ThumbnailUrl = videoInfo.ThumbnailUrl,
+                PrivacyStatus = videoInfo.PrivacyStatus,
+                Title = videoInfo.Title,
+                Duration = videoInfo.Duration,
+                Live = videoInfo.Live
+            };
+        }
+
 
         public static string CreateDuration(VideoInfo videoInfo)
         {

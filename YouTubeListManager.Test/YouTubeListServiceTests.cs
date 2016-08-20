@@ -292,6 +292,138 @@ namespace YouTubeListManager.Test
                 PlayList = dummyPlayList,
                 VideoInfoId = 1,
                 VideoInfo = dummyVideo1,
+                Title = "dummyTitle1",
+                Description = VideoInfo.PrivateVideoDescription
+            };
+
+            var dummyPlayListItem2 = new PlaylistItemTestObject
+            {
+                Id = 2,
+                Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(2),
+                Position = 2,
+                PlayListId = 1,
+                PlayList = dummyPlayList,
+                VideoInfoId = 2,
+                VideoInfo = dummyVideo2,
+                Description = "dummyDescription2",
+                Title = VideoInfo.PrivateVideoTitle
+            };
+
+            var dummyPlayListItem3 = new PlaylistItemTestObject
+            {
+                Id = 3,
+                Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(3),
+                Position = 3,
+                PlayListId = 1,
+                PlayList = dummyPlayList,
+                VideoInfoId = 3,
+                VideoInfo = dummyVideo3,
+                Description = "dummyDescription3",
+                Title = "dummyTitle3"
+            };
+
+            var response = YouTubeDataTestHelper.CreatePlayListResponse(new List<PlayListTestObject> { dummyPlayList });
+            var task = Task.FromResult(response);
+
+            var serviceWrapperListMock = new Mock<IYouTubeApiListServiceWrapper>();
+            serviceWrapperListMock.Setup(m => m.GetVideo(It.Is<string>(s => s == dummyVideo3.Hash)))
+                .Returns(YouTubeDataTestHelper.CreateVideo(videoStore.FirstOrDefault(v => v.Hash == dummyVideo3.Hash)));
+            container.RegisterInstance(serviceWrapperListMock.Object);
+
+            var playlistResponseServiceMock = new Mock<IPlaylistResponseService>();
+            playlistResponseServiceMock.Setup(m => m.GetResponse(It.IsAny<string>(), It.IsAny<string>())).Returns(task);
+            container.RegisterInstance(playlistResponseServiceMock.Object);
+
+            var playlistItemListResponse =
+                YouTubeDataTestHelper.CreatePlaylistItemListResponse(new List<PlaylistItemTestObject>
+                {
+                    dummyPlayListItem1,
+                    dummyPlayListItem2,
+                    dummyPlayListItem3
+                });
+            var playlistItemListTaskResponse = Task.FromResult(playlistItemListResponse);
+            var playlistItemResponseServiceMock = new Mock<IPlaylistItemResponseService>();
+            playlistItemResponseServiceMock.Setup(m => m.GetResponse(string.Empty, expectedHash)).Returns(playlistItemListTaskResponse);
+            container.RegisterInstance(playlistItemResponseServiceMock.Object);
+
+            context = container.Resolve<IYouTubeListManagerService>();
+
+            var playList = context.GetPlayList(expectedHash);
+
+            Assert.IsNotNull(playList);
+            Assert.AreEqual(dummyPlayList.Hash, playList.Hash);
+            Assert.AreEqual(dummyPlayList.PrivacyStatus, playList.PrivacyStatus);
+            Assert.AreEqual(1, playList.PlayListItems.Count);
+
+            var foundPlayListItem = playList.PlayListItems.FirstOrDefault(i => i.Hash == dummyPlayListItem3.Hash);
+            Assert.IsNotNull(foundPlayListItem);
+            Assert.AreEqual(1, foundPlayListItem.Position);
+            Assert.IsNotNull(foundPlayListItem.VideoInfo);
+            Assert.AreEqual(dummyVideo3.Title, foundPlayListItem.VideoInfo.Title);
+            Assert.AreEqual(dummyVideo3.Duration, foundPlayListItem.VideoInfo.Duration);
+        }
+
+        [TestMethod]
+        public void TestReturnPlayListWithItemsOnlyWithValidTitleOrDescriptionIfTheyAreInDb()
+        {
+            var dummyVideo1 = new VideoInfoTestObject
+            {
+                Id = 1,
+                Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1),
+                Duration = 300,
+                Live = true,
+                PrivacyStatus = PrivacyStatus.Public,
+                ThumbnailUrl = "dummyUrl1",
+                Title = "dummyTitle1",
+                ThumbnailDetailsType = ThumbnailDetailsType.Standard,
+            };
+
+            var dummyVideo2 = new VideoInfoTestObject
+            {
+                Id = 2,
+                Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(2),
+                Duration = 246,
+                Live = true,
+                PrivacyStatus = PrivacyStatus.Private,
+                ThumbnailUrl = "dummyUrl2",
+                Title = VideoInfo.PrivateVideoTitle,
+                ThumbnailDetailsType = ThumbnailDetailsType.Standard,
+            };
+
+            var dummyVideo3 = new VideoInfoTestObject
+            {
+                Id = 3,
+                Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(3),
+                Duration = 189,
+                Live = true,
+                PrivacyStatus = PrivacyStatus.Public,
+                ThumbnailUrl = "dummyUrl3",
+                Title = "dummyTitle3",
+                Description = VideoInfo.PrivateVideoDescription,
+                ThumbnailDetailsType = ThumbnailDetailsType.Standard,
+            };
+
+            var videoStore = new List<VideoInfoTestObject> { dummyVideo1, dummyVideo2, dummyVideo3 };
+
+            var expectedHash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1);
+            var dummyPlayList = new PlayListTestObject
+            {
+                Id = 1,
+                Hash = expectedHash,
+                Title = "Test",
+                PrivacyStatus = PrivacyStatus.Private
+
+            };
+
+            var dummyPlayListItem1 = new PlaylistItemTestObject
+            {
+                Id = 1,
+                Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1),
+                Position = 1,
+                PlayListId = 1,
+                PlayList = dummyPlayList,
+                VideoInfoId = 1,
+                VideoInfo = dummyVideo1,
                 Description = "dummyDescription1",
                 Title = "dummyTitle1"
             };
@@ -346,6 +478,12 @@ namespace YouTubeListManager.Test
             playlistItemResponseServiceMock.Setup(m => m.GetResponse(string.Empty, expectedHash)).Returns(playlistItemListTaskResponse);
             container.RegisterInstance(playlistItemResponseServiceMock.Object);
 
+            var repositoryStore = container.Resolve<IRepositoryStore>();
+            repositoryStore.VideoInfoRepository.Insert(dummyVideo1.CreateVideoInfo());
+            repositoryStore.VideoInfoRepository.Insert(dummyVideo2.CreateVideoInfo());
+            repositoryStore.VideoInfoRepository.Insert(dummyVideo3.CreateVideoInfo());
+            repositoryStore.SaveChanges();
+
             context = container.Resolve<IYouTubeListManagerService>();
 
             var playList = context.GetPlayList(expectedHash);
@@ -366,6 +504,17 @@ namespace YouTubeListManager.Test
 
             foundPlayListItem = playList.PlayListItems.FirstOrDefault(i => i.Hash == dummyPlayListItem3.Hash);
             Assert.IsFalse(foundPlayListItem.VideoInfo.Live);
+
+            var foundVideo = repositoryStore.VideoInfoRepository.FindBy(v => v.Hash == dummyVideo1.Hash).FirstOrDefault();
+            repositoryStore.VideoInfoRepository.Delete(foundVideo);
+
+            foundVideo = repositoryStore.VideoInfoRepository.FindBy(v => v.Hash == dummyVideo2.Hash).FirstOrDefault();
+            repositoryStore.VideoInfoRepository.Delete(foundVideo);
+
+            foundVideo = repositoryStore.VideoInfoRepository.FindBy(v => v.Hash == dummyVideo3.Hash).FirstOrDefault();
+            repositoryStore.VideoInfoRepository.Delete(foundVideo);
+            repositoryStore.SaveChanges();
+
         }
 
         [TestMethod]
