@@ -1,6 +1,6 @@
 ﻿mainModule.controller('suggestionsController',
-    ['$rootScope', '$scope', '$location', '$routeParams', 'dragularService', 'youTubeListManagerDataService', 'suggestionsModel',
-    function ($rootScope, $scope, $location, $routeParams, dragularService, youTubeListManagerDataService, suggestionsModel) {
+    ['$rootScope', '$scope', '$location', '$routeParams', 'dragularService', 'youTubeListManagerDataService', 
+    function ($rootScope, $scope, $location, $routeParams, dragularService, youTubeListManagerDataService) {
 
         $scope.showSuggestions = function () {
             youTubeListManagerDataService.getSuggestions($scope.model.searchKey, $scope.model.nextPageSuggestionsToken).then(function (response) {
@@ -54,8 +54,12 @@
             $scope.showSuggestions();
         };
 
+        $scope.save = function() {
+            youTubeListManagerDataService.savePlaylist($scope.model.playlist);
+        };
+
         var init = function () {
-            $scope.model = suggestionsModel;
+            $scope.model = new suggestionsModel();
 
             youTubeListManagerDataService.getPlayList($routeParams.playListId).then(function (playListResponse) {
 

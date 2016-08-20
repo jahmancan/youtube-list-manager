@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListAPI.Business.Extensions;
 using YouTubeListAPI.Business.Service.Response;
@@ -99,8 +100,10 @@ namespace YouTubeListAPI.Business.Service
             var cleanedPlayListItems = new List<PlayListItem>();
             foreach (var playListItem in playListItems)
             {
-                if (!playListItem.VideoInfo.Live)
+                if (!playListItem.VideoInfo.Live) { 
                     indexReduction++;
+                    youTubeApiUpdateServiceWrapper.DeletePlaylistItem(playListItem.Hash);
+                }
                 else
                 {
                     playListItem.Position -= indexReduction;
@@ -139,7 +142,7 @@ namespace YouTubeListAPI.Business.Service
             youTubeListManagerCache.AddPlayLists(currentPlayLists);
 
             currentPlayLists = GetCachedIfNotAny(withPlayListItems, playListId, currentPlayLists);
-
+            
             return new ServiceResponse<List<PlayList>>(taskResponse.Result.NextPageToken, currentPlayLists);
         }
 
@@ -181,9 +184,9 @@ namespace YouTubeListAPI.Business.Service
             playList.PlayListItems = playListItemResponse.Response;
         }
 
-        public ServiceResponse<List<VideoInfo>> ShowSuggestions(string requestToken, string title)
+        public ServiceResponse<List<VideoInfo>> ShowSuggestions(string requestToken, string title, SearchResource.ListRequest.VideoDurationEnum videoDuration = default(SearchResource.ListRequest.VideoDurationEnum))
         {
-            Task<SearchListResponse> taskResponse = searchListResponseService.GetResponse(requestToken, title);
+            Task<SearchListResponse> taskResponse = searchListResponseService.GetResponse(requestToken, title, videoDuration);
 
             var uniqueHashes = youTubeListManagerCache.Get<VideoInfo>(title).Select(t => t.Hash).Distinct();
             var currentVideoItems = taskResponse.Result.Items

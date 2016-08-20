@@ -330,6 +330,9 @@ namespace YouTubeListManager.Test
                 .Returns(YouTubeDataTestHelper.CreateVideo(videoStore.FirstOrDefault(v => v.Hash == dummyVideo3.Hash)));
             container.RegisterInstance(serviceWrapperListMock.Object);
 
+            var updateServiceWrapperMock = new Mock<IYouTubeApiUpdateServiceWrapper>();
+            container.RegisterInstance(updateServiceWrapperMock.Object);
+            
             var playlistResponseServiceMock = new Mock<IPlaylistResponseService>();
             playlistResponseServiceMock.Setup(m => m.GetResponse(It.IsAny<string>(), It.IsAny<string>())).Returns(task);
             container.RegisterInstance(playlistResponseServiceMock.Object);

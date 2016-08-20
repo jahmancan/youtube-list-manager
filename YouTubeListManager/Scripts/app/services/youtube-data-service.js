@@ -26,9 +26,9 @@
                 return deferred.promise;
             },
 
-            updatePlaylist: function (playlist) {
+            savePlaylist: function (playlist) {
                 var deferred = $q.defer();
-                $http.post('/api/playlist/save', playlist).success(deferred.resolve).error(deferred.reject);
+                $http.post('/playlist/save', playlist).success(deferred.resolve).error(deferred.reject);
                 return deferred.promise;
             }
         }

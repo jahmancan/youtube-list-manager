@@ -1,20 +1,22 @@
-﻿mainModule.value('suggestionsModel',
-{
-    playlist: {
-        title: "",
-        privacy: "public",
-        hash: "",
-        thumbnailUrl: "",
-        itemCount: 0,
+﻿var suggestionsModel = (
+    function () {
+        function suggestionsModel() {
+            this.playlist = {
+                title: "",
+                privacy: "public",
+                hash: "",
+                thumbnailUrl: "",
+                itemCount: 0,
 
-        playListItems: []
-    },
+                playListItems: []
+            };
 
-    suggestions: [],
+            this.suggestions = [];
 
-    playListItemsFetched: false,
-    autoLoad: false,
+            this.playListItemsFetched = false;
+            this.autoLoad = false;
+            this.searchKey = "";
+        };
 
-    searchKey: ""
-        
-});
+        return suggestionsModel;
+})();

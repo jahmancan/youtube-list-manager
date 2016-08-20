@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListAPI.Business.Service.Wrapper;
 
@@ -12,11 +13,11 @@ namespace YouTubeListAPI.Business.Service.Response
             youTubeApiListServiceWrapper.SearchResultsFetched += SearchResultsFetched;
         }
 
-        public Task<SearchListResponse> GetResponse(string requestToken, string title)
+        public Task<SearchListResponse> GetResponse(string requestToken, string title, SearchResource.ListRequest.VideoDurationEnum videoDuration)
         {
             try
             {
-                youTubeApiListServiceWrapper.ExecuteAsyncRequestSearch(requestToken, title);
+                youTubeApiListServiceWrapper.ExecuteAsyncRequestSearch(requestToken, title, videoDuration);
                 return response;
             }
             finally

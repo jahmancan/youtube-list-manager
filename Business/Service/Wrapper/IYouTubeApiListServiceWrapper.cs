@@ -1,4 +1,5 @@
 ﻿using System;
+using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListAPI.Business.Service.Response;
 
@@ -13,6 +14,6 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         void ExecuteAsyncRequestPlayListItems(string requestToken, string playListId);
         void ExecuteAsyncRequestPlayList(string requestToken, string playListId);
         void ExcuteAsyncRequestPlayLists(string requestToken);
-        void ExecuteAsyncRequestSearch(string requestToken, string title);
+        void ExecuteAsyncRequestSearch(string requestToken, string title, SearchResource.ListRequest.VideoDurationEnum videoDuration);
     }
 }
