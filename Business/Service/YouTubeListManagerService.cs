@@ -112,44 +112,52 @@ namespace YouTubeListAPI.Business.Service
         {
             Task<PlaylistListResponse> taskResponse = playlistResponseService.GetResponse(requestToken, playListId);
 
-            var playListIds = youTubeListManagerCache.GetPlayLists().Select(pl => pl.Hash).Distinct();
+            var playListIds = youTubeListManagerCache.GetPlayLists(null).Select(pl => pl.Hash).Distinct();
             var currentPlayLists = taskResponse.Result.Items
                 .Where(i => !playListIds.Contains(i.Id))
                 .Select(playList => CreatePlayList(playList, withPlayListItems)).ToList();
             youTubeListManagerCache.AddPlayLists(currentPlayLists);
 
-            if (string.IsNullOrEmpty(requestToken) && !currentPlayLists.Any())
-                currentPlayLists = youTubeListManagerCache.GetPlayLists();
+            currentPlayLists = GetCachedIfNotAny(withPlayListItems, playListId, currentPlayLists);
 
-            var serviceResponse = new ServiceResponse<List<PlayList>>(taskResponse.Result.NextPageToken, currentPlayLists);
+            return new ServiceResponse<List<PlayList>>(taskResponse.Result.NextPageToken, currentPlayLists);
+        }
 
-            return serviceResponse;
+        private List<PlayList> GetCachedIfNotAny(bool withPlayListItems, string playListId, List<PlayList> currentPlayLists)
+        {
+            if (!currentPlayLists.Any())
+                if (withPlayListItems && !string.IsNullOrEmpty(playListId))
+                {
+                    currentPlayLists = youTubeListManagerCache.GetPlayLists(p => p.Hash == playListId);
+                    currentPlayLists.ForEach(PopulatePlayListWithPlayListItems);
+                }
+                else
+                    currentPlayLists = youTubeListManagerCache.GetPlayLists(null);
+
+            return currentPlayLists;
         }
 
         private PlayList CreatePlayList(YouTubePlayList youTubePlayList, bool withPlayListItems)
         {
-            string innerNextPageToken = string.Empty;
-            var playListItems = new List<PlayListItem>();
-
-            if (withPlayListItems)
-            {
-                ServiceResponse<List<PlayListItem>> playListItemResponse = GetPlayListItems(innerNextPageToken, youTubePlayList.Id);
-                innerNextPageToken = playListItemResponse.NextPageToken;
-                playListItems = playListItemResponse.Response;
-            }
-
             var playList = new PlayList
             {
                 Hash = youTubePlayList.Id,
                 Title = youTubePlayList.Snippet.Title,
                 ItemCount = youTubePlayList.ContentDetails.ItemCount,
                 ThumbnailUrl = youTubePlayList.Snippet.Thumbnails.GetThumbnailUrl(),
-                PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), youTubePlayList.Status.PrivacyStatus, true),
-                PlayListItems = playListItems,
-                PlayListItemsNextPageToken = innerNextPageToken
+                PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), youTubePlayList.Status.PrivacyStatus, true)
             };
+            if (withPlayListItems)
+                PopulatePlayListWithPlayListItems(playList);
 
             return playList;
+        }
+
+        private void PopulatePlayListWithPlayListItems(PlayList playList)
+        {
+            ServiceResponse<List<PlayListItem>> playListItemResponse = GetPlayListItems(string.Empty, playList.Hash);
+            playList.PlayListItemsNextPageToken = playListItemResponse.NextPageToken;
+            playList.PlayListItems = playListItemResponse.Response;
         }
 
         public ServiceResponse<List<VideoInfo>> ShowSuggestions(string requestToken, string title)

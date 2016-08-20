@@ -12,6 +12,7 @@
 
     suggestions: [],
 
+    playListItemsFetched: false,
     autoLoad: false,
 
     searchKey: ""

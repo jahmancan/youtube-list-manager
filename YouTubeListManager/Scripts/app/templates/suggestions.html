@@ -1,1 +1,42 @@
-﻿INITIAL PAGE
+﻿<div class="module-wrapper">
+    <div class="container half">
+        <div class="header">
+            <h2>{{model.playlist.Title}} <span class="privacy">{{model.playlist.PrivacyStatus}}</span></h2>
+        </div>
+        <ul class="item-list">
+            <li class="item" data-ng-repeat="playlistItem in model.playlist.PlayListItems" data-ng-click="selectPlayList(playlist.Hash)">
+                <div class="item-wrapper">
+                    <div data-ng-click="selectPlaylist(playlist.Hash)" class="image" style="background: url('{{playlistItem.VideoInfo.ThumbnailUrl}}') center no-repeat">
+                        <div class="extra-info" data-ng-class="{'conflict': (playlistItem.VideoInfo.Live === false)}"><span>{{playlistItem.Position}}</span></div>
+                        <div class="item-footer">
+                            <div class="title">{{playlistItem.VideoInfo.Title}}</div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="footer">
+            <div class="button" data-ng-click="save()"><span>Save</span></div>
+        </div>
+    </div>
+    <div class="container half">
+        <div class="header">
+            <h2><input class="checkbox" type="checkbox" data-ng-model="model.autoLoad"/> Suggestions <input type="text" data-ng-model="model.searchKey"/>
+            </h2>
+        </div>
+        <ul class="item-list">
+            <li class="item" data-ng-repeat="video in model.suggestions" data-ng-click="selectPlayList(playlist.Hash)">
+                <div class="item-wrapper">
+                    <div class="image" style="background: url('{{video.ThumbnailUrl}}') center no-repeat">
+                        <div class="item-footer">
+                            <div class="title">{{video.Title}}</div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="footer" data-ng-if="!model.autoLoad">
+            <div class="button" data-ng-click="showSuggestions()"><span>Load more</span></div>
+        </div>
+    </div>
+</div>

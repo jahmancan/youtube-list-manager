@@ -11,7 +11,7 @@
 
             youTubeListManagerDataService.getAllPlaylists().then(function (response) {
 
-                var getPlayListItemsAsync = function (playlistResponse) {
+                var getPlayListsAsync = function (playlistResponse) {
                     var playlists = playlistResponse.Response;
                     var nextPageToken = playlistResponse.NextPageToken;
 
@@ -20,12 +20,12 @@
 
                     if (nextPageToken !== null) {
                         youTubeListManagerDataService.getAllPlaylists(nextPageToken).then(function (response) {
-                            getPlayListItemsAsync(response);
+                            getPlayListsAsync(response);
                         });
                     }
                 }
 
-                getPlayListItemsAsync(response);
+                getPlayListsAsync(response);
             });
         };
 

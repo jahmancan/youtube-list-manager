@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using YouTubeListManager.Data.Domain;
 
@@ -7,11 +8,12 @@ namespace YouTubeListAPI.Business
 {
     public class YouTubeListManagerCache : IYouTubeListManagerCache
     {
-        private const string playListCacheKey = "playlist";
+        private const string PlayListCacheKey = "playlist";
 
-        public List<PlayList> GetPlayLists()
+        public List<PlayList> GetPlayLists(Func<PlayList, bool> predicate)
         {
-            return Get<PlayList>(playListCacheKey);
+            var playLists = Get<PlayList>(PlayListCacheKey);
+            return predicate != null ? playLists.Where(predicate).ToList() : playLists;
         }
 
         public List<T> Get<T>(string cacheKey) where T : class
@@ -28,7 +30,7 @@ namespace YouTubeListAPI.Business
 
         public void AddPlayLists(IEnumerable<PlayList> playLists)
         {
-            Add(playListCacheKey, playLists);
+            Add(PlayListCacheKey, playLists);
         }
 
         public void Add<T>(string title, IEnumerable<T> items) where T : class

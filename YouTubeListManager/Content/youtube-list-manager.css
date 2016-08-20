@@ -9,6 +9,18 @@
 .module-wrapper .container {
   max-width: 1500px;
 }
+.module-wrapper .container.half {
+  float: left;
+  max-width: 740px;
+}
+.module-wrapper .container.half:first-child {
+  margin-left: 10px;
+}
+.module-wrapper .container .footer {
+  width: 100%;
+  float: left;
+  margin-top: 25px;
+}
 .item-list {
   list-style: none;
 }
@@ -38,6 +50,9 @@
   height: 40px;
   background: #fff;
 }
+.item-list .item .item-wrapper .image .extra-info.conflict {
+  border-top: 10px solid #E9522B;
+}
 .item-list .item .item-wrapper .image .extra-info span {
   display: inline-block;
   font-size: 19px;
@@ -54,9 +69,10 @@
   left: 15px;
   position: absolute;
   width: 220px;
+  overflow: hidden;
 }
 .item-list .item .item-wrapper .image .item-footer .title {
   text-align: center;
-  font-size: 20px;
+  font-size: 12px;
   margin-top: 5px;
 }
