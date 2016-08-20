@@ -323,8 +323,12 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controllers\playlist-controller.js" />
     <Content Include="Scripts\app\controllers\suggestion-controller.js" />
+    <Content Include="Scripts\app\filters\duration-filter.js" />
     <Content Include="Scripts\app\models\config.js" />
-    <Content Include="Scripts\app\models\suggestionsModel.js" />
+    <Content Include="Scripts\app\models\playListItem.js" />
+    <Content Include="Scripts\app\models\searchRequest.js" />
+    <Content Include="Scripts\app\models\suggestions.js" />
+    <Content Include="Scripts\app\services\model-factory.js" />
     <Content Include="Scripts\app\services\youtube-data-service.js" />
     <Content Include="Scripts\app\templates\playlist-item.html" />
     <Content Include="Scripts\app\templates\playlist.html" />

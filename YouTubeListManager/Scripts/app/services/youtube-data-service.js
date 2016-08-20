@@ -2,9 +2,9 @@
     ['$http', '$q', 
     function ($http, $q) {
         return {
-            getSuggestions: function (searchKey, requestToken) {
+            showSearchResults: function (request) {
                 var deferred = $q.defer();
-                $http.get('/api/video/get/' + searchKey + (requestToken !== "" && requestToken !== null && !angular.isUndefined(requestToken) ? '/' + requestToken : "")).success(deferred.resolve).error(deferred.reject);
+                $http.post('/video/post', request ).success(deferred.resolve).error(deferred.reject);
                 return deferred.promise;
             },
 

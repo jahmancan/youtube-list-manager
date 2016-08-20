@@ -50,7 +50,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             if (string.IsNullOrEmpty(playListId))
                 throw new ApplicationException("PlayListId can not be empty");
 
-            PlaylistItemsResource.ListRequest request = YouTubeService.PlaylistItems.List("snippet, contentDetails");
+            PlaylistItemsResource.ListRequest request = YouTubeService.PlaylistItems.List("snippet, contentDetails, status");
             request.PlaylistId = playListId;
             request.MaxResults = MaxResults;
             request.PageToken = requestToken;
@@ -78,11 +78,11 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             ExecuteAsyncRequestPlayLists(requestToken, string.Empty);
         }
 
-        public void ExecuteAsyncRequestSearch(string requestToken, string title, SearchResource.ListRequest.VideoDurationEnum videoDuration)
+        public void ExecuteAsyncRequestSearch(string requestToken, string searchKey, SearchResource.ListRequest.VideoDurationEnum videoDuration)
         {
             SearchResource.ListRequest request = YouTubeService.Search.List("id, snippet");
             request.MaxResults = MaxResults;
-            request.Q = title.CleanTitle();
+            request.Q = searchKey.CleanTitle();
             request.VideoDuration = videoDuration;
             request.PageToken = requestToken;
             request.Type = VideoType;

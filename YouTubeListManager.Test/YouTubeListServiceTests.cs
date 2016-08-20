@@ -326,6 +326,10 @@ namespace YouTubeListManager.Test
             var task = Task.FromResult(response);
 
             var serviceWrapperListMock = new Mock<IYouTubeApiListServiceWrapper>();
+            serviceWrapperListMock.Setup(m => m.GetVideo(It.Is<string>(s => s == dummyVideo1.Hash)))
+                .Returns(YouTubeDataTestHelper.CreateVideo(videoStore.FirstOrDefault(v => v.Hash == dummyVideo1.Hash)));
+            serviceWrapperListMock.Setup(m => m.GetVideo(It.Is<string>(s => s == dummyVideo2.Hash)))
+                .Returns(YouTubeDataTestHelper.CreateVideo(videoStore.FirstOrDefault(v => v.Hash == dummyVideo2.Hash)));
             serviceWrapperListMock.Setup(m => m.GetVideo(It.Is<string>(s => s == dummyVideo3.Hash)))
                 .Returns(YouTubeDataTestHelper.CreateVideo(videoStore.FirstOrDefault(v => v.Hash == dummyVideo3.Hash)));
             container.RegisterInstance(serviceWrapperListMock.Object);
@@ -463,6 +467,10 @@ namespace YouTubeListManager.Test
             var serviceWrapperListMock = new Mock<IYouTubeApiListServiceWrapper>();
             serviceWrapperListMock.Setup(m => m.GetVideo(It.Is<string>(s => s == dummyVideo1.Hash)))
                 .Returns(YouTubeDataTestHelper.CreateVideo(videoStore.FirstOrDefault(v => v.Hash == dummyVideo1.Hash)));
+            serviceWrapperListMock.Setup(m => m.GetVideo(It.Is<string>(s => s == dummyVideo2.Hash)))
+                .Returns(YouTubeDataTestHelper.CreateVideo(videoStore.FirstOrDefault(v => v.Hash == dummyVideo2.Hash)));
+            serviceWrapperListMock.Setup(m => m.GetVideo(It.Is<string>(s => s == dummyVideo3.Hash)))
+                .Returns(YouTubeDataTestHelper.CreateVideo(videoStore.FirstOrDefault(v => v.Hash == dummyVideo3.Hash)));
             container.RegisterInstance(serviceWrapperListMock.Object);
 
             var playlistResponseServiceMock = new Mock<IPlaylistResponseService>();

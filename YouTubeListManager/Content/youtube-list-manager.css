@@ -30,6 +30,9 @@
   height: 180px;
   margin: 15px;
 }
+.item-list .item.selected {
+  box-shadow: 0 0 20px #E9522B;
+}
 .item-list .item .item-wrapper {
   height: inherit;
   width: 100%;
@@ -52,6 +55,16 @@
 }
 .item-list .item .item-wrapper .image .extra-info.conflict {
   border-top: 10px solid #E9522B;
+}
+.item-list .item .item-wrapper .image .extra-info.duration {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.item-list .item .item-wrapper .image .extra-info.duration span {
+  top: 10px;
+  font-size: 14px;
+  font-weight: bold;
 }
 .item-list .item .item-wrapper .image .extra-info span {
   display: inline-block;

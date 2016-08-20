@@ -15,9 +15,9 @@
         max-width: 1500px;
 
         &.half {
-            float:left;
+            float: left;
             max-width: 740px;
-            
+
             &:first-child {
                 margin-left: 10px;
             }
@@ -39,6 +39,10 @@
         width: 250px;
         height: 180px;
         margin: 15px;
+
+        &.selected {
+            box-shadow: 0 0 20px @conflict-red;
+        }
 
         .item-wrapper {
             height: inherit;
@@ -62,6 +66,18 @@
 
                     &.conflict {
                         border-top: 10px solid @conflict-red;
+                    }
+
+                    &.duration {
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+
+                        span {
+                            top: 10px;
+                            font-size: 14px;
+                            font-weight: bold;
+                        }
                     }
 
                     span {
