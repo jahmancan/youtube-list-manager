@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Logger;
@@ -40,6 +42,20 @@ namespace YouTubeListAPI.Business.Service.Wrapper
                 InsertUpdateYouTubePlayListItem(playListItem);
 
                 OnPlayListItemUpdated(playList, playListItem);
+            }
+        }
+
+        public void DeletePlaylistItem(string playlistItemId)
+        {
+            PlaylistItemsResource.DeleteRequest request = YouTubeService.PlaylistItems.Delete(playlistItemId);
+            try
+            {
+                request.ExecuteAsync();
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(string.Format("Your delete playlist item({0}) request could not been served!", playlistItemId), exception);
+                throw;
             }
         }
 

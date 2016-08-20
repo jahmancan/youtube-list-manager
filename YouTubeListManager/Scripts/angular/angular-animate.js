@@ -3909,7 +3909,7 @@ var ngAnimateSwapDirective = ['$animate', '$rootScope', function($animate, $root
         .config(['$routeProvider', function($routeProvider) {
           $routeProvider.when('/', {
             templateUrl: 'home.html',
-            controller: 'HomeController as home'
+            controller: 'ManagerController as home'
           });
           $routeProvider.when('/profile/:id', {
             templateUrl: 'profile.html',
@@ -3930,7 +3930,7 @@ var ngAnimateSwapDirective = ['$animate', '$rootScope', function($animate, $root
             { id:10, title: "Alexandrea Sauer" }
           ];
         }])
-        .controller('HomeController', [function() {
+        .controller('ManagerController', [function() {
           //empty
         }])
         .controller('ProfileController', ['$rootScope', '$routeParams', function($rootScope, $routeParams) {

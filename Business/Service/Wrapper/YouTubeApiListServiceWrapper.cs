@@ -14,6 +14,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
     {
         //todo: retrieve it from configuration..
         private const int MaxResults = 50;
+        private const string VideoType = "video";
 
         public event EventHandler<ResponseEventArgs<PlaylistListResponse>> PlaylistFetched;
         private void OnPlayListFetched(Task<PlaylistListResponse> response) 
@@ -77,12 +78,14 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             ExecuteAsyncRequestPlayLists(requestToken, string.Empty);
         }
 
-        public void ExecuteAsyncRequestSearch(string requestToken, string title)
+        public void ExecuteAsyncRequestSearch(string requestToken, string title, SearchResource.ListRequest.VideoDurationEnum videoDuration)
         {
             SearchResource.ListRequest request = YouTubeService.Search.List("id, snippet");
             request.MaxResults = MaxResults;
             request.Q = title.CleanTitle();
+            request.VideoDuration = videoDuration;
             request.PageToken = requestToken;
+            request.Type = VideoType;
 
             try
             {
@@ -100,7 +103,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
 
         private void ExecuteAsyncRequestPlayLists(string requestToken, string playListId)
         {
-            PlaylistsResource.ListRequest request = YouTubeService.Playlists.List("snippet, status");
+            PlaylistsResource.ListRequest request = YouTubeService.Playlists.List("snippet, status, contentDetails");
             request.MaxResults = MaxResults;
             request.PageToken = requestToken;
 

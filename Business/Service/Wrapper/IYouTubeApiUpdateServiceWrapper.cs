@@ -11,5 +11,6 @@ namespace YouTubeListAPI.Business.Service.Wrapper
 
         void UpdatePlayLists(IEnumerable<PlayList> playLists);
         void UpdatePlaylistItems(PlayList playList, IEnumerable<PlayListItem> playListItems);
+        void DeletePlaylistItem(string playlistItemId);
     }
 }

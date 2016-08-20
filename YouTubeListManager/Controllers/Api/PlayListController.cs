@@ -27,10 +27,11 @@ namespace YouTubeListManager.Controllers.Api
             return Json(PlayList, JsonRequestBehavior.AllowGet);
         }
 
-        //todo: implement save
-        public ActionResult SavePlayList()
+        [HttpPost]
+        public ActionResult Save(PlayList playList)
         {
-            return new BadRequest();
+            youTubeListManagerService.UpdatePlayLists(new List<PlayList> {playList});
+            return Json("Playlist has been saved successfully", JsonRequestBehavior.DenyGet);
         }
 
         public ActionResult Put()

@@ -2,7 +2,7 @@
 
 namespace YouTubeListManager.Controllers
 {
-    public class HomeController : Controller
+    public class ManagerController : Controller
     {
         public ActionResult Index()
         {
