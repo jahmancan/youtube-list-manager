@@ -12,12 +12,13 @@
     }
 
     .container {
-        max-width: 1500px;
+        margin: 0 auto;
+        max-width: 80%;
 
         &.half {
-            float:left;
-            max-width: 740px;
-            
+            float: left;
+            max-width: 750px;
+
             &:first-child {
                 margin-left: 10px;
             }
@@ -55,6 +56,10 @@
                 position: relative;
                 display: block;
 
+                &.selected {
+                    box-shadow: 0 0 20px @conflict-red;
+                }
+
                 .extra-info {
                     width: 40px;
                     height: 40px;
@@ -62,6 +67,18 @@
 
                     &.conflict {
                         border-top: 10px solid @conflict-red;
+                    }
+
+                    &.duration {
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+
+                        span {
+                            top: 10px;
+                            font-size: 14px;
+                            font-weight: bold;
+                        }
                     }
 
                     span {

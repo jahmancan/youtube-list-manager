@@ -83,6 +83,10 @@ namespace YouTubeListManager.Test.Common.Helpers
                 ContentDetails = new VideoContentDetails
                 {
                     Duration = CreateDuration(videoInfo)
+                },
+                Status = new VideoStatus
+                {
+                    PrivacyStatus = Enum.GetName(typeof(PrivacyStatus), videoInfo.PrivacyStatus)
                 }
             };
         }

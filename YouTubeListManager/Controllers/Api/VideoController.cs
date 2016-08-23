@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using YouTubeListAPI.Business.Service;
+using YouTubeListAPI.Business.Service.Response;
 using YouTubeListManager.Data.Domain;
 
 namespace YouTubeListManager.Controllers.Api
@@ -11,11 +12,11 @@ namespace YouTubeListManager.Controllers.Api
         {
         }
 
-        [HttpGet]
-        public JsonResult Get(string searchKey, string requestToken)
+        [HttpPost]
+        public JsonResult Post(SearchRequest searchRequest)
         {
-            ServiceResponse<List<VideoInfo>> suggestions = youTubeListManagerService.ShowSuggestions(requestToken, searchKey);
-            return Json(suggestions, JsonRequestBehavior.AllowGet);
+            ServiceResponse<List<VideoInfo>> suggestions = youTubeListManagerService.SearchSuggestions(searchRequest);
+            return Json(suggestions, JsonRequestBehavior.DenyGet);
         }
     }
 }

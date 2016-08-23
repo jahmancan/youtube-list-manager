@@ -27,12 +27,7 @@ namespace YouTubeListManager
                 new { controller = "PlayListItem", action = "Get", requestToken = UrlParameter.Optional }
             );
 
-            routes.MapRoute(
-                "Video",
-                "api/video/get/{searchKey}/{requestToken}",
-                new { controller = "Video", action = "Get", requestToken = UrlParameter.Optional }
-            );
-
+            
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

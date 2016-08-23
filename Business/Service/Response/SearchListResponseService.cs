@@ -13,11 +13,11 @@ namespace YouTubeListAPI.Business.Service.Response
             youTubeApiListServiceWrapper.SearchResultsFetched += SearchResultsFetched;
         }
 
-        public Task<SearchListResponse> GetResponse(string requestToken, string title, SearchResource.ListRequest.VideoDurationEnum videoDuration)
+        public Task<SearchListResponse> GetResponse(SearchRequest searchRequest)
         {
             try
             {
-                youTubeApiListServiceWrapper.ExecuteAsyncRequestSearch(requestToken, title, videoDuration);
+                youTubeApiListServiceWrapper.ExecuteAsyncRequestSearch(searchRequest.NextPageRequestToken, searchRequest.SearchKey, searchRequest.VideoDuration);
                 return response;
             }
             finally
