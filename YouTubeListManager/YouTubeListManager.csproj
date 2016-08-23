@@ -281,6 +281,7 @@
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\dragular.css" />
     <Content Include="Content\youtube-list-manager.css">
       <DependentUpon>youtube-list-manager.less</DependentUpon>
     </Content>

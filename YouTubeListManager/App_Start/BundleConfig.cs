@@ -30,9 +30,11 @@ namespace YouTubeListManager
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/youtube-list-manager.css"));
+            bundles.Add(new StyleBundle("~/Content/css")
+                .Include("~/Content/bootstrap.css")
+                .Include("~/Content/dragular.css")
+                .Include("~/Content/youtube-list-manager.css")
+                );
         }
     }
 }

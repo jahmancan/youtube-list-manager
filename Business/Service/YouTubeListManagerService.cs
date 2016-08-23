@@ -76,9 +76,9 @@ namespace YouTubeListAPI.Business.Service
                 {
                     Hash = playlistItem.ContentDetails.VideoId,
                     Title = playlistItem.Snippet.Title,
-                    Duration = video.GetDurationFromVideoInfo(),
+                    Duration = video?.GetDurationFromVideoInfo() ?? 0, //same as (video == null) ? 0 : video.GetDurationFromVideoInfo()
                     ThumbnailUrl = playlistItem.Snippet.Thumbnails.GetThumbnailUrl(),
-                    Live = IsPlaylistItemStillValid(playlistItem.Snippet, video.Status.PrivacyStatus)
+                    Live = IsPlaylistItemStillValid(playlistItem.Snippet, video?.Status.PrivacyStatus ?? "private")
                 }
             };
         }

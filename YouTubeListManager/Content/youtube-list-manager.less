@@ -12,11 +12,12 @@
     }
 
     .container {
-        max-width: 1500px;
+        margin: 0 auto;
+        max-width: 80%;
 
         &.half {
             float: left;
-            max-width: 740px;
+            max-width: 750px;
 
             &:first-child {
                 margin-left: 10px;
@@ -40,10 +41,6 @@
         height: 180px;
         margin: 15px;
 
-        &.selected {
-            box-shadow: 0 0 20px @conflict-red;
-        }
-
         .item-wrapper {
             height: inherit;
             width: 100%;
@@ -58,6 +55,10 @@
                 cursor: pointer;
                 position: relative;
                 display: block;
+
+                &.selected {
+                    box-shadow: 0 0 20px @conflict-red;
+                }
 
                 .extra-info {
                     width: 40px;

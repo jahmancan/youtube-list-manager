@@ -1,15 +1,15 @@
 ﻿mainModule.controller('suggestionsController',
-    ['$rootScope', '$scope', '$location', '$routeParams', 'dragularService', 'youTubeListManagerDataService', 'modelFactory', 'config',
-    function ($rootScope, $scope, $location, $routeParams, dragularService, youTubeListManagerDataService, modelFactory, config) {
+    ['$rootScope', '$scope', '$location', '$routeParams', '$timeout', 'dragularService', 'youTubeListManagerDataService', 'modelFactory', 'config',
+    function ($rootScope, $scope, $location, $routeParams, $timeout, dragularService, youTubeListManagerDataService, modelFactory, config) {
 
         $scope.showSuggestions = function () {
             youTubeListManagerDataService.showSearchResults(modelFactory.createSearchRequest($scope.model)).then(function (response) {
-                var getSearchResultsAsync = function(searchResultResponse) {
+                var getSearchResultsAsync = function (searchResultResponse) {
                     var searchResults = searchResultResponse.Response;
                     $scope.model.nextPageSuggestionsToken = searchResultResponse.NextPageToken;
 
                     if (searchResults.length > 0)
-                        angular.forEach(searchResults, function(value) {
+                        angular.forEach(searchResults, function (value) {
                             $scope.model.suggestions.push(value);
                         });
 
@@ -27,6 +27,12 @@
         $scope.$on('PlayListfetched', function () {
             $scope.model.playListItemsFetched = true;
 
+            var draggableContainer = document.getElementById("playlist-container");
+            dragularService([draggableContainer], {
+                containersModel: [$scope.model.playlist.PlayListItems],
+                scope: $scope
+            });
+
             $scope.model.markedItems = $scope.model.playlist.PlayListItems.filter(function (playListItem) { return playListItem.VideoInfo.Live === false });
             if ($scope.model.markedItems.length === 0)
                 return;
@@ -34,7 +40,39 @@
             $scope.model.current = $scope.model.markedItems[0];
             $scope.model.searchKey = $scope.model.current.VideoInfo.Title;
 
+            
+
             $scope.showSuggestions();
+        });
+
+        $scope.$on("dragulardrop", function(event, element) {
+            event.stopPropagation();
+
+            $timeout(function() {
+                var jQueryElement = jQuery(element);
+                var oldPosition = parseInt(jQueryElement.data("position"));
+
+                var playListItems = $scope.model.playlist.PlayListItems;
+                var item = playListItems.filter(function(item) { return item.Hash === element.id})[0];
+                var newPosition = playListItems.indexOf(item);
+
+                if (oldPosition === newPosition) return;
+
+                var positionChange, startIndex, endIndex;
+                if (oldPosition > newPosition) {
+                    startIndex = newPosition + 1;
+                    endIndex = oldPosition + 1;
+                    positionChange = 1;
+                } else {
+                    startIndex = oldPosition;
+                    endIndex = newPosition;
+                    positionChange = -1;
+                }
+                playListItems[newPosition].Position = newPosition;
+                for (var i = startIndex; i < endIndex; i++) {
+                    playListItems[i].Position += positionChange;
+                }
+            }, 0);
         });
 
         $scope.getNextConflict = function () {
@@ -51,12 +89,12 @@
             $scope.showSuggestions();
         };
 
-        $scope.resolveConflict = function(video) {
-            var playListItemIndex = $scope.model.playlist.PlayListItems.findIndex(function(i) { return i.VideoInfo.Hash === $scope.model.current.VideoInfo.Hash; });
+        $scope.resolveConflict = function (video) {
+            var playListItemIndex = $scope.model.playlist.PlayListItems.findIndex(function (i) { return i.VideoInfo.Hash === $scope.model.current.VideoInfo.Hash; });
             $scope.model.playlist.PlayListItems[playListItemIndex].VideoInfo = video;
         };
 
-        $scope.save = function() {
+        $scope.save = function () {
             youTubeListManagerDataService.savePlaylist($scope.model.playlist);
         };
 

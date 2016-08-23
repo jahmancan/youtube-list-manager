@@ -65,12 +65,15 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             if (youTubePlayListItem == null)
                 InsertPlaylistItem(playListItem);
             else
+            {
+                youTubePlayListItem.Snippet.Position = playListItem.Position;
                 UpdatePlaylistItem(youTubePlayListItem);
+            }
         }
 
-        private void InsertPlaylistItem(PlayListItem playListItem)
+        private YouTubePlayListItem CreatePlaylistItem(PlayListItem playListItem)
         {
-            var youTubePlaylistItem = new YouTubePlayListItem
+            return new YouTubePlayListItem
             {
                 Snippet = new PlaylistItemSnippet
                 {
@@ -95,7 +98,11 @@ namespace YouTubeListAPI.Business.Service.Wrapper
                     }
                 }
             };
+        }
 
+        private void InsertPlaylistItem(PlayListItem playListItem)
+        {
+            YouTubePlayListItem youTubePlaylistItem = CreatePlaylistItem(playListItem);
             try
             {
                 var request = youTubeService.PlaylistItems.Insert(youTubePlaylistItem, "snippet");
@@ -112,7 +119,13 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             try
             {
                 var request = youTubeService.PlaylistItems.Update(playlistItem, "snippet, status, contentDetails");
-                request.ExecuteAsync(CancellationToken.None);
+                Task<PlaylistItem> response = request.ExecuteAsync(CancellationToken.None);
+                var responsePlaylistItem = response.Result;
+                if (responsePlaylistItem == null)
+                {
+                    const string error = "Your update playlist request could not been served!";
+                    logger.LogError(error, new Exception(error));
+                }
             }
             catch (Exception exception)
             {
