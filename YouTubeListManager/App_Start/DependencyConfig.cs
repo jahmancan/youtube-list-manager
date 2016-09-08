@@ -4,6 +4,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity;
 using YouTubeListAPI.Business.Service.Wrapper;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
 using YouTubeListManager.Common.Bootstraper;
 using YouTubeListManager.Data;
 using YouTubeListManager.Logger;

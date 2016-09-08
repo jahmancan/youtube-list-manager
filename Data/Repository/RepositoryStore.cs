@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data.Entity.Validation;
+using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Data.Extension;
+using YouTubeListManager.DataContracts.Repository;
 
 namespace YouTubeListManager.Data.Repository
 {

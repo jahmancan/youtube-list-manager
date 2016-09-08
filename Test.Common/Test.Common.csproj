@@ -127,6 +127,10 @@
       <Project>{8AFCDE18-D184-4AD8-826A-AF05CB762B56}</Project>
       <Name>Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CrossCutting\CrossCutting.csproj">
+      <Project>{943257D1-71E4-4F99-8953-36425EEB9256}</Project>
+      <Name>CrossCutting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{13327070-7592-496c-8bc2-3f31854e3cd8}</Project>
       <Name>Data</Name>

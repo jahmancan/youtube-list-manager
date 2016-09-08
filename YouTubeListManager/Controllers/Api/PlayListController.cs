@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using YouTubeListAPI.Business.Service;
+using YouTubeListManager.BusinessContracts.Service;
+using YouTubeListManager.CrossCutting.Domain;
+using YouTubeListManager.CrossCutting.Response;
 using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Request;
 
@@ -16,7 +19,7 @@ namespace YouTubeListManager.Controllers.Api
         [HttpGet]
         public JsonResult GetAll(string requestToken)
         {
-            ServiceResponse<List<PlayList>> response = youTubeListManagerService.GetPlaylists(requestToken);
+            ServiceResponse<List<PlayList>> response = youTubeListManagerService.GetPlayLists(requestToken);
             return Json(response, JsonRequestBehavior.AllowGet);
         } 
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Google.Apis.YouTube.v3.Data;
-using YouTubeListManager.Data.Domain;
+using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.Test.Common.TestDomain;
 using YouTubePlayList = Google.Apis.YouTube.v3.Data.Playlist;
 using YouTubePlayListItem = Google.Apis.YouTube.v3.Data.PlaylistItem;

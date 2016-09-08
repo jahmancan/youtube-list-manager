@@ -5,6 +5,7 @@ using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YouTubeListManager.CrossCutting.Domain;
 
 namespace YouTubeListManager.Data.Domain.Mapping
 {

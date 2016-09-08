@@ -4,7 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
-using YouTubeListManager.Data.Domain;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
+using YouTubeListManager.CrossCutting.Domain;
+using YouTubeListManager.CrossCutting.EventArgs;
 using YouTubeListManager.Logger;
 
 using YouTubePlayListItem = Google.Apis.YouTube.v3.Data.PlaylistItem;

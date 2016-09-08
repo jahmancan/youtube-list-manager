@@ -1167,9 +1167,17 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusinessContracts\BusinessContracts.csproj">
+      <Project>{71210960-BCB7-4444-B5BC-A51B6C93BC70}</Project>
+      <Name>BusinessContracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Business\Business.csproj">
       <Project>{8afcde18-d184-4ad8-826a-af05cb762b56}</Project>
       <Name>Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CrossCutting\CrossCutting.csproj">
+      <Project>{943257D1-71E4-4F99-8953-36425EEB9256}</Project>
+      <Name>CrossCutting</Name>
     </ProjectReference>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{13327070-7592-496c-8bc2-3f31854e3cd8}</Project>

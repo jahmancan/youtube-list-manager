@@ -1,4 +1,5 @@
-﻿using YouTubeListManager.Data.Domain;
+﻿using YouTubeListManager.CrossCutting.Domain;
+using YouTubeListManager.Data.Domain;
 
 namespace YouTubeListManager.Test.Common.TestDomain
 {

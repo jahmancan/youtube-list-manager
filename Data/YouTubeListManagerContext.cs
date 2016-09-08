@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Data.Domain.Mapping;
 

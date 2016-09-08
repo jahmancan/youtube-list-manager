@@ -3,7 +3,12 @@ using YouTubeListAPI.Business;
 using YouTubeListAPI.Business.Service;
 using YouTubeListAPI.Business.Service.Response;
 using YouTubeListAPI.Business.Service.Wrapper;
+using YouTubeListManager.BusinessContracts;
+using YouTubeListManager.BusinessContracts.Service;
+using YouTubeListManager.BusinessContracts.Service.Response;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
 using YouTubeListManager.Data.Repository;
+using YouTubeListManager.DataContracts.Repository;
 
 namespace YouTubeListManager.Common.Bootstraper
 {

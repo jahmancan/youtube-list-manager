@@ -6,12 +6,13 @@ using HashidsNet;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using YouTubeListAPI.Business;
-using YouTubeListAPI.Business.Service;
-using YouTubeListAPI.Business.Service.Response;
-using YouTubeListAPI.Business.Service.Wrapper;
-using YouTubeListManager.Data.Domain;
-using YouTubeListManager.Data.Repository;
+using YouTubeListManager.BusinessContracts;
+using YouTubeListManager.BusinessContracts.Service;
+using YouTubeListManager.BusinessContracts.Service.Response;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
+using YouTubeListManager.CrossCutting.Domain;
+using YouTubeListManager.CrossCutting.EventArgs;
+using YouTubeListManager.DataContracts.Repository;
 using YouTubeListManager.Test.Common.Helpers;
 using YouTubeListManager.Test.Common.TestDomain;
 
@@ -47,7 +48,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            var playLists = context.GetPlaylists(string.Empty);
+            var playLists = context.GetPlayLists(string.Empty);
 
             Assert.AreEqual(1, playLists.Response.Count());
             var playList = playLists.Response.First();
@@ -109,7 +110,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>(new ParameterOverride("youTubeListManagerCache", cache));
 
-            var playLists = context.GetPlaylists(string.Empty);
+            var playLists = context.GetPlayLists(string.Empty);
 
             Assert.AreEqual(2, playLists.Response.Count());
             var playList = playLists.Response.First();
@@ -667,7 +668,7 @@ namespace YouTubeListManager.Test
             });
             repositoryStore.SaveChanges();
 
-            var playListItems = context.GetPlayListItems(string.Empty, expectedHash).Response;
+            var playListItems = context.GetPlayListItemsAsync(string.Empty, expectedHash).Result.Response;
             Assert.AreEqual(3, playListItems.Count);
             var foundPlayListItem = playListItems.FirstOrDefault();
             Assert.AreEqual(dummyPlayListItem1.Position, foundPlayListItem.Position);

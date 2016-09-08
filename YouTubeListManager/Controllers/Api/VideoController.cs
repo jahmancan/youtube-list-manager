@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using YouTubeListAPI.Business.Service;
-using YouTubeListAPI.Business.Service.Response;
-using YouTubeListManager.Data.Domain;
+using YouTubeListManager.BusinessContracts.Service;
+using YouTubeListManager.CrossCutting.Domain;
+using YouTubeListManager.CrossCutting.Request;
+using YouTubeListManager.CrossCutting.Response;
 
 namespace YouTubeListManager.Controllers.Api
 {
