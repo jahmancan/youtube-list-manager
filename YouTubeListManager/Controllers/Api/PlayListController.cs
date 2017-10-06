@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using YouTubeListAPI.Business.Service;
 using YouTubeListManager.BusinessContracts.Service;
 using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.CrossCutting.Response;
-using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Request;
 
 namespace YouTubeListManager.Controllers.Api
@@ -17,11 +16,26 @@ namespace YouTubeListManager.Controllers.Api
         }
 
         [HttpGet]
+        public async Task<JsonResult> GetAllAsync(string requestToken)
+        {
+            ServiceResponse<List<PlayList>> response = await youTubeListManagerService.GetPlayListsAsync(requestToken);
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public JsonResult GetAll(string requestToken)
         {
             ServiceResponse<List<PlayList>> response = youTubeListManagerService.GetPlayLists(requestToken);
             return Json(response, JsonRequestBehavior.AllowGet);
-        } 
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetAsync(string hash)
+        {
+            PlayList PlayList = await youTubeListManagerService.GetPlayListAsync(hash);
+            return Json(PlayList, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpGet]
         public JsonResult Get(string hash)

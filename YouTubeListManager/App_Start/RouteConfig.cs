@@ -22,6 +22,12 @@ namespace YouTubeListManager
             );
 
             routes.MapRoute(
+               "PlayListGetAllAsync",
+               "api/playlist/getallasync/{requestToken}",
+               new { controller = "PlayList", action = "GetAllAsync", requestToken = UrlParameter.Optional }
+           );
+
+            routes.MapRoute(
                 "PlayListItemGet",
                 "api/playlistitem/get/{playListId}/{requestToken}",
                 new { controller = "PlayListItem", action = "Get", requestToken = UrlParameter.Optional }

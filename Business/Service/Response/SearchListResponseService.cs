@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
-using YouTubeListAPI.Business.Service.Wrapper;
 using YouTubeListManager.BusinessContracts.Service.Response;
 using YouTubeListManager.BusinessContracts.Service.Wrapper;
 using YouTubeListManager.CrossCutting.EventArgs;

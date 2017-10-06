@@ -668,7 +668,7 @@ namespace YouTubeListManager.Test
             });
             repositoryStore.SaveChanges();
 
-            var playListItems = context.GetPlayListItemsAsync(string.Empty, expectedHash).Result.Response;
+            var playListItems = context.GetPlayListItems(string.Empty, expectedHash).Response;
             Assert.AreEqual(3, playListItems.Count);
             var foundPlayListItem = playListItems.FirstOrDefault();
             Assert.AreEqual(dummyPlayListItem1.Position, foundPlayListItem.Position);
