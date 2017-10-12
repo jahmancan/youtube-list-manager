@@ -261,6 +261,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\VideoController.cs" />
+    <Compile Include="Infrastructure\JsonValueProviderFactory.cs" />
     <Compile Include="Request\BadRequest.cs" />
     <Compile Include="Controllers\Api\BaseController.cs" />
     <Compile Include="Controllers\Api\PlayListItemController.cs" />

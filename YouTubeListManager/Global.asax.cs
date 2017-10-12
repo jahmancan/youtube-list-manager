@@ -13,6 +13,9 @@ namespace YouTubeListManager
     {
         protected void Application_Start()
         {
+            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
+            ValueProviderFactories.Factories.Add(new Infrastructure.JsonValueProviderFactory());
+
             DependencyConfig.Register();
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
