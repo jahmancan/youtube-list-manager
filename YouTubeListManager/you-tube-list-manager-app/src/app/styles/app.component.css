@@ -1,0 +1,99 @@
+.module-wrapper {
+  width: 100%;
+  position: relative;
+}
+.module-wrapper .header {
+  width: 100%;
+  height: 50px;
+}
+.module-wrapper .container {
+  margin: 0 auto;
+  max-width: 80%;
+}
+.module-wrapper .container.half {
+  float: left;
+  max-width: 750px;
+}
+.module-wrapper .container.half:first-child {
+  margin-left: 10px;
+}
+.module-wrapper .container .footer {
+  width: 100%;
+  float: left;
+  margin-top: 25px;
+}
+.item-list {
+  list-style: none;
+}
+.item-list .item {
+  float: left;
+  width: 250px;
+  height: 180px;
+  margin: 15px;
+}
+.item-list .item .item-wrapper {
+  height: inherit;
+  width: 100%;
+}
+.item-list .item .item-wrapper .image-wrapper {
+  width: 250px;
+  height: 180px;
+  top: 6px;
+  left: 0px;
+  box-shadow: 0px 0px 26px -9px #000;
+  cursor: pointer;
+  position: relative;
+  display: block;
+}
+
+.item-list .item .item-wrapper .image {
+  width: 250px;
+  height: 180px;
+}
+
+.item-list .item .item-wrapper .image-wrapper.selected {
+  box-shadow: 0 0 20px #E9522B;
+}
+.item-list .item .item-wrapper .image-wrapper .extra-info {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  position: absolute;
+  top: 0;
+}
+.item-list .item .item-wrapper .image-wrapper .extra-info.conflict {
+  border-top: 10px solid #E9522B;
+}
+.item-list .item .item-wrapper .image-wrapper .extra-info.duration {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.item-list .item .item-wrapper .image-wrapper .extra-info.duration span {
+  top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.item-list .item .item-wrapper .image-wrapper .extra-info span {
+  display: inline-block;
+  font-size: 19px;
+  font-weight: bold;
+  position: relative;
+  text-align: center;
+  top: 7px;
+  width: 100%;
+}
+.item-list .item .item-wrapper .image-wrapper .item-footer {
+  background-color: #fff;
+  bottom: -15px;
+  height: 40px;
+  left: 15px;
+  position: absolute;
+  width: 220px;
+  overflow: hidden;
+}
+.item-list .item .item-wrapper .image-wrapper .item-footer .title {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 5px;
+}

@@ -243,3 +243,8 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+node_modules
+jspm_packages
+npm-debug.log
+package-lock.json
