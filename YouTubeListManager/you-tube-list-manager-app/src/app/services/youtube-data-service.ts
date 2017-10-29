@@ -39,11 +39,10 @@ export class YouTubeDataService {
       .map(response => response.json() as Response<Playlist[]>);
   }
 
-  getPlaylistItems(requestToken: string, playlistId: string): Promise<Response<PlaylistItem[]>> {
+  getPlaylistItems(requestToken: string, playlistId: string): Observable<Response<PlaylistItem[]>> {
     const url = `${this.serverUrl}/api/playlistitem/get/${playlistId}/${requestToken}`;
+    console.log(url);
     return this.http.get(url)
-      .toPromise()
-      .then(response => response.json() as Response<PlaylistItem[]>)
-      .catch(this.handleError);
+      .map(response => response.json() as Response<PlaylistItem[]>);
   }
 }

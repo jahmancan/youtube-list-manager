@@ -7,6 +7,7 @@ export class Playlist {
   Hash: string ;
   ThumbnailUrl: string;
   ItemCount: number = 0;
+  PlaylistItemsNextPageToken: string;
 
   PlaylistItems: PlaylistItem[];
 }

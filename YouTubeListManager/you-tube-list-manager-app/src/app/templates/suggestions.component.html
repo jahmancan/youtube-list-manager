@@ -5,7 +5,7 @@
       <div class="button" data-ng-click="getNextConflict()" data-ng-if="model.markedItems.length > 0"></div>
     </div>
     <ul id="playlist-container" class="item-list" >
-      <li id="{{playlistItem.Hash}}" class="item"  *ngFor="let playlistItem of playlist.PlaylistItems">
+      <li id="{{playlistItem.Hash}}" class="item"  *ngFor="let playlistItem of playlistItems | async">
         <div class="item-wrapper">
           <div (click)="selectPlayList(playlist.Hash)" class="image-wrapper " data-ng-class="{selected: (current.hash === playlistItem.Hash)}">
             <img src="{{playlistItem.VideoInfo.ThumbnailUrl}}" class="image"/>

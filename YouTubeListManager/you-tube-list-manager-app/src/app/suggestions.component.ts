@@ -1,18 +1,25 @@
 import { Component, OnInit }  from '@angular/core';
 import { ActivatedRoute }     from '@angular/router';
 
-import { Playlist }     from './models/playlist';
-import { PlaylistItem } from "./models/playlist-item";
-import { VideoInfo }    from "./models/video";
-import { Suggestion }   from "./models/suggestion";
+import { Observable }         from 'rxjs/Observable';
+import { BehaviorSubject }    from 'rxjs/BehaviorSubject';
 
-import { YouTubeDataService } from "./services/youtube-data-service";
+// Observable operators
+import 'rxjs/add/operator/distinctUntilChanged';
+
+import { Playlist }     from './models/playlist';
+import { PlaylistItem } from './models/playlist-item';
+import { VideoInfo }    from './models/video';
+import { Suggestion }   from './models/suggestion';
+
+import { YouTubeDataService } from './services/youtube-data-service';
 
 
 @Component({
   selector: 'suggestions',
   templateUrl: './templates/suggestions.component.html',
-  styleUrls: ['./styles/app.component.css']
+  styleUrls: ['./styles/app.component.css'],
+  providers: [ YouTubeDataService ]
 })
 
 
@@ -26,48 +33,51 @@ export class SuggestionsComponent  implements OnInit {
   current: PlaylistItem;
   markedItems: PlaylistItem[];
 
-  constructor(private route:ActivatedRoute,
+
+  playlistItems: Observable<PlaylistItem[]> = new Observable<PlaylistItem[]>();
+  private _playlistItems = <BehaviorSubject<PlaylistItem[]>>new BehaviorSubject([]);
+  private nextPageToken = <BehaviorSubject<string>>new BehaviorSubject('');
+
+  constructor(private route: ActivatedRoute,
               private dataService: YouTubeDataService) { }
 
   ngOnInit(): void {
     this.playlistId = this.route.snapshot.params['playListId'];
-    console.log(this.playlistId);
-    if (!this.playlistId){
+    if (!this.playlistId) {
       return;
     }
 
     this.dataService.getPlaylist(this.playlistId)
       .then(playlist =>
-        this.getPlaylistItemsAsync(playlist)
+        this.getPlaylist(playlist)
       );
+
+    this.playlistItems = this._playlistItems.asObservable();
+    this.nextPageToken
+      .distinctUntilChanged()
+      .subscribe((token) => {
+        this.getPlaylistItems(token);
+      });
   }
 
-  private getPlaylistItemsAsync(response: any): void {
-    let responseItem = (undefined === response.Response) ? response : response.Response;
+  private getPlaylist(playlist: Playlist): void {
+    this.playlist = playlist;
+    this._playlistItems.next(this.playlist.PlaylistItems);
+    this.nextPageToken.next(playlist.PlaylistItemsNextPageToken);
+  }
 
-    let isInnerPageTokenPresent = responseItem.PlaylistItemsNextPageToken !== undefined;
-    let nextPageToken = (isInnerPageTokenPresent)
-      ? responseItem.PlaylistItemsNextPageToken
-      : response.NextPageToken;
-
-    if (isInnerPageTokenPresent) {
-      this.playlist = responseItem;
-      //this.playlistStatus = responseItem.PrivacyStatus;
-    } else {
-      console.log(response);
-      this.playlist.PlaylistItems.concat(response.Response as PlaylistItem[]);
-    }
-
-
-    if (!nextPageToken) {
+  private getPlaylistItems(token: string)  {
+    if (token === null) {
       return;
       //emit event for dragular
       //$scope.$broadcast('Playlistfetched');
     }
 
+    this.dataService.getPlaylistItems(token, this.playlistId).subscribe(data => this.loadPlaylistItems(data));
+  }
 
-    console.log(nextPageToken);
-    let nextResponse = this.dataService.getPlaylistItems(nextPageToken, this.playlist.Hash);
-    this.getPlaylistItemsAsync(nextResponse);
+  private loadPlaylistItems(data: any): void {
+    this._playlistItems.next(this._playlistItems.getValue().concat(Object.assign({}, data).Response));
+    this.nextPageToken.next(data.NextPageToken);
   }
 }
