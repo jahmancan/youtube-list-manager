@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit }  from '@angular/core';
+import { ActivatedRoute }     from '@angular/router';
 
-import { Playlist } from './models/playlist';
+import { Playlist }     from './models/playlist';
 import { PlaylistItem } from "./models/playlist-item";
-import { Suggestion } from "./models/suggestion";
+import { VideoInfo }    from "./models/video";
+import { Suggestion }   from "./models/suggestion";
 
 import { YouTubeDataService } from "./services/youtube-data-service";
-import {VideoInfo} from "./models/video";
+
 
 @Component({
   selector: 'suggestions',
@@ -29,15 +30,16 @@ export class SuggestionsComponent  implements OnInit {
               private dataService: YouTubeDataService) { }
 
   ngOnInit(): void {
-    this.playlistId = this.route.snapshot.params['id'];
+    this.playlistId = this.route.snapshot.params['playListId'];
+    console.log(this.playlistId);
     if (!this.playlistId){
       return;
     }
-    console.log(this.playlistId);
+
     this.dataService.getPlaylist(this.playlistId)
       .then(playlist =>
-        console.log(playlist)
-        //this.playlist = playlist;
+        //console.log(playlist)
+        this.playlist = playlist
       );
   }
 }

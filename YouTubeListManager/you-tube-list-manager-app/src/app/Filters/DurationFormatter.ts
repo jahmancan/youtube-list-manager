@@ -10,7 +10,7 @@ export class DurationFormatterPipe implements PipeTransform {
     let minutes: number = Math.floor(duration / 60);
     let seconds: number = duration % 60;
 
-    let stringifiedSeconds: string = minutes.toString();
+    let stringifiedSeconds: string = seconds.toString();
     if (seconds < 10) {
       stringifiedSeconds = '0' + seconds;
     }

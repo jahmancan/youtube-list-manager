@@ -1,5 +1,5 @@
 <div class="module-wrapper">
-  <div class="container half" *ngIf="playlists">
+  <div class="container half" *ngIf="playlist   ">
     <div class="header">
       <h2>{{playlist.Title}} <span class="privacy {{playlistStatus}}">{{playlist.PrivacyStatus}}</span></h2>
       <div class="button" data-ng-click="getNextConflict()" data-ng-if="model.markedItems.length > 0"></div>
@@ -7,7 +7,8 @@
     <ul id="playlist-container" class="item-list" >
       <li id="{{playlistItem.Hash}}" class="item"  *ngFor="let playlistItem of playlist.PlaylistItems">
         <div class="item-wrapper">
-          <div class="image" data-ng-class="{selected: (current.hash === playlistItem.Hash)}" style="background: url('{{playlistItem.VideoInfo.ThumbnailUrl}}') center no-repeat">
+          <div (click)="selectPlayList(playlist.Hash)" class="image-wrapper " data-ng-class="{selected: (current.hash === playlistItem.Hash)}">
+            <img src="{{playlistItem.VideoInfo.ThumbnailUrl}}" class="image"/>
             <div class="extra-info" data-ng-class="{'conflict': (playlistItem.VideoInfo.Live === false)}"><span>{{playlistItem.Position}}</span></div>
             <div class="extra-info duration"><span>{{playlistItem.VideoInfo.Duration | durationFormatter}}</span></div>
             <div class="item-footer">

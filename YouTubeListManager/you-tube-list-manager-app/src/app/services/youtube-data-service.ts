@@ -9,7 +9,7 @@ import {Playlist} from "../models/playlist";
 export class YouTubeDataService {
 
   private serverUrl = 'http://localhost:45921';  // URL to web api
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new Headers({'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Request-Method': 'GET'});
 
   constructor(private http: Http) {
   }
@@ -20,9 +20,9 @@ export class YouTubeDataService {
   }
 
   getPlaylist(id: string): Promise<Playlist> {
-    const url = `${this.serverUrl}/playlist/get/${id}`;
-    return this.http.get(url, {headers: this.headers}).toPromise()
-      .then(response => response.json().Response as Playlist)
+    const url = `${this.serverUrl}/api/playlist/get/${id}`;
+    return this.http.get(url).toPromise()
+      .then(response => response.json() as Playlist)
       .catch(this.handleError);
   }
 

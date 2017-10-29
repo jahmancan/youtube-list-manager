@@ -7,6 +7,7 @@ import { AppRoutingModule }     from './app-routing.module';
 import { DurationFormatterPipe} from "./Filters/DurationFormatter";
 
 import { AppComponent }  from './app.component';
+import { PlaylistComponent } from "./playlist.component";
 import { SuggestionsComponent } from "./suggestions.component";
 
 import { YouTubeDataService} from "./services/youtube-data-service";
@@ -20,6 +21,7 @@ import { YouTubeDataService} from "./services/youtube-data-service";
   declarations: [
     DurationFormatterPipe,
     AppComponent,
+    PlaylistComponent,
     SuggestionsComponent
   ],
   providers: [

@@ -18,7 +18,7 @@ namespace YouTubeListManager.Data.Domain.Mapping
             Property(t => t.ThumbnailUrl);
             Property(t => t.PrivacyStatus);
 
-            HasMany(t => t.PlayListItems).WithRequired(t => t.VideoInfo);
+            HasMany(t => t.PlaylistItems).WithRequired(t => t.VideoInfo);
         }
     }
 }

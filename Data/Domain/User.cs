@@ -8,11 +8,11 @@ namespace YouTubeListManager.Data.Domain
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<PlayList> PlayLists { get; set; }
+        public virtual ICollection<Playlist> Playlists { get; set; }
 
         public User()
         {
-            PlayLists = new List<PlayList>();
+            Playlists = new List<Playlist>();
         }
     }
 }

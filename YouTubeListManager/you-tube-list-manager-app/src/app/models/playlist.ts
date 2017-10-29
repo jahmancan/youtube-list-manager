@@ -7,6 +7,9 @@ export class Playlist {
   Hash: string ;
   ThumbnailUrl: string;
   ItemCount: number = 0;
+  PlayListItemsNextPageToken: string;
+  UserId: number;
+  User: string;
 
   PlaylistItems: PlaylistItem[];
 }

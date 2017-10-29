@@ -2,12 +2,12 @@
 
 namespace YouTubeListManager.Data.Domain
 {
-    public class PlayList
+    public class Playlist
     {
-        public PlayList()
+        public Playlist()
         {
             PrivacyStatus = PrivacyStatus.Public;
-            PlayListItems = new List<PlayListItem>();
+            PlaylistItems = new List<PlaylistItem>();
         }
 
         public int Id { get; set; }
@@ -16,11 +16,11 @@ namespace YouTubeListManager.Data.Domain
         public PrivacyStatus PrivacyStatus { get; set; }
         public string ThumbnailUrl { get; set; }
         public long? ItemCount { get; set; }
-        public string PlayListItemsNextPageToken { get; set; }
+        public string PlaylistItemsNextPageToken { get; set; }
 
 
         public int? UserId { get; set; }
         public virtual User User { get; set; }
-        public virtual ICollection<PlayListItem> PlayListItems { get; set; }
+        public virtual ICollection<PlaylistItem> PlaylistItems { get; set; }
     }
 }

@@ -9,8 +9,8 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         event EventHandler<UpdatePlayListItemEventArgs> PlaylistItemUpdated;
         event EventHandler<UpdatePlayListEventArgs> PlaylistUpdated;
 
-        void UpdatePlayLists(IEnumerable<PlayList> playLists);
-        void UpdatePlaylistItems(PlayList playList, IEnumerable<PlayListItem> playListItems);
+        void UpdatePlayLists(IEnumerable<Playlist> playLists);
+        void UpdatePlaylistItems(Playlist playlist, IEnumerable<PlaylistItem> playListItems);
         void DeletePlaylistItem(string playlistItemId);
     }
 }

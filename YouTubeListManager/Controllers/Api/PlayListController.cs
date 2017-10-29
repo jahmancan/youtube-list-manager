@@ -6,31 +6,31 @@ using YouTubeListManager.Request;
 
 namespace YouTubeListManager.Controllers.Api
 {
-    public class PlayListController : BaseController
+    public class PlaylistController : BaseController
     {
 
-        public PlayListController(IYouTubeListManagerService youTubeListManagerService) : base(youTubeListManagerService)
+        public PlaylistController(IYouTubeListManagerService youTubeListManagerService) : base(youTubeListManagerService)
         {
         }
 
         [HttpGet]
         public JsonResult GetAll(string requestToken)
         {
-            ServiceResponse<List<PlayList>> response = youTubeListManagerService.GetPlaylists(requestToken);
+            ServiceResponse<List<Playlist>> response = youTubeListManagerService.GetPlaylists(requestToken);
             return Json(response, JsonRequestBehavior.AllowGet);
         } 
 
         [HttpGet]
         public JsonResult Get(string hash)
         {
-            PlayList PlayList = youTubeListManagerService.GetPlayList(hash);
-            return Json(PlayList, JsonRequestBehavior.AllowGet);
+            Playlist Playlist = youTubeListManagerService.GetPlayList(hash);
+            return Json(Playlist, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult Save(PlayList playList)
+        public ActionResult Save(Playlist playlist)
         {
-            youTubeListManagerService.UpdatePlayLists(new List<PlayList> {playList});
+            youTubeListManagerService.UpdatePlayLists(new List<Playlist> {playlist});
             return Json("Playlist has been saved successfully", JsonRequestBehavior.DenyGet);
         }
 
