@@ -1,5 +1,5 @@
 import { VideoInfo} from "./video";
-import {Playlist} from "./playlist";
+import { Playlist } from "./playlist";
 
 export class PlaylistItem {
   Id: number;

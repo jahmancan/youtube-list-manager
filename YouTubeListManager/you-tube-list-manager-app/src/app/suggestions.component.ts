@@ -38,8 +38,36 @@ export class SuggestionsComponent  implements OnInit {
 
     this.dataService.getPlaylist(this.playlistId)
       .then(playlist =>
-        //console.log(playlist)
-        this.playlist = playlist
+        this.getPlaylistItemsAsync(playlist)
       );
+  }
+
+  private getPlaylistItemsAsync(response: any): void {
+    let responseItem = (undefined === response.Response) ? response : response.Response;
+
+    let isInnerPageTokenPresent = responseItem.PlaylistItemsNextPageToken !== undefined;
+    let nextPageToken = (isInnerPageTokenPresent)
+      ? responseItem.PlaylistItemsNextPageToken
+      : response.NextPageToken;
+
+    if (isInnerPageTokenPresent) {
+      this.playlist = responseItem;
+      //this.playlistStatus = responseItem.PrivacyStatus;
+    } else {
+      console.log(response);
+      this.playlist.PlaylistItems.concat(response.Response as PlaylistItem[]);
+    }
+
+
+    if (!nextPageToken) {
+      return;
+      //emit event for dragular
+      //$scope.$broadcast('Playlistfetched');
+    }
+
+
+    console.log(nextPageToken);
+    let nextResponse = this.dataService.getPlaylistItems(nextPageToken, this.playlist.Hash);
+    this.getPlaylistItemsAsync(nextResponse);
   }
 }

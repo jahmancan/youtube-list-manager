@@ -1,9 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Injectable }     from '@angular/core';
+import { Headers, Http }  from '@angular/http';
 
+import { Observable }     from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-import {Playlist} from "../models/playlist";
 
+import { Playlist }     from "../models/playlist";
+import { PlaylistItem } from "../models/playlist-item";
+import { Response }     from "../models/response";
 
 @Injectable()
 export class YouTubeDataService {
@@ -26,11 +30,20 @@ export class YouTubeDataService {
       .catch(this.handleError);
   }
 
-  getPlaylists(): Promise<Playlist[]> {
-    const url = `${this.serverUrl}/playlist/getall`;
+  getPlaylists(requestToken?: string): Observable<Response<Playlist[]>> {
+    const url = (requestToken === null || requestToken === undefined || requestToken.length === 0)
+      ? `${this.serverUrl}/playlist/getall`
+      : `${this.serverUrl}/playlist/getall?requestToken=${requestToken}`;
+    console.log(url);
+    return this.http.get(url)
+      .map(response => response.json() as Response<Playlist[]>);
+  }
+
+  getPlaylistItems(requestToken: string, playlistId: string): Promise<Response<PlaylistItem[]>> {
+    const url = `${this.serverUrl}/api/playlistitem/get/${playlistId}/${requestToken}`;
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json().Response as Playlist[])
+      .then(response => response.json() as Response<PlaylistItem[]>)
       .catch(this.handleError);
   }
 }

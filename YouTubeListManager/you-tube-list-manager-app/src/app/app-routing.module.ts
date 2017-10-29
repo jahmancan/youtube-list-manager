@@ -2,7 +2,7 @@ import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { PlaylistComponent }      from './playlist.component';
-import { SuggestionsComponent }      from './suggestions.component';
+import { SuggestionsComponent }   from './suggestions.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/playlist', pathMatch: 'full' },
