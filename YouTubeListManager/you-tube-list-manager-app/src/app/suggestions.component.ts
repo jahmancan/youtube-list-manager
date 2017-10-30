@@ -68,6 +68,7 @@ export class SuggestionsComponent  implements OnInit {
 
   private getPlaylistItems(token: string)  {
     if (token === null) {
+      this.playlist.PlaylistItems = this._playlistItems.getValue();
       return;
       //emit event for dragular
       //$scope.$broadcast('Playlistfetched');
@@ -80,4 +81,8 @@ export class SuggestionsComponent  implements OnInit {
     this._playlistItems.next(this._playlistItems.getValue().concat(Object.assign({}, data).Response));
     this.nextPageToken.next(data.NextPageToken);
   }
+
+  save() {
+    this.dataService.savePlaylist(this.playlist);
+  };
 }

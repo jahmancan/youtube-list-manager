@@ -13,7 +13,7 @@ import { Response }     from "../models/response";
 export class YouTubeDataService {
 
   private serverUrl = 'http://localhost:45921';  // URL to web api
-  private headers = new Headers({'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Request-Method': 'GET'});
+  private headers = new Headers({'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Request-Method': 'GET, POST'});
 
   constructor(private http: Http) {
   }
@@ -28,6 +28,16 @@ export class YouTubeDataService {
     return this.http.get(url).toPromise()
       .then(response => response.json() as Playlist)
       .catch(this.handleError);
+  }
+
+  savePlaylist(playlist: Playlist) {
+    const url = `${this.serverUrl}/playlist/save`;
+    console.log(url);
+    console.log(JSON.stringify(playlist));
+    return this.http.post(url, JSON.stringify(playlist))
+      .map(response => response.json()).subscribe(data => {
+        console.log(data);
+      }, error => console.log('Could not save playlist.'));
   }
 
   getPlaylists(requestToken?: string): Observable<Response<Playlist[]>> {
