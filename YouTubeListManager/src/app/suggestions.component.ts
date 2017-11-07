@@ -96,7 +96,7 @@ export class SuggestionsComponent  implements OnInit {
     this.playlistItems = this._playlistItems.asObservable();
     this.nextPageToken
       .distinctUntilChanged()
-      .subscribe((token) => {
+      .subscribe((token: any) => {
         this.getPlaylistItems(token);
       });
   }

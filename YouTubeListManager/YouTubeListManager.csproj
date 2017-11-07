@@ -263,6 +263,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\VideoController.cs" />
+    <Compile Include="Controllers\ListManagerController.cs" />
     <Compile Include="Infrastructure\JsonValueProviderFactory.cs" />
     <Compile Include="Request\BadRequest.cs" />
     <Compile Include="Controllers\Api\BaseController.cs" />
@@ -379,6 +380,7 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="package.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\angular\i18n\angular-locale_aa-dj.js" />
     <Content Include="Scripts\angular\i18n\angular-locale_aa-er.js" />
@@ -1134,6 +1136,16 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="src\app\styles\app.component.css" />
+    <Content Include="src\app\templates\app.component.html" />
+    <Content Include="src\app\templates\playlists.component.html" />
+    <Content Include="src\app\templates\suggestions.component.html" />
+    <Content Include="src\favicon.ico" />
+    <Content Include="src\index.html" />
+    <Content Include="src\styles.css" />
+    <Content Include="src\systemjs-angular-loader.js" />
+    <Content Include="src\systemjs.config.extras.js" />
+    <Content Include="src\systemjs.config.js" />
     <Content Include="Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1154,6 +1166,9 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\version.json" />
+    <Content Include="src\tsconfig.json" />
+    <Content Include="tslint.json" />
+    <Content Include="Views\ListManager\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1189,6 +1204,24 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="src\app\app-routing.module.ts" />
+    <TypeScriptCompile Include="src\app\app.component.spec.ts" />
+    <TypeScriptCompile Include="src\app\app.component.ts" />
+    <TypeScriptCompile Include="src\app\app.module.ts" />
+    <TypeScriptCompile Include="src\app\Filters\DurationFormatter.ts" />
+    <TypeScriptCompile Include="src\app\models\enums.ts" />
+    <TypeScriptCompile Include="src\app\models\playlist-item.ts" />
+    <TypeScriptCompile Include="src\app\models\playlist.ts" />
+    <TypeScriptCompile Include="src\app\models\response.ts" />
+    <TypeScriptCompile Include="src\app\models\search-request.ts" />
+    <TypeScriptCompile Include="src\app\models\suggestion.ts" />
+    <TypeScriptCompile Include="src\app\models\video.ts" />
+    <TypeScriptCompile Include="src\app\playlist.component.ts" />
+    <TypeScriptCompile Include="src\app\services\youtube-data-service.ts" />
+    <TypeScriptCompile Include="src\app\suggestions.component.ts" />
+    <TypeScriptCompile Include="src\main.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

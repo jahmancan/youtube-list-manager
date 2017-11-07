@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule }    from '@angular/http';
 
 import { AppRoutingModule }     from './app-routing.module';
-import {NgDragDropModule}       from 'ng-drag-drop';
+import { DndModule}             from 'ng2-dnd';
 
 import { DurationFormatterPipe} from './Filters/DurationFormatter';
 
@@ -19,7 +19,7 @@ import { YouTubeDataService}    from './services/youtube-data-service';
     BrowserModule,
     HttpModule,
     AppRoutingModule,
-    NgDragDropModule.forRoot()
+    DndModule.forRoot()
   ],
   declarations: [
     DurationFormatterPipe,
