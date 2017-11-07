@@ -4,8 +4,8 @@
       <h2>{{playlist.Title}} <span class="privacy {{playlistStatus}}">{{playlist.PrivacyStatus}}</span></h2>
       <div class="button" data-ng-click="getNextConflict()" data-ng-if="model.markedItems.length > 0"></div>
     </div>
-    <ul id="playlist-container" class="item-list" dnd-sortable-container [sortableData]="playlistItems">
-      <li id="{{playlistItem.Hash}}" class="item" *ngFor="let playlistItem of playlistItems | async" dnd-sortable [sortableIndex]="playlistItem.Position">
+    <ul id="playlist-container" class="item-list" dnd-sortable-container [sortableData]="playlist.PlaylistItems">
+      <li id="{{playlistItem.Hash}}" class="item" *ngFor="let playlistItem of playlistItems | async" dnd-sortable dnd-droppable [sortableIndex]="playlistItem.Position" (onDropSuccess)="onDrop()" >
         <div class="item-wrapper">
           <div (click)="selectPlayList(playlist.Hash)" class="image-wrapper " data-ng-class="{selected: (current.hash === playlistItem.Hash)}">
             <img src="{{playlistItem.VideoInfo.ThumbnailUrl}}" class="image"/>
