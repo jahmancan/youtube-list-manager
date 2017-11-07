@@ -6,8 +6,9 @@ import { SuggestionsComponent }   from './suggestions.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/playlist', pathMatch: 'full' },
-  { path: 'playlist',                 component: PlaylistComponent },
-  { path: 'suggestions/:playListId',  component: SuggestionsComponent },
+  { path: 'playlist',                   component: PlaylistComponent },
+  { path: 'suggestions/:playListId',    component: SuggestionsComponent },
+  { path: 'ListManager/Index',          component: PlaylistComponent }
 ];
 
 @NgModule({

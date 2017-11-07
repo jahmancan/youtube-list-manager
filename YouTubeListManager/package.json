@@ -37,7 +37,8 @@
     "ng-drag-drop": "^4.0.0",
     "rxjs": "5.4.2",
     "systemjs": "0.19.40",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+    "ng2-dnd": "^2.2.2"
   },
   "devDependencies": {
     "concurrently": "^3.2.0",
