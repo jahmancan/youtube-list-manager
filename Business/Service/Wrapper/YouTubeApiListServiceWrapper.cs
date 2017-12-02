@@ -13,7 +13,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
     public class YouTubeApiListServiceWrapper : YouTubeApiServiceWrapper, IYouTubeApiListServiceWrapper
     {
         //todo: retrieve it from configuration..
-        private const int MaxResults = 5;
+        private const int MaxResults = 50;
         private const string VideoType = "video";
 
         public event EventHandler<ResponseEventArgs<PlaylistListResponse>> PlaylistFetched;
