@@ -1136,12 +1136,11 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="src\app\styles\app.component.css" />
+    <Content Include="src\app\styles\app-bak.component.css" />
     <Content Include="src\app\templates\app.component.html" />
     <Content Include="src\app\templates\playlists.component.html" />
-    <Content Include="src\app\templates\suggestions.component.html" />
+    <Content Include="src\app\templates\suggestion-bak.component.html" />
     <Content Include="src\favicon.ico" />
-    <Content Include="src\index.html" />
     <Content Include="src\styles.css" />
     <Content Include="src\systemjs-angular-loader.js" />
     <Content Include="src\systemjs.config.extras.js" />

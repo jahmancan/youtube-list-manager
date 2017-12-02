@@ -6,6 +6,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 // Observable operators
 import 'rxjs/add/operator/distinctUntilChanged';
+//drag n drop
+import { DragulaService } from 'ng2-dragula';
 
 import { Playlist } from './models/playlist';
 import { PlaylistItem } from './models/playlist-item';
@@ -17,8 +19,8 @@ import { YouTubeDataService } from './services/youtube-data-service';
 
 @Component({
     selector: 'suggestions',
-    templateUrl: './templates/suggestions.component.html',
-    styleUrls: ['./styles/app.component.css'],
+    templateUrl: './templates/suggestion-bak.component.html',
+    styleUrls: ['./styles/app-bak.component.css'], 
     providers: [
         YouTubeDataService,
     ],
@@ -42,18 +44,26 @@ export class SuggestionsComponent implements OnInit {
     private nextPageToken = <BehaviorSubject<string>>new BehaviorSubject('');
 
     constructor(private route: ActivatedRoute,
+        private dragulaService: DragulaService,
         private dataService: YouTubeDataService) {
+        dragulaService.setOptions('playlist-bag', {
+            removeOnSpill: true
+        });
         this.playlist.PlaylistItems = new Array<PlaylistItem>();
     }
 
-    onDrop() {
+    private onDrop(args: [HTMLElement, HTMLElement]) {
         let playlistItems = this.playlist.PlaylistItems;
-        for (let i = 0; i < playlistItems.length; i++) {
-            playlistItems[i].Position = i;
-        }
-        this._playlistItems.next(playlistItems); //update list
+        let observedPlaylistItems = this._playlistItems;
+        setTimeout(function () {
+            for (let i = 0; i < playlistItems.length; i++) {
+                playlistItems[i].Position = i;
+            }
+            observedPlaylistItems.next(playlistItems); //update list
+        }, 100);
+        
     }
-    
+
     ngOnInit(): void {
         this.playlistId = this.route.snapshot.params['playListId'];
         if (!this.playlistId) {
@@ -82,6 +92,10 @@ export class SuggestionsComponent implements OnInit {
     private getPlaylistItems(token: string) {
         if (token === null) {
             this.setSuggestions();
+
+            this.dragulaService.drop.subscribe((value: any) => {
+                this.onDrop(value.slice(1));
+            });
             return;
         }
 
