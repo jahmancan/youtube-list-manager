@@ -2,7 +2,7 @@
 
 namespace YouTubeListManager.Test.Common.TestDomain
 {
-    public class PlayListTestObject : Playlist, ITestThumbnailObject
+    public class PlaylistTestObject : Playlist, ITestThumbnailObject
     {
         public ThumbnailDetailsType ThumbnailDetailsType { get; set; }
     }

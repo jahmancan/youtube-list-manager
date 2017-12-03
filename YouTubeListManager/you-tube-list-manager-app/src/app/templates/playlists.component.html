@@ -1,0 +1,22 @@
+<div class="module-wrapper">
+  <div class="container playlist-container">
+    <div class="header">
+      <h2>PlayLists
+        <span *ngIf="playlists" class="count">{{playlists.length}}</span>
+      </h2>
+    </div>
+    <ul class="item-list" *ngIf="playlists">
+      <li *ngFor="let playlist of playlists | async" (click)="selectPlayList(playlist.Hash)" class="item">
+        <div class="item-wrapper">
+          <div (click)="selectPlayList(playlist.Hash)" class="image-wrapper ">
+            <img src="{{playlist.ThumbnailUrl}}" class="image"/>
+            <div class="extra-info"><span>{{playlist.ItemCount}}</span></div>
+            <div class="item-footer">
+              <div class="title">{{playlist.Title}}</div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

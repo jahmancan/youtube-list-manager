@@ -8,10 +8,10 @@ using YouTubeListManager.Request;
 
 namespace YouTubeListManager.Controllers.Api
 {
-    public class PlayListController : BaseController
+    public class PlaylistController : BaseController
     {
 
-        public PlayListController(IYouTubeListManagerService youTubeListManagerService) : base(youTubeListManagerService)
+        public PlaylistController(IYouTubeListManagerService youTubeListManagerService) : base(youTubeListManagerService)
         {
         }
 
@@ -25,7 +25,7 @@ namespace YouTubeListManager.Controllers.Api
         [HttpGet]
         public JsonResult GetAll(string requestToken)
         {
-            ServiceResponse<List<Playlist>> response = youTubeListManagerService.GetPlayLists(requestToken);
+            ServiceResponse<List<Playlist>> response = youTubeListManagerService.GetPlaylists(requestToken);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
@@ -40,14 +40,14 @@ namespace YouTubeListManager.Controllers.Api
         [HttpGet]
         public JsonResult Get(string hash)
         {
-            Playlist PlayList = youTubeListManagerService.GetPlayList(hash);
-            return Json(PlayList, JsonRequestBehavior.AllowGet);
+            Playlist Playlist = youTubeListManagerService.GetPlayList(hash);
+            return Json(Playlist, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult Save(Playlist playList)
+        public ActionResult Save(Playlist playlist)
         {
-            youTubeListManagerService.UpdatePlayLists(new List<Playlist> {playList});
+            youTubeListManagerService.UpdatePlayLists(new List<Playlist> {playlist});
             return Json("Playlist has been saved successfully", JsonRequestBehavior.DenyGet);
         }
 

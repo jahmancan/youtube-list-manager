@@ -8,7 +8,8 @@ using YouTubeListManager.BusinessContracts.Service.Wrapper;
 using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.CrossCutting.EventArgs;
 using YouTubeListManager.Logger;
-
+using Playlist = YouTubeListManager.Data.Domain.Playlist;
+using PlaylistItem = YouTubeListManager.Data.Domain.PlaylistItem;
 using YouTubePlayListItem = Google.Apis.YouTube.v3.Data.PlaylistItem;
 
 namespace YouTubeListAPI.Business.Service.Wrapper
@@ -20,15 +21,15 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         }
 
         public event EventHandler<UpdatePlayListEventArgs> PlaylistUpdated;
-        private void OnPlaylistUpdated(YouTubeListManager.CrossCutting.Domain.Playlist playList)
+        private void OnPlaylistUpdated(Playlist playlist)
         {
-            PlaylistUpdated?.Invoke(this, new UpdatePlayListEventArgs(playList));
+            PlaylistUpdated?.Invoke(this, new UpdatePlayListEventArgs(playlist));
         }
 
         public event EventHandler<UpdatePlayListItemEventArgs> PlaylistItemUpdated;
-        private void OnPlayListItemUpdated(YouTubeListManager.CrossCutting.Domain.Playlist playList, YouTubeListManager.CrossCutting.Domain.PlaylistItem playListItem)
+        private void OnPlayListItemUpdated(Playlist playlist, PlaylistItem playlistItem)
         {
-            PlaylistItemUpdated?.Invoke(this, new UpdatePlayListItemEventArgs(playList, playListItem));
+            PlaylistItemUpdated?.Invoke(this, new UpdatePlayListItemEventArgs(playlist, playlistItem));
         }
 
         public void UpdatePlaylists(IEnumerable<YouTubeListManager.CrossCutting.Domain.Playlist> playLists)
@@ -43,7 +44,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             {
                 InsertUpdateYouTubePlayListItem(playListItem);
 
-                OnPlayListItemUpdated(playList, playListItem);
+                OnPlayListItemUpdated(playlist, playListItem);
             }
         }
 
@@ -61,50 +62,50 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        private void InsertUpdateYouTubePlayListItem(YouTubeListManager.CrossCutting.Domain.PlaylistItem playListItem)
+        private void InsertUpdateYouTubePlayListItem(PlaylistItem playlistItem)
         {
-            YouTubePlayListItem youTubePlayListItem = GetPlayListItem(playListItem.Hash);
+            YouTubePlayListItem youTubePlayListItem = GetPlayListItem(playlistItem.Hash);
             if (youTubePlayListItem == null)
-                InsertPlaylistItem(playListItem);
+                InsertPlaylistItem(playlistItem);
             else
             {
-                youTubePlayListItem.Snippet.Position = playListItem.Position;
+                youTubePlayListItem.Snippet.Position = playlistItem.Position;
                 UpdatePlaylistItem(youTubePlayListItem);
             }
         }
 
-        private YouTubePlayListItem CreatePlaylistItem(YouTubeListManager.CrossCutting.Domain.PlaylistItem playListItem)
+        private YouTubePlayListItem CreatePlaylistItem(PlaylistItem playlistItem)
         {
             return new YouTubePlayListItem
             {
                 Snippet = new PlaylistItemSnippet
                 {
-                    PlaylistId = playListItem.Playlist.Hash,
-                    Position = playListItem.Position,
-                    Title = playListItem.VideoInfo.Title,
+                    PlaylistId = playlistItem.Playlist.Hash,
+                    Position = playlistItem.Position,
+                    Title = playlistItem.VideoInfo.Title,
                     Thumbnails = new ThumbnailDetails
                     {
                         Standard = new Thumbnail
                         {
-                            Url = playListItem.VideoInfo.ThumbnailUrl
+                            Url = playlistItem.VideoInfo.ThumbnailUrl
                         },
                         Default__ = new Thumbnail
                         {
-                            Url = playListItem.VideoInfo.ThumbnailUrl
+                            Url = playlistItem.VideoInfo.ThumbnailUrl
                         }
                     },
                     ResourceId = new ResourceId
                     {
                         Kind = VideoInfo.VideoKind,
-                        VideoId = playListItem.VideoInfo.Hash
+                        VideoId = playlistItem.VideoInfo.Hash
                     }
                 }
             };
         }
 
-        private void InsertPlaylistItem(YouTubeListManager.CrossCutting.Domain.PlaylistItem playListItem)
+        private void InsertPlaylistItem(PlaylistItem playlistItem)
         {
-            YouTubePlayListItem youTubePlaylistItem = CreatePlaylistItem(playListItem);
+            YouTubePlayListItem youTubePlaylistItem = CreatePlaylistItem(playlistItem);
             try
             {
                 var request = youTubeService.PlaylistItems.Insert(youTubePlaylistItem, "snippet");
@@ -135,20 +136,20 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        private void UpdateYouTubePlayList(YouTubeListManager.CrossCutting.Domain.Playlist playList)
+        private void UpdateYouTubePlayList(Playlist playlist)
         {
-            var youTubePlaylist = GetYouTubePlayList(playList.Hash);
+            var youTubePlaylist = GetYouTubePlayList(playlist.Hash);
             if (youTubePlaylist == null) return;
 
-            youTubePlaylist.Snippet.Title = playList.Title;
-            youTubePlaylist.Status.PrivacyStatus = Enum.GetName(typeof (PrivacyStatus), playList.PrivacyStatus).ToLower();
+            youTubePlaylist.Snippet.Title = playlist.Title;
+            youTubePlaylist.Status.PrivacyStatus = Enum.GetName(typeof (PrivacyStatus), playlist.PrivacyStatus).ToLower();
 
             try
             {
                 var request = YouTubeService.Playlists.Update(youTubePlaylist, "snippet, status");
                 request.ExecuteAsync(CancellationToken.None);
 
-                OnPlaylistUpdated(playList);
+                OnPlaylistUpdated(playlist);
             }
             catch (Exception e)
             {

@@ -24,16 +24,16 @@
             });
         };
 
-        $scope.$on('PlayListfetched', function () {
+        $scope.$on('Playlistfetched', function () {
             $scope.model.playListItemsFetched = true;
 
             var draggableContainer = document.getElementById("playlist-container");
             dragularService([draggableContainer], {
-                containersModel: [$scope.model.playlist.PlayListItems],
+                containersModel: [$scope.model.playlist.PlaylistItems],
                 scope: $scope
             });
 
-            $scope.model.markedItems = $scope.model.playlist.PlayListItems.filter(function (playListItem) { return playListItem.VideoInfo.Live === false });
+            $scope.model.markedItems = $scope.model.playlist.PlaylistItems.filter(function (playListItem) { return playListItem.VideoInfo.Live === false });
             if ($scope.model.markedItems.length === 0)
                 return;
 
@@ -52,7 +52,7 @@
                 var jQueryElement = jQuery(element);
                 var oldPosition = parseInt(jQueryElement.data("position"));
 
-                var playListItems = $scope.model.playlist.PlayListItems;
+                var playListItems = $scope.model.playlist.PlaylistItems;
                 var item = playListItems.filter(function(item) { return item.Hash === element.id})[0];
                 var newPosition = playListItems.indexOf(item);
 
@@ -90,8 +90,8 @@
         };
 
         $scope.resolveConflict = function (video) {
-            var playListItemIndex = $scope.model.playlist.PlayListItems.findIndex(function (i) { return i.VideoInfo.Hash === $scope.model.current.VideoInfo.Hash; });
-            $scope.model.playlist.PlayListItems[playListItemIndex].VideoInfo = video;
+            var playListItemIndex = $scope.model.playlist.PlaylistItems.findIndex(function (i) { return i.VideoInfo.Hash === $scope.model.current.VideoInfo.Hash; });
+            $scope.model.playlist.PlaylistItems[playListItemIndex].VideoInfo = video;
         };
 
         $scope.save = function () {
@@ -105,9 +105,9 @@
 
                 var getPlayListItemsAsync = function (response) {
                     var responseItem = angular.isUndefined(response.Response) ? response : response.Response;
-                    var isInnerPageTokenPresent = !angular.isUndefined(responseItem.PlayListItemsNextPageToken);
+                    var isInnerPageTokenPresent = !angular.isUndefined(responseItem.PlaylistItemsNextPageToken);
                     var nextPageToken = (isInnerPageTokenPresent)
-                        ? responseItem.PlayListItemsNextPageToken
+                        ? responseItem.PlaylistItemsNextPageToken
                         : response.NextPageToken;
 
                     if (isInnerPageTokenPresent) {
@@ -116,7 +116,7 @@
                     } else {
                         //response item is playlistItem list
                         angular.forEach(responseItem, function (value) {
-                            $scope.model.playlist.PlayListItems.push(value);
+                            $scope.model.playlist.PlaylistItems.push(value);
                         });
                     }
 
@@ -125,7 +125,7 @@
                             getPlayListItemsAsync(nextResponse);
                         });
                     } else
-                        $scope.$broadcast('PlayListfetched');
+                        $scope.$broadcast('Playlistfetched');
                 }
 
                 getPlayListItemsAsync(playListResponse);

@@ -7,16 +7,16 @@ using YouTubeListManager.Request;
 
 namespace YouTubeListManager.Controllers.Api
 {
-    public class PlayListItemController : BaseController
+    public class PlaylistItemController : BaseController
     {
-        public PlayListItemController(IYouTubeListManagerService youTubeListManagerService) : base(youTubeListManagerService)
+        public PlaylistItemController(IYouTubeListManagerService youTubeListManagerService) : base(youTubeListManagerService)
         {
         }
 
         [HttpGet]
         public JsonResult Get(string playlistId, string requestToken)
         {
-            ServiceResponse<List<PlaylistItem>> response = youTubeListManagerService.GetPlayListItems(requestToken, playlistId);
+            ServiceResponse<List<PlaylistItem>> response = youTubeListManagerService.GetPlaylistItems(requestToken, playlistId);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         

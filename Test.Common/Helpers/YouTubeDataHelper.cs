@@ -11,7 +11,7 @@ namespace YouTubeListManager.Test.Common.Helpers
 {
     public static class YouTubeDataTestHelper
     {
-        public static PlaylistListResponse CreatePlayListResponse(List<PlayListTestObject> playLists)
+        public static PlaylistListResponse CreatePlayListResponse(List<PlaylistTestObject> playLists)
         {
             var playLisyListResponse = new PlaylistListResponse
             {
@@ -30,14 +30,14 @@ namespace YouTubeListManager.Test.Common.Helpers
             return playlistItemListResponse;
         }
 
-        public static YouTubePlayList CreatePlayList(PlayListTestObject playList)
+        public static YouTubePlayList CreatePlayList(PlaylistTestObject playlist)
         {
             return new YouTubePlayList
             {
-                Id = playList.Hash,
+                Id = playlist.Hash,
                 Status =
-                    new PlaylistStatus {PrivacyStatus = Enum.GetName(typeof (PrivacyStatus), playList.PrivacyStatus)},
-                Snippet = new PlaylistSnippet {Title = playList.Title, Thumbnails = CreateThumbnailDetails(playList)},
+                    new PlaylistStatus {PrivacyStatus = Enum.GetName(typeof (PrivacyStatus), playlist.PrivacyStatus)},
+                Snippet = new PlaylistSnippet {Title = playlist.Title, Thumbnails = CreateThumbnailDetails(playlist)},
                 ContentDetails = new PlaylistContentDetails { ItemCount = 2}
             };
         }
