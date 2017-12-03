@@ -22,16 +22,21 @@ namespace YouTubeListManager
             );
 
             routes.MapRoute(
+                "PlayListGetAllDefault",
+                "playlist/getall",
+                new { controller = "PlayList", action = "GetAll" }
+            );
+
+            routes.MapRoute(
                 "PlayListItemGet",
                 "api/playlistitem/get/{playListId}/{requestToken}",
                 new { controller = "PlayListItem", action = "Get", requestToken = UrlParameter.Optional }
             );
 
-            
-            routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Manager", action = "Index", id = UrlParameter.Optional }
+           routes.MapRoute(
+                name: "angular",
+                url: "{*url}",
+                defaults: new { controller = "ListManager", action = "Index" } // The view that bootstraps Angular 2
             );
         }
     }

@@ -22,11 +22,11 @@ namespace YouTubeListManager.Data.Domain
         public string ThumbnailUrl { get; set; }
         public PrivacyStatus PrivacyStatus { get; set; }
 
-        public virtual ICollection<PlayListItem> PlayListItems { get; set; }
+        public virtual ICollection<PlaylistItem> PlaylistItems { get; set; }
 
         public VideoInfo()
         {
-            PlayListItems = new List<PlayListItem>();
+            PlaylistItems = new List<PlaylistItem>();
         }
     }
 }

@@ -6,7 +6,8 @@ using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Logger;
-
+using Playlist = YouTubeListManager.Data.Domain.Playlist;
+using PlaylistItem = YouTubeListManager.Data.Domain.PlaylistItem;
 using YouTubePlayListItem = Google.Apis.YouTube.v3.Data.PlaylistItem;
 
 namespace YouTubeListAPI.Business.Service.Wrapper
@@ -18,30 +19,30 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         }
 
         public event EventHandler<UpdatePlayListEventArgs> PlaylistUpdated;
-        private void OnPlaylistUpdated(PlayList playList)
+        private void OnPlaylistUpdated(Playlist playlist)
         {
-            PlaylistUpdated?.Invoke(this, new UpdatePlayListEventArgs(playList));
+            PlaylistUpdated?.Invoke(this, new UpdatePlayListEventArgs(playlist));
         }
 
         public event EventHandler<UpdatePlayListItemEventArgs> PlaylistItemUpdated;
-        private void OnPlayListItemUpdated(PlayList playList, PlayListItem playListItem)
+        private void OnPlayListItemUpdated(Playlist playlist, PlaylistItem playlistItem)
         {
-            PlaylistItemUpdated?.Invoke(this, new UpdatePlayListItemEventArgs(playList, playListItem));
+            PlaylistItemUpdated?.Invoke(this, new UpdatePlayListItemEventArgs(playlist, playlistItem));
         }
 
-        public void UpdatePlayLists(IEnumerable<PlayList> playLists)
+        public void UpdatePlayLists(IEnumerable<Playlist> playLists)
         {
             foreach (var playList in playLists)
                 UpdateYouTubePlayList(playList);
         }
 
-        public void UpdatePlaylistItems(PlayList playList, IEnumerable<PlayListItem> playListItems)
+        public void UpdatePlaylistItems(Playlist playlist, IEnumerable<PlaylistItem> playListItems)
         {
             foreach (var playListItem in playListItems)
             {
                 InsertUpdateYouTubePlayListItem(playListItem);
 
-                OnPlayListItemUpdated(playList, playListItem);
+                OnPlayListItemUpdated(playlist, playListItem);
             }
         }
 
@@ -59,50 +60,50 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        private void InsertUpdateYouTubePlayListItem(PlayListItem playListItem)
+        private void InsertUpdateYouTubePlayListItem(PlaylistItem playlistItem)
         {
-            YouTubePlayListItem youTubePlayListItem = GetPlayListItem(playListItem.Hash);
+            YouTubePlayListItem youTubePlayListItem = GetPlayListItem(playlistItem.Hash);
             if (youTubePlayListItem == null)
-                InsertPlaylistItem(playListItem);
+                InsertPlaylistItem(playlistItem);
             else
             {
-                youTubePlayListItem.Snippet.Position = playListItem.Position;
+                youTubePlayListItem.Snippet.Position = playlistItem.Position;
                 UpdatePlaylistItem(youTubePlayListItem);
             }
         }
 
-        private YouTubePlayListItem CreatePlaylistItem(PlayListItem playListItem)
+        private YouTubePlayListItem CreatePlaylistItem(PlaylistItem playlistItem)
         {
             return new YouTubePlayListItem
             {
                 Snippet = new PlaylistItemSnippet
                 {
-                    PlaylistId = playListItem.PlayList.Hash,
-                    Position = playListItem.Position,
-                    Title = playListItem.VideoInfo.Title,
+                    PlaylistId = playlistItem.Playlist.Hash,
+                    Position = playlistItem.Position,
+                    Title = playlistItem.VideoInfo.Title,
                     Thumbnails = new ThumbnailDetails
                     {
                         Standard = new Thumbnail
                         {
-                            Url = playListItem.VideoInfo.ThumbnailUrl
+                            Url = playlistItem.VideoInfo.ThumbnailUrl
                         },
                         Default__ = new Thumbnail
                         {
-                            Url = playListItem.VideoInfo.ThumbnailUrl
+                            Url = playlistItem.VideoInfo.ThumbnailUrl
                         }
                     },
                     ResourceId = new ResourceId
                     {
                         Kind = VideoInfo.VideoKind,
-                        VideoId = playListItem.VideoInfo.Hash
+                        VideoId = playlistItem.VideoInfo.Hash
                     }
                 }
             };
         }
 
-        private void InsertPlaylistItem(PlayListItem playListItem)
+        private void InsertPlaylistItem(PlaylistItem playlistItem)
         {
-            YouTubePlayListItem youTubePlaylistItem = CreatePlaylistItem(playListItem);
+            YouTubePlayListItem youTubePlaylistItem = CreatePlaylistItem(playlistItem);
             try
             {
                 var request = youTubeService.PlaylistItems.Insert(youTubePlaylistItem, "snippet");
@@ -119,7 +120,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             try
             {
                 var request = youTubeService.PlaylistItems.Update(playlistItem, "snippet, status, contentDetails");
-                Task<PlaylistItem> response = request.ExecuteAsync(CancellationToken.None);
+                Task<YouTubePlayListItem> response = request.ExecuteAsync(CancellationToken.None);
                 var responsePlaylistItem = response.Result;
                 if (responsePlaylistItem == null)
                 {
@@ -133,20 +134,20 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        private void UpdateYouTubePlayList(PlayList playList)
+        private void UpdateYouTubePlayList(Playlist playlist)
         {
-            var youTubePlaylist = GetYouTubePlayList(playList.Hash);
+            var youTubePlaylist = GetYouTubePlayList(playlist.Hash);
             if (youTubePlaylist == null) return;
 
-            youTubePlaylist.Snippet.Title = playList.Title;
-            youTubePlaylist.Status.PrivacyStatus = Enum.GetName(typeof (PrivacyStatus), playList.PrivacyStatus).ToLower();
+            youTubePlaylist.Snippet.Title = playlist.Title;
+            youTubePlaylist.Status.PrivacyStatus = Enum.GetName(typeof (PrivacyStatus), playlist.PrivacyStatus).ToLower();
 
             try
             {
                 var request = YouTubeService.Playlists.Update(youTubePlaylist, "snippet, status");
                 request.ExecuteAsync(CancellationToken.None);
 
-                OnPlaylistUpdated(playList);
+                OnPlaylistUpdated(playlist);
             }
             catch (Exception e)
             {

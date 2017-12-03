@@ -1,0 +1,47 @@
+<div class="module-wrapper">
+  <div class="container half" *ngIf="playlist">
+    <div class="header">
+      <h2>{{playlist.Title}} <span class="privacy {{playlistStatus}}">{{playlist.PrivacyStatus}}</span></h2>
+      <!--<div class="button" data-ng-click="getNextConflict()" *ngIf="markedItems.length > 0"></div>-->
+    </div>
+    <ul id="playlist-container" class="item-list" [dragula]='"playlist-bag"' [dragulaModel]="playlist.PlaylistItems">
+      <li id="{{playlistItem.Hash}}" class="item" *ngFor="let playlistItem of playlistItems | async" [ngClass]="{'selected': isSelected(playlistItem)}" >
+        <div class="item-wrapper">
+          <div class="image-wrapper " >
+            <img src="{{playlistItem.VideoInfo.ThumbnailUrl}}" class="image"/>
+            <div class="extra-info" [ngClass]="{'conflict': (!playlistItem.VideoInfo.Live)}"><span>{{playlistItem.Position}}</span></div>
+            <div class="extra-info duration"><span>{{playlistItem.VideoInfo.Duration | durationFormatter}}</span></div>
+            <div class="item-footer">
+              <div class="title">{{playlistItem.VideoInfo.Title}}</div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="footer">
+      <div class="button" (click)="save()"><span>Save</span></div>
+    </div>
+  </div>
+  <div class="container half" *ngIf="suggestions">
+    <div class="header">
+      <!--<h2>
+        <input class="checkbox" type="checkbox" data-ng-model="autoLoad"/> Suggestions <input type="text" data-ng-model="model.searchKey"/>
+      </h2>-->
+    </div>
+    <ul class="item-list">
+      <li class="item" data-ng-repeat="video in suggestions" (click)="resolveConflict(video)" (dblclick)="previewVideo(video.Hash)">
+        <div class="item-wrapper">
+          <div class="image" style="background: url('{{video.ThumbnailUrl}}') center no-repeat">
+            <div class="extra-info duration"><span>{{video.Duration | durationFormatter}}</span></div>
+            <div class="item-footer">
+              <div class="title">{{video.Title}}</div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="footer" *ngIf="!autoLoad">
+      <div class="button" (click)="showSuggestions()"><span>Load more</span></div>
+    </div>
+  </div>
+</div>

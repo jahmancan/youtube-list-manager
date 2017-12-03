@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace YouTubeListManager.Data.Domain.Mapping
 {
-    internal class PlayListItemMap : EntityTypeConfiguration<PlayListItem>
+    internal class PlaylistItemMap : EntityTypeConfiguration<PlaylistItem>
     {
-        public PlayListItemMap()
+        public PlaylistItemMap()
         {
-            ToTable("PlayListItem");
+            ToTable("PlaylistItem");
             HasKey(t => t.Id);
 
             Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);

@@ -16,15 +16,15 @@ namespace YouTubeListManager.Data
             Database.Initialize(true);
         }
 
-        public DbSet<PlayListItem> PlayListItems { get; set; }
-        public DbSet<PlayList> PlayLists { get; set; }
+        public DbSet<PlaylistItem> PlaylistItems { get; set; }
+        public DbSet<Playlist> Playlists { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<VideoInfo> Video { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new PlayListItemMap());
-            modelBuilder.Configurations.Add(new PlayListMap());
+            modelBuilder.Configurations.Add(new PlaylistItemMap());
+            modelBuilder.Configurations.Add(new PlaylistMap());
             modelBuilder.Configurations.Add(new UserMap());
             modelBuilder.Configurations.Add(new VideoInfoMap());
         }

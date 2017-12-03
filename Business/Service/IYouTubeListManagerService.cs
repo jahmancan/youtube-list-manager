@@ -6,11 +6,11 @@ namespace YouTubeListAPI.Business.Service
 {
     public interface IYouTubeListManagerService
     {
-        ServiceResponse<List<PlayListItem>> GetPlayListItems(string requestToken, string playListId);
-        PlayList GetPlayList(string playListId);
-        ServiceResponse<List<PlayList>> GetPlaylists(string requestToken);
+        ServiceResponse<List<PlaylistItem>> GetPlaylistItems(string requestToken, string playListId);
+        Playlist GetPlayList(string playListId);
+        ServiceResponse<List<Playlist>> GetPlaylists(string requestToken);
         ServiceResponse<List<VideoInfo>> SearchSuggestions(SearchRequest searchRequest);
 
-        void UpdatePlayLists(IEnumerable<PlayList> playLists);
+        void UpdatePlayLists(IEnumerable<Playlist> playLists);
     }
 }

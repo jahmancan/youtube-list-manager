@@ -3,11 +3,11 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace YouTubeListManager.Data.Domain.Mapping
 {
-    public class PlayListMap : EntityTypeConfiguration<PlayList>
+    public class PlaylistMap : EntityTypeConfiguration<Playlist>
     {
-        public PlayListMap()
+        public PlaylistMap()
         {
-            ToTable("PlayList");
+            ToTable("Playlist");
             HasKey(t => t.Id);
 
             Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
@@ -18,10 +18,10 @@ namespace YouTubeListManager.Data.Domain.Mapping
             Property(t => t.PrivacyStatus);
 
             Ignore(t => t.ItemCount);
-            Ignore(t => t.PlayListItemsNextPageToken);
+            Ignore(t => t.PlaylistItemsNextPageToken);
 
-            HasOptional(t => t.User).WithMany(t => t.PlayLists).HasForeignKey(t => t.UserId);
-            HasMany(t => t.PlayListItems).WithRequired(t => t.PlayList);
+            HasOptional(t => t.User).WithMany(t => t.Playlists).HasForeignKey(t => t.UserId);
+            HasMany(t => t.PlaylistItems).WithRequired(t => t.Playlist);
         }
     }
 }
