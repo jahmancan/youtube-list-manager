@@ -2,14 +2,14 @@
   <div class="container half" *ngIf="playlist">
     <div class="header">
       <h2>{{playlist.Title}} <span class="privacy {{playlistStatus}}">{{playlist.PrivacyStatus}}</span></h2>
-      <div class="button" data-ng-click="getNextConflict()" data-ng-if="model.markedItems.length > 0"></div>
+      <!--<div class="button" data-ng-click="getNextConflict()" *ngIf="markedItems.length > 0"></div>-->
     </div>
     <ul id="playlist-container" class="item-list" [dragula]='"playlist-bag"' [dragulaModel]="playlist.PlaylistItems">
-      <li id="{{playlistItem.Hash}}" class="item" *ngFor="let playlistItem of playlistItems | async" >
+      <li id="{{playlistItem.Hash}}" class="item" *ngFor="let playlistItem of playlistItems | async" [ngClass]="{'selected': isSelected(playlistItem)}" >
         <div class="item-wrapper">
-          <div class="image-wrapper " data-ng-class="{selected: (current.hash === playlistItem.Hash)}">
+          <div class="image-wrapper " >
             <img src="{{playlistItem.VideoInfo.ThumbnailUrl}}" class="image"/>
-            <div class="extra-info" data-ng-class="{'conflict': (playlistItem.VideoInfo.Live === false)}"><span>{{playlistItem.Position}}</span></div>
+            <div class="extra-info" [ngClass]="{'conflict': (!playlistItem.VideoInfo.Live)}"><span>{{playlistItem.Position}}</span></div>
             <div class="extra-info duration"><span>{{playlistItem.VideoInfo.Duration | durationFormatter}}</span></div>
             <div class="item-footer">
               <div class="title">{{playlistItem.VideoInfo.Title}}</div>

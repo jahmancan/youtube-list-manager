@@ -62,7 +62,7 @@
                 height: 180px;
             }
 
-            .item-list .item .item-wrapper .image-wrapper.selected {
+            .item-list .item.selected .item-wrapper .image-wrapper {
                 box-shadow: 0 0 20px #E9522B;
             }
 

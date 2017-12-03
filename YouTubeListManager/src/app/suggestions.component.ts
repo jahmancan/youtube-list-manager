@@ -26,16 +26,14 @@ import { YouTubeDataService } from './services/youtube-data-service';
     ],
 })
 
-
-
 export class SuggestionsComponent implements OnInit {
 
     autoautoLoad: boolean = false;
     playlistId: string;
     playlist: Playlist = new Playlist();
     suggestions: VideoInfo[];
-    current: PlaylistItem;
-    markedItems: PlaylistItem[];
+    current: PlaylistItem = new PlaylistItem();
+    markedItems: PlaylistItem[] = new Array<PlaylistItem>();
     searchKey: string; //todo: convert to behavior subject
 
 
@@ -49,6 +47,7 @@ export class SuggestionsComponent implements OnInit {
         dragulaService.setOptions('playlist-bag', {
             removeOnSpill: true
         });
+        this.current.Hash = "";
         this.playlist.PlaylistItems = new Array<PlaylistItem>();
     }
 
@@ -81,6 +80,10 @@ export class SuggestionsComponent implements OnInit {
             .subscribe((token: any) => {
                 this.getPlaylistItems(token);
             });
+    }
+
+    isSelected(playlistItem: PlaylistItem): boolean {
+        return this.current != undefined && this.current.Hash === playlistItem.Hash;
     }
 
     private getPlaylist(playlist: Playlist): void {
