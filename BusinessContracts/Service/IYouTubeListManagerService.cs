@@ -8,20 +8,20 @@ namespace YouTubeListManager.BusinessContracts.Service
 {
     public interface IYouTubeListManagerService
     {
-        Task<ServiceResponse<List<PlaylistItem>>> GetPlayListItemsAsync(string requestToken, string playlistId);
-        ServiceResponse<List<PlaylistItem>> GetPlayListItems(string requestToken, string playlistId);
+        Task<ServiceResponse<List<PlaylistItem>>> GetPlaylistItemsAsync(string requestToken, string playlistId);
+        ServiceResponse<List<PlaylistItem>> GetPlaylistItems(string requestToken, string playlistId);
 
-        Task<Playlist> GetPlayListAsync(string playlistId);
-        Playlist GetPlayList(string playlistId);
+        Task<Playlist> GetPlaylistAsync(string playlistId);
+        Playlist GetPlaylist(string playlistId);
 
-        Task<ServiceResponse<List<Playlist>>> GetPlayListsAsync(string requestToken);
-        ServiceResponse<List<Playlist>> GetPlayLists(string requestToken);
+        Task<ServiceResponse<List<Playlist>>> GetPlaylistsAsync(string requestToken);
+        ServiceResponse<List<Playlist>> GetPlaylists(string requestToken);
         
         Task<ServiceResponse<List<VideoInfo>>> SearchSuggestionsAsync(SearchRequest searchRequest);
         ServiceResponse<List<VideoInfo>> SearchSuggestions(SearchRequest searchRequest);
 
-        ServiceResponse<List<PlaylistItem>> SynchronizePlayListItems(string requestToken, string playlistId);
+        ServiceResponse<List<PlaylistItem>> SynchronizePlaylistItems(string requestToken, string playlistId);
 
-        void UpdatePlayLists(IEnumerable<Playlist> playLists);
+        void UpdatePlaylists(IEnumerable<Playlist> playLists);
     }
 }

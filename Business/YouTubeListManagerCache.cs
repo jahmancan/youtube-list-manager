@@ -11,7 +11,7 @@ namespace YouTubeListAPI.Business
     {
         private const string PlayListCacheKey = "playlist";
 
-        public List<Playlist> GetPlayLists(Func<Playlist, bool> predicate)
+        public List<Playlist> GetPlaylists(Func<Playlist, bool> predicate)
         {
             var playLists = Get<Playlist>(PlayListCacheKey);
             return predicate != null ? playLists.Where(predicate).ToList() : playLists;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListManager.CrossCutting.EventArgs;
@@ -12,9 +13,9 @@ namespace YouTubeListManager.BusinessContracts.Service.Wrapper
         event EventHandler<ResponseEventArgs<PlaylistItemListResponse>> PlaylistItemsFetched;
         event EventHandler<ResponseEventArgs<SearchListResponse>> SearchResultsFetched;
 
-        void ExecuteAsyncRequestPlayListItems(string requestToken, string playListId);
-        void ExecuteAsyncRequestPlayList(string requestToken, string playListId);
-        void ExcuteAsyncRequestPlayLists(string requestToken);
-        void ExecuteAsyncRequestSearch(SearchRequest searchRequest);
+        Task<PlaylistItemListResponse> ExecuteAsyncRequestPlayListItems(string requestToken, string playListId);
+        Task<PlaylistListResponse> ExecuteAsyncRequestPlayList(string requestToken, string playListId);
+        Task<PlaylistListResponse> ExcuteAsyncRequestPlayLists(string requestToken);
+        Task<SearchListResponse> ExecuteAsyncRequestSearch(SearchRequest searchRequest);
     }
 }

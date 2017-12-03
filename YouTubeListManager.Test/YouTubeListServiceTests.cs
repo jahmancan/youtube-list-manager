@@ -48,7 +48,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            var playLists = context.GetPlayLists(string.Empty);
+            var playLists = context.GetPlaylists(string.Empty);
 
             Assert.AreEqual(1, playLists.Response.Count());
             var playList = playLists.Response.First();
@@ -110,7 +110,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>(new ParameterOverride("youTubeListManagerCache", cache));
 
-            var playLists = context.GetPlayLists(string.Empty);
+            var playLists = context.GetPlaylists(string.Empty);
 
             Assert.AreEqual(2, playLists.Response.Count());
             var playList = playLists.Response.First();
@@ -212,7 +212,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            var playList = context.GetPlayList(expectedHash);
+            var playList = context.GetPlaylist(expectedHash);
 
             Assert.IsNotNull(playList);
             Assert.AreEqual(dummyPlayList.Hash, playList.Hash);
@@ -356,7 +356,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            var playList = context.GetPlayList(expectedHash);
+            var playList = context.GetPlaylist(expectedHash);
 
             Assert.IsNotNull(playList);
             Assert.AreEqual(dummyPlayList.Hash, playList.Hash);
@@ -494,11 +494,11 @@ namespace YouTubeListManager.Test
             repositoryStore.VideoInfoRepository.Insert(dummyVideo1.CreateVideoInfo());
             repositoryStore.VideoInfoRepository.Insert(dummyVideo2.CreateVideoInfo());
             repositoryStore.VideoInfoRepository.Insert(dummyVideo3.CreateVideoInfo());
-            repositoryStore.SaveChanges();
+            repositoryStore.SaveChangesAsync();
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            var playList = context.GetPlayList(expectedHash);
+            var playList = context.GetPlaylist(expectedHash);
 
             Assert.IsNotNull(playList);
             Assert.AreEqual(dummyPlayList.Hash, playList.Hash);
@@ -525,7 +525,7 @@ namespace YouTubeListManager.Test
 
             foundVideo = repositoryStore.VideoInfoRepository.FindBy(v => v.Hash == dummyVideo3.Hash).FirstOrDefault();
             repositoryStore.VideoInfoRepository.Delete(foundVideo);
-            repositoryStore.SaveChanges();
+            repositoryStore.SaveChangesAsync();
 
         }
 
@@ -666,7 +666,7 @@ namespace YouTubeListManager.Test
                 ThumbnailUrl = dummyVideo3.ThumbnailUrl,
                 Live = true
             });
-            repositoryStore.SaveChanges();
+            repositoryStore.SaveChangesAsync();
 
             var playListItems = context.GetPlaylistItems(string.Empty, expectedHash).Response;
             Assert.AreEqual(3, playListItems.Count);
@@ -686,7 +686,7 @@ namespace YouTubeListManager.Test
             {
                 repositoryStore.VideoInfoRepository.Delete(videoInfo);
             }
-            repositoryStore.SaveChanges();
+            repositoryStore.SaveChangesAsync();
         }
 
         [TestMethod]
@@ -706,12 +706,12 @@ namespace YouTubeListManager.Test
             
             var serviceWrapperUpdateMock = new Mock<IYouTubeApiUpdateServiceWrapper>();
             serviceWrapperUpdateMock.Setup(m => m.UpdatePlaylists(It.IsAny<List<Playlist>>()))
-                .Raises(m => m.PlaylistUpdated += null, new UpdatePlayListEventArgs(dummyPlayList));
+                .Raises(m => m.PlaylistUpdated += null, new UpdatePlaylistEventArgs(dummyPlayList));
             container.RegisterInstance(serviceWrapperUpdateMock.Object);
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            context.UpdatePlayLists(new List<Playlist> {dummyPlayList});
+            context.UpdatePlaylists(new List<Playlist> {dummyPlayList});
 
             var repositoryStore = container.Resolve<IRepositoryStore>();
             var foundPlayList = repositoryStore.PlaylistRepository.FindBy(pl => pl.Hash == expectedHash).FirstOrDefault();
@@ -721,7 +721,7 @@ namespace YouTubeListManager.Test
             Assert.AreEqual(dummyPlayList.Title, foundPlayList.Title);
 
             repositoryStore.PlaylistRepository.Delete(foundPlayList);
-            repositoryStore.SaveChanges();
+            repositoryStore.SaveChangesAsync();
         }
     }
 }

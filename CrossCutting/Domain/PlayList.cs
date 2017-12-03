@@ -18,13 +18,13 @@ namespace YouTubeListManager.CrossCutting.Domain
 
         public int? UserId { get; set; }
         public virtual User User { get; set; }
-        public virtual ICollection<PlaylistItem> PlayListItems { get; set; }
+        public virtual ICollection<PlaylistItem> PlaylistItems { get; set; }
 
 
         public Playlist()
         {
             PrivacyStatus = PrivacyStatus.Public;
-            PlayListItems = new List<PlaylistItem>();
+            PlaylistItems = new List<PlaylistItem>();
         }
 
         public Playlist(YouTubePlayList youTubePlayList)
@@ -35,7 +35,7 @@ namespace YouTubeListManager.CrossCutting.Domain
             ThumbnailUrl = youTubePlayList.Snippet.Thumbnails.GetThumbnailUrl();
             PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), youTubePlayList.Status.PrivacyStatus, true);
 
-            PlayListItems = new List<PlaylistItem>();
+            PlaylistItems = new List<PlaylistItem>();
         }
     }
 }

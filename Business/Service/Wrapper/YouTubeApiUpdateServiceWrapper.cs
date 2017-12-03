@@ -8,8 +8,10 @@ using YouTubeListManager.BusinessContracts.Service.Wrapper;
 using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.CrossCutting.EventArgs;
 using YouTubeListManager.Logger;
-using Playlist = YouTubeListManager.Data.Domain.Playlist;
-using PlaylistItem = YouTubeListManager.Data.Domain.PlaylistItem;
+using Playlist = YouTubeListManager.CrossCutting.Domain.Playlist;
+using PlaylistItem = YouTubeListManager.CrossCutting.Domain.PlaylistItem;
+
+using YouTubePlaylist = Google.Apis.YouTube.v3.Data.Playlist;
 using YouTubePlayListItem = Google.Apis.YouTube.v3.Data.PlaylistItem;
 
 namespace YouTubeListAPI.Business.Service.Wrapper
@@ -20,25 +22,25 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         {
         }
 
-        public event EventHandler<UpdatePlayListEventArgs> PlaylistUpdated;
+        public event EventHandler<UpdatePlaylistEventArgs> PlaylistUpdated;
         private void OnPlaylistUpdated(Playlist playlist)
         {
-            PlaylistUpdated?.Invoke(this, new UpdatePlayListEventArgs(playlist));
+            PlaylistUpdated?.Invoke(this, new UpdatePlaylistEventArgs(playlist));
         }
 
-        public event EventHandler<UpdatePlayListItemEventArgs> PlaylistItemUpdated;
+        public event EventHandler<UpdatePlaylistItemEventArgs> PlaylistItemUpdated;
         private void OnPlayListItemUpdated(Playlist playlist, PlaylistItem playlistItem)
         {
-            PlaylistItemUpdated?.Invoke(this, new UpdatePlayListItemEventArgs(playlist, playlistItem));
+            PlaylistItemUpdated?.Invoke(this, new UpdatePlaylistItemEventArgs(playlist, playlistItem));
         }
 
-        public void UpdatePlaylists(IEnumerable<YouTubeListManager.CrossCutting.Domain.Playlist> playLists)
+        public void UpdatePlaylists(IEnumerable<Playlist> playLists)
         {
             foreach (var playList in playLists)
                 UpdateYouTubePlayList(playList);
         }
 
-        public void UpdatePlaylistItems(YouTubeListManager.CrossCutting.Domain.Playlist playList, IEnumerable<YouTubeListManager.CrossCutting.Domain.PlaylistItem> playListItems)
+        public void UpdatePlaylistItems(Playlist playlist, IEnumerable<PlaylistItem> playListItems)
         {
             foreach (var playListItem in playListItems)
             {

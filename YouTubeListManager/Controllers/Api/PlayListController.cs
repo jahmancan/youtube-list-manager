@@ -18,7 +18,7 @@ namespace YouTubeListManager.Controllers.Api
         [HttpGet]
         public async Task<JsonResult> GetAllAsync(string requestToken)
         {
-            ServiceResponse<List<Playlist>> response = await youTubeListManagerService.GetPlayListsAsync(requestToken);
+            ServiceResponse<List<Playlist>> response = await youTubeListManagerService.GetPlaylistsAsync(requestToken);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
@@ -32,7 +32,7 @@ namespace YouTubeListManager.Controllers.Api
         [HttpGet]
         public async Task<JsonResult> GetAsync(string hash)
         {
-            Playlist PlayList = await youTubeListManagerService.GetPlayListAsync(hash);
+            Playlist PlayList = await youTubeListManagerService.GetPlaylistAsync(hash);
             return Json(PlayList, JsonRequestBehavior.AllowGet);
         }
 
@@ -40,14 +40,14 @@ namespace YouTubeListManager.Controllers.Api
         [HttpGet]
         public JsonResult Get(string hash)
         {
-            Playlist Playlist = youTubeListManagerService.GetPlayList(hash);
+            Playlist Playlist = youTubeListManagerService.GetPlaylist(hash);
             return Json(Playlist, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult Save(Playlist playlist)
         {
-            youTubeListManagerService.UpdatePlayLists(new List<Playlist> {playlist});
+            youTubeListManagerService.UpdatePlaylists(new List<Playlist> {playlist});
             return Json("Playlist has been saved successfully", JsonRequestBehavior.DenyGet);
         }
 

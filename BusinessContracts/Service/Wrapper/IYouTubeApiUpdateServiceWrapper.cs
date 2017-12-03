@@ -7,11 +7,11 @@ namespace YouTubeListManager.BusinessContracts.Service.Wrapper
 {
     public interface IYouTubeApiUpdateServiceWrapper
     {
-        event EventHandler<UpdatePlayListItemEventArgs> PlaylistItemUpdated;
-        event EventHandler<UpdatePlayListEventArgs> PlaylistUpdated;
+        event EventHandler<UpdatePlaylistItemEventArgs> PlaylistItemUpdated;
+        event EventHandler<UpdatePlaylistEventArgs> PlaylistUpdated;
 
         void UpdatePlaylists(IEnumerable<Playlist> playLists);
-        void UpdatePlaylistItems(Playlist playList, IEnumerable<PlaylistItem> playListItems);
+        void UpdatePlaylistItems(Playlist playlist, IEnumerable<PlaylistItem> playListItems);
         void DeletePlaylistItem(string playlistItemId);
     }
 }

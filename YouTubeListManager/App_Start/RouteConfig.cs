@@ -12,28 +12,40 @@ namespace YouTubeListManager
             routes.MapRoute(
                 "PlayListGet",
                 "api/playlist/get/{hash}",
-                new { controller = "PlayList", action = "Get" }
+                new { controller = "Playlist", action = "Get" }
+            );
+
+            routes.MapRoute(
+                "PlayListGetAsync",
+                "api/playlist/getasync/{hash}",
+                new { controller = "Playlist", action = "GetAsync" }
             );
 
             routes.MapRoute(
                 "PlayListGetAll",
                 "api/playlist/getall/{requestToken}",
-                new { controller = "PlayList", action = "GetAll", requestToken = UrlParameter.Optional }
+                new { controller = "Playlist", action = "GetAll", requestToken = UrlParameter.Optional }
             );
 
             routes.MapRoute(
                "PlayListGetAllAsync",
-               "api/playlist/getallasync/{requestToken}",
-               new { controller = "PlayList", action = "GetAllAsync", requestToken = UrlParameter.Optional }
+               "playlist/getallasync/{requestToken}",
+               new { controller = "Playlist", action = "GetAllAsync", requestToken = UrlParameter.Optional }
            );
 
             routes.MapRoute(
                 "PlayListItemGet",
                 "api/playlistitem/get/{playListId}/{requestToken}",
-                new { controller = "PlayListItem", action = "Get", requestToken = UrlParameter.Optional }
+                new { controller = "PlaylistItem", action = "Get", requestToken = UrlParameter.Optional }
             );
 
-           routes.MapRoute(
+            routes.MapRoute(
+               "PlayListItemGetAsync",
+               "api/playlistitem/getasync/{playListId}/{requestToken}",
+               new { controller = "PlaylistItem", action = "GetAsync", requestToken = UrlParameter.Optional }
+           );
+
+            routes.MapRoute(
                 name: "angular",
                 url: "{*url}",
                 defaults: new { controller = "ListManager", action = "Index" } // The view that bootstraps Angular 2

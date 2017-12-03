@@ -267,9 +267,9 @@
     <Compile Include="Infrastructure\JsonValueProviderFactory.cs" />
     <Compile Include="Request\BadRequest.cs" />
     <Compile Include="Controllers\Api\BaseController.cs" />
-    <Compile Include="Controllers\Api\PlayListItemController.cs" />
+    <Compile Include="Controllers\Api\PlaylistItemController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
-    <Compile Include="Controllers\Api\PlayListController.cs" />
+    <Compile Include="Controllers\Api\PlaylistController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1138,7 +1138,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="src\app\styles\app-bak.component.css" />
     <Content Include="src\app\templates\app.component.html" />
-    <Content Include="src\app\templates\playlists.component.html" />
+    <Content Include="src\app\templates\playlists-bak.component.html" />
     <Content Include="src\app\templates\suggestion-bak.component.html" />
     <Content Include="src\favicon.ico" />
     <Content Include="src\styles.css" />

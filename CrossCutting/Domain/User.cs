@@ -7,11 +7,11 @@ namespace YouTubeListManager.CrossCutting.Domain
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<Playlist> PlayLists { get; set; }
+        public virtual ICollection<Playlist> Playlists { get; set; }
 
         public User()
         {
-            PlayLists = new List<Playlist>();
+            Playlists = new List<Playlist>();
         }
     }
 }

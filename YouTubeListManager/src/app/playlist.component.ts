@@ -13,7 +13,7 @@ import { Playlist } from './models/playlist';
 
 @Component({
   selector: 'playlist',
-  templateUrl: './templates/playlists.component.html',
+  templateUrl: './templates/playlists-bak.component.html',
   styleUrls: ['./styles/app.component.css'],
   providers: [ YouTubeDataService ]
 })

@@ -1,10 +1,10 @@
 ﻿<div class="module-wrapper">
     <div class="container playlist-container">
         <div class="header">
-            <h2>PlayLists <span class="count">{{model.length}}</span></h2>
+            <h2>playlists <span class="count">{{model.length}}</span></h2>
         </div>
         <ul class="item-list">
-            <li class="item" data-ng-repeat="playlist in model" data-ng-click="selectPlayList(playlist.Hash)">
+            <li class="item" data-ng-repeat="playlist in model" data-ng-click="selectplaylist(playlist.Hash)">
                 <div class="item-wrapper">
                     <div data-ng-click="selectPlaylist(playlist.Hash)" class="image" style="background: url('{{playlist.ThumbnailUrl}}') center no-repeat">
                         <div class="extra-info"><span>{{playlist.ItemCount}}</span></div>

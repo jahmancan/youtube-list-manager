@@ -2,25 +2,25 @@
 
 namespace YouTubeListManager.CrossCutting.EventArgs
 {
-    public class UpdatePlayListEventArgs : System.EventArgs
+    public class UpdatePlaylistEventArgs : System.EventArgs
     {
-        public UpdatePlayListEventArgs(Playlist playList)
+        public UpdatePlaylistEventArgs(Playlist playlist)
         {
-            PlayList = playList;
+            Playlist = playlist;
         }
 
-        public Playlist PlayList { get; private set; }
+        public Playlist Playlist { get; private set; }
     }
 
-    public class UpdatePlayListItemEventArgs : System.EventArgs
+    public class UpdatePlaylistItemEventArgs : System.EventArgs
     {
-        public UpdatePlayListItemEventArgs(Playlist playList, PlaylistItem playListItem)
+        public UpdatePlaylistItemEventArgs(Playlist playlist, PlaylistItem playlistItem)
         {
-            PlayList = playList;
-            PlayListItem = playListItem;
+            Playlist = playlist;
+            PlaylistItem = playlistItem;
         }
 
-        public Playlist PlayList { get; private set; }
-        public PlaylistItem PlayListItem { get; private set; }
+        public Playlist Playlist { get; private set; }
+        public PlaylistItem PlaylistItem { get; private set; }
     }
 }

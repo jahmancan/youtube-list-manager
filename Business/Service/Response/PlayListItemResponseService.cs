@@ -19,8 +19,8 @@ namespace YouTubeListAPI.Business.Service.Response
         {
             try
             {
-                youTubeApiListServiceWrapper.ExecuteAsyncRequestPlayListItems(requestToken, playListId);
-                return response;
+                return youTubeApiListServiceWrapper.ExecuteAsyncRequestPlayListItems(requestToken, playListId);
+                //return response;
             }
             finally
             {
