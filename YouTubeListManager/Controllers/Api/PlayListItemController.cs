@@ -16,7 +16,7 @@ namespace YouTubeListManager.Controllers.Api
         [HttpGet]
         public JsonResult Get(string playlistId, string requestToken)
         {
-            ServiceResponse<List<PlayListItem>> response = youTubeListManagerService.GetPlayListItems(requestToken, playlistId);
+            ServiceResponse<List<PlaylistItem>> response = youTubeListManagerService.GetPlayListItems(requestToken, playlistId);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         

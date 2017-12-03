@@ -16,8 +16,8 @@ namespace YouTubeListManager.Data
             Database.Initialize(true);
         }
 
-        public DbSet<PlayListItem> PlayListItems { get; set; }
-        public DbSet<PlayList> PlayLists { get; set; }
+        public DbSet<PlaylistItem> PlayListItems { get; set; }
+        public DbSet<Playlist> PlayLists { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<VideoInfo> Video { get; set; }
 

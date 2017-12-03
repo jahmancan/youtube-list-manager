@@ -106,7 +106,7 @@ namespace YouTubeListManager.Test
             container.RegisterInstance(responseServiceMock.Object);
 
             var cache = container.Resolve<IYouTubeListManagerCache>();
-            cache.AddPlayLists(new List<PlayList> { dummyPlayListExisting });
+            cache.AddPlayLists(new List<Playlist> { dummyPlayListExisting });
 
             context = container.Resolve<IYouTubeListManagerService>(new ParameterOverride("youTubeListManagerCache", cache));
 
@@ -168,8 +168,8 @@ namespace YouTubeListManager.Test
                 Id = 1,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1),
                 Position = 1,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 1,
                 VideoInfo = dummyVideo1
             };
@@ -179,8 +179,8 @@ namespace YouTubeListManager.Test
                 Id = 2,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(2),
                 Position = 2,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 2,
                 VideoInfo = dummyVideo2
             };
@@ -289,8 +289,8 @@ namespace YouTubeListManager.Test
                 Id = 1,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1),
                 Position = 1,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 1,
                 VideoInfo = dummyVideo1,
                 Title = "dummyTitle1",
@@ -302,8 +302,8 @@ namespace YouTubeListManager.Test
                 Id = 2,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(2),
                 Position = 2,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 2,
                 VideoInfo = dummyVideo2,
                 Description = "dummyDescription2",
@@ -315,8 +315,8 @@ namespace YouTubeListManager.Test
                 Id = 3,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(3),
                 Position = 3,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 3,
                 VideoInfo = dummyVideo3,
                 Description = "dummyDescription3",
@@ -428,8 +428,8 @@ namespace YouTubeListManager.Test
                 Id = 1,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1),
                 Position = 1,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 1,
                 VideoInfo = dummyVideo1,
                 Description = "dummyDescription1",
@@ -441,8 +441,8 @@ namespace YouTubeListManager.Test
                 Id = 2,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(2),
                 Position = 2,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 2,
                 VideoInfo = dummyVideo2,
                 Description = "dummyDescription2",
@@ -454,8 +454,8 @@ namespace YouTubeListManager.Test
                 Id = 3,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(3),
                 Position = 3,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 3,
                 VideoInfo = dummyVideo3,
                 Title = "dummyTitle3",
@@ -574,7 +574,7 @@ namespace YouTubeListManager.Test
             var videoStore = new List<VideoInfoTestObject> { dummyVideo1, dummyVideo2, dummyVideo3 };
 
             var expectedHash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1);
-            var dummyPlayList = new PlayList
+            var dummyPlayList = new Playlist
             {
                 Id = 1,
                 Hash = expectedHash,
@@ -587,8 +587,8 @@ namespace YouTubeListManager.Test
                 Id = 1,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1),
                 Position = 1,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 1,
                 VideoInfo = dummyVideo1,
                 Description = "dummyDescription1",
@@ -600,8 +600,8 @@ namespace YouTubeListManager.Test
                 Id = 2,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(2),
                 Position = 2,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 2,
                 VideoInfo = dummyVideo2,
                 Description = "dummyDescription2",
@@ -613,8 +613,8 @@ namespace YouTubeListManager.Test
                 Id = 3,
                 Hash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(3),
                 Position = 3,
-                PlayListId = 1,
-                PlayList = dummyPlayList,
+                PlaylistId = 1,
+                Playlist = dummyPlayList,
                 VideoInfoId = 3,
                 VideoInfo = dummyVideo3,
                 Title = "dummyTitle3",
@@ -693,7 +693,7 @@ namespace YouTubeListManager.Test
         public void TestUpdatePlayList()
         {
             var expectedHash = new Hashids(DateTime.UtcNow.Ticks.ToString(), 15).Encode(1);
-            var dummyPlayList = new PlayList
+            var dummyPlayList = new Playlist
             {
                 Id = 1,
                 Hash = expectedHash,
@@ -705,13 +705,13 @@ namespace YouTubeListManager.Test
             container.RegisterInstance(serviceMock.Object);
             
             var serviceWrapperUpdateMock = new Mock<IYouTubeApiUpdateServiceWrapper>();
-            serviceWrapperUpdateMock.Setup(m => m.UpdatePlayLists(It.IsAny<List<PlayList>>()))
+            serviceWrapperUpdateMock.Setup(m => m.UpdatePlaylists(It.IsAny<List<Playlist>>()))
                 .Raises(m => m.PlaylistUpdated += null, new UpdatePlayListEventArgs(dummyPlayList));
             container.RegisterInstance(serviceWrapperUpdateMock.Object);
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            context.UpdatePlayLists(new List<PlayList> {dummyPlayList});
+            context.UpdatePlayLists(new List<Playlist> {dummyPlayList});
 
             var repositoryStore = container.Resolve<IRepositoryStore>();
             var foundPlayList = repositoryStore.PlayListRepository.FindBy(pl => pl.Hash == expectedHash).FirstOrDefault();

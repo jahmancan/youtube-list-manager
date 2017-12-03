@@ -4,7 +4,7 @@ using YouTubeListManager.CrossCutting.Domain;
 
 namespace YouTubeListManager.Data.Domain.Mapping
 {
-    public class PlayListMap : EntityTypeConfiguration<PlayList>
+    public class PlayListMap : EntityTypeConfiguration<Playlist>
     {
         public PlayListMap()
         {
@@ -19,10 +19,10 @@ namespace YouTubeListManager.Data.Domain.Mapping
             Property(t => t.PrivacyStatus);
 
             Ignore(t => t.ItemCount);
-            Ignore(t => t.PlayListItemsNextPageToken);
+            Ignore(t => t.PlaylistItemsNextPageToken);
 
             HasOptional(t => t.User).WithMany(t => t.PlayLists).HasForeignKey(t => t.UserId);
-            HasMany(t => t.PlayListItems).WithRequired(t => t.PlayList);
+            HasMany(t => t.PlayListItems).WithRequired(t => t.Playlist);
         }
     }
 }

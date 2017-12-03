@@ -6,9 +6,9 @@ namespace YouTubeListManager.BusinessContracts
 {
     public interface IYouTubeListManagerCache
     {
-        List<PlayList> GetPlayLists(Func<PlayList, bool> predicate);
+        List<Playlist> GetPlayLists(Func<Playlist, bool> predicate);
         List<T> Get<T>(string cacheKey) where T : class;
-        void AddPlayLists(IEnumerable<PlayList> playLists);
+        void AddPlayLists(IEnumerable<Playlist> playLists);
         void Add<T>(string title, IEnumerable<T> items) where T : class;
     }
 }

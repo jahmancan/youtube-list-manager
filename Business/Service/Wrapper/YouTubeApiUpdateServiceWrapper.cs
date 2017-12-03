@@ -20,24 +20,24 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         }
 
         public event EventHandler<UpdatePlayListEventArgs> PlaylistUpdated;
-        private void OnPlaylistUpdated(PlayList playList)
+        private void OnPlaylistUpdated(YouTubeListManager.CrossCutting.Domain.Playlist playList)
         {
             PlaylistUpdated?.Invoke(this, new UpdatePlayListEventArgs(playList));
         }
 
         public event EventHandler<UpdatePlayListItemEventArgs> PlaylistItemUpdated;
-        private void OnPlayListItemUpdated(PlayList playList, PlayListItem playListItem)
+        private void OnPlayListItemUpdated(YouTubeListManager.CrossCutting.Domain.Playlist playList, YouTubeListManager.CrossCutting.Domain.PlaylistItem playListItem)
         {
             PlaylistItemUpdated?.Invoke(this, new UpdatePlayListItemEventArgs(playList, playListItem));
         }
 
-        public void UpdatePlayLists(IEnumerable<PlayList> playLists)
+        public void UpdatePlaylists(IEnumerable<YouTubeListManager.CrossCutting.Domain.Playlist> playLists)
         {
             foreach (var playList in playLists)
                 UpdateYouTubePlayList(playList);
         }
 
-        public void UpdatePlaylistItems(PlayList playList, IEnumerable<PlayListItem> playListItems)
+        public void UpdatePlaylistItems(YouTubeListManager.CrossCutting.Domain.Playlist playList, IEnumerable<YouTubeListManager.CrossCutting.Domain.PlaylistItem> playListItems)
         {
             foreach (var playListItem in playListItems)
             {
@@ -61,7 +61,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        private void InsertUpdateYouTubePlayListItem(PlayListItem playListItem)
+        private void InsertUpdateYouTubePlayListItem(YouTubeListManager.CrossCutting.Domain.PlaylistItem playListItem)
         {
             YouTubePlayListItem youTubePlayListItem = GetPlayListItem(playListItem.Hash);
             if (youTubePlayListItem == null)
@@ -73,13 +73,13 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        private YouTubePlayListItem CreatePlaylistItem(PlayListItem playListItem)
+        private YouTubePlayListItem CreatePlaylistItem(YouTubeListManager.CrossCutting.Domain.PlaylistItem playListItem)
         {
             return new YouTubePlayListItem
             {
                 Snippet = new PlaylistItemSnippet
                 {
-                    PlaylistId = playListItem.PlayList.Hash,
+                    PlaylistId = playListItem.Playlist.Hash,
                     Position = playListItem.Position,
                     Title = playListItem.VideoInfo.Title,
                     Thumbnails = new ThumbnailDetails
@@ -102,7 +102,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             };
         }
 
-        private void InsertPlaylistItem(PlayListItem playListItem)
+        private void InsertPlaylistItem(YouTubeListManager.CrossCutting.Domain.PlaylistItem playListItem)
         {
             YouTubePlayListItem youTubePlaylistItem = CreatePlaylistItem(playListItem);
             try
@@ -121,7 +121,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             try
             {
                 var request = youTubeService.PlaylistItems.Update(playlistItem, "snippet, status, contentDetails");
-                Task<PlaylistItem> response = request.ExecuteAsync(CancellationToken.None);
+                Task<YouTubePlayListItem> response = request.ExecuteAsync(CancellationToken.None);
                 var responsePlaylistItem = response.Result;
                 if (responsePlaylistItem == null)
                 {
@@ -135,7 +135,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        private void UpdateYouTubePlayList(PlayList playList)
+        private void UpdateYouTubePlayList(YouTubeListManager.CrossCutting.Domain.Playlist playList)
         {
             var youTubePlaylist = GetYouTubePlayList(playList.Hash);
             if (youTubePlaylist == null) return;

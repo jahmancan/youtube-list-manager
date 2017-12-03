@@ -11,9 +11,9 @@ namespace YouTubeListAPI.Business
     {
         private const string PlayListCacheKey = "playlist";
 
-        public List<PlayList> GetPlayLists(Func<PlayList, bool> predicate)
+        public List<Playlist> GetPlayLists(Func<Playlist, bool> predicate)
         {
-            var playLists = Get<PlayList>(PlayListCacheKey);
+            var playLists = Get<Playlist>(PlayListCacheKey);
             return predicate != null ? playLists.Where(predicate).ToList() : playLists;
         }
 
@@ -29,7 +29,7 @@ namespace YouTubeListAPI.Business
             return cachedItems;
         }
 
-        public void AddPlayLists(IEnumerable<PlayList> playLists)
+        public void AddPlayLists(IEnumerable<Playlist> playLists)
         {
             Add(PlayListCacheKey, playLists);
         }

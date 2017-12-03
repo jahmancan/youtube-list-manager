@@ -5,7 +5,7 @@ using YouTubePlayList = Google.Apis.YouTube.v3.Data.Playlist;
 
 namespace YouTubeListManager.CrossCutting.Domain
 {
-    public class PlayList
+    public class Playlist
     {
         public int Id { get; set; }
         public string Hash { get; set; }
@@ -13,21 +13,21 @@ namespace YouTubeListManager.CrossCutting.Domain
         public PrivacyStatus PrivacyStatus { get; set; }
         public string ThumbnailUrl { get; set; }
         public long? ItemCount { get; set; }
-        public string PlayListItemsNextPageToken { get; set; }
+        public string PlaylistItemsNextPageToken { get; set; }
 
 
         public int? UserId { get; set; }
         public virtual User User { get; set; }
-        public virtual ICollection<PlayListItem> PlayListItems { get; set; }
+        public virtual ICollection<PlaylistItem> PlayListItems { get; set; }
 
 
-        public PlayList()
+        public Playlist()
         {
             PrivacyStatus = PrivacyStatus.Public;
-            PlayListItems = new List<PlayListItem>();
+            PlayListItems = new List<PlaylistItem>();
         }
 
-        public PlayList(YouTubePlayList youTubePlayList)
+        public Playlist(YouTubePlayList youTubePlayList)
         {
             Hash = youTubePlayList.Id;
             Title = youTubePlayList.Snippet.Title;
@@ -35,7 +35,7 @@ namespace YouTubeListManager.CrossCutting.Domain
             ThumbnailUrl = youTubePlayList.Snippet.Thumbnails.GetThumbnailUrl();
             PrivacyStatus = (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), youTubePlayList.Status.PrivacyStatus, true);
 
-            PlayListItems = new List<PlayListItem>();
+            PlayListItems = new List<PlaylistItem>();
         }
     }
 }

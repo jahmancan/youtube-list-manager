@@ -20,11 +20,11 @@ namespace YouTubeListManager.CrossCutting.Domain
         public string ThumbnailUrl { get; set; }
         public PrivacyStatus PrivacyStatus { get; set; }
 
-        public virtual ICollection<PlayListItem> PlayListItems { get; set; }
+        public virtual ICollection<PlaylistItem> PlayListItems { get; set; }
 
         public VideoInfo()
         {
-            PlayListItems = new List<PlayListItem>();
+            PlayListItems = new List<PlaylistItem>();
         }
 
         public VideoInfo(Video video)

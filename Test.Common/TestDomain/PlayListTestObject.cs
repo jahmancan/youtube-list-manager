@@ -1,9 +1,8 @@
-﻿using YouTubeListManager.CrossCutting.Domain;
-using YouTubeListManager.Data.Domain;
+﻿using Playlist = YouTubeListManager.CrossCutting.Domain.Playlist;
 
 namespace YouTubeListManager.Test.Common.TestDomain
 {
-    public class PlayListTestObject : PlayList, ITestThumbnailObject
+    public class PlayListTestObject : Playlist, ITestThumbnailObject
     {
         public ThumbnailDetailsType ThumbnailDetailsType { get; set; }
     }
