@@ -27,6 +27,15 @@ namespace YouTubeListManager.CrossCutting.Domain
             PlaylistItems = new List<PlaylistItem>();
         }
 
+        public VideoInfo(VideoInfo video) : this()
+        {
+            Hash = video.Hash;
+            Title = video.Title;
+            ThumbnailUrl = video.ThumbnailUrl;
+            Live = video.Live;
+            Duration = video.Duration;
+        }
+
         public VideoInfo(Video video)
         {
             Hash = video.Id;

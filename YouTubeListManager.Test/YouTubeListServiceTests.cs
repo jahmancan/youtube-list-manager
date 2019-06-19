@@ -25,7 +25,7 @@ namespace YouTubeListManager.Test
         private IYouTubeListManagerService context;
 
         [TestMethod]
-        public void TestListOneSpecificPlayList()
+        public async Task TestListOneSpecificPlayList()
         {
             var dummyPlayList = new PlaylistTestObject
             {
@@ -48,7 +48,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            var playLists = context.GetPlaylists(string.Empty);
+            var playLists = await context.GetPlaylistsAsync(string.Empty);
 
             Assert.AreEqual(1, playLists.Response.Count());
             var playList = playLists.Response.First();
@@ -58,7 +58,7 @@ namespace YouTubeListManager.Test
         }
 
         [TestMethod]
-        public void TestReturnNewPlayListsOnly()
+        public async Task TestReturnNewPlayListsOnly()
         {
             var dummyPlayList1 = new PlaylistTestObject
             {
@@ -110,7 +110,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>(new ParameterOverride("youTubeListManagerCache", cache));
 
-            var playLists = context.GetPlaylists(string.Empty);
+            var playLists = await context.GetPlaylistsAsync(string.Empty);
 
             Assert.AreEqual(2, playLists.Response.Count());
             var playList = playLists.Response.First();
@@ -124,7 +124,7 @@ namespace YouTubeListManager.Test
         }
 
         [TestMethod]
-        public void TestReturnPlayListWithItems()
+        public async Task TestReturnPlayListWithItems()
         {
             var dummyVideo1 = new VideoInfoTestObject
             {
@@ -212,7 +212,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            var playList = context.GetPlaylist(expectedHash);
+            var playList = await context.GetPlaylistAsync(expectedHash);
 
             Assert.IsNotNull(playList);
             Assert.AreEqual(dummyPlayList.Hash, playList.Hash);
@@ -233,7 +233,7 @@ namespace YouTubeListManager.Test
         }
 
         [TestMethod]
-        public void TestReturnPlayListWithItemsOnlyWithValidTitleOrDescription()
+        public async Task TestReturnPlayListWithItemsOnlyWithValidTitleOrDescription()
         {
             var dummyVideo1 = new VideoInfoTestObject
             {
@@ -356,7 +356,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            var playList = context.GetPlaylist(expectedHash);
+            var playList = await context.GetPlaylistAsync(expectedHash);
 
             Assert.IsNotNull(playList);
             Assert.AreEqual(dummyPlayList.Hash, playList.Hash);
@@ -372,7 +372,7 @@ namespace YouTubeListManager.Test
         }
 
         [TestMethod]
-        public void TestReturnPlayListWithItemsOnlyWithValidTitleOrDescriptionIfTheyAreInDb()
+        public async Task TestReturnPlayListWithItemsOnlyWithValidTitleOrDescriptionIfTheyAreInDb()
         {
             var dummyVideo1 = new VideoInfoTestObject
             {
@@ -498,7 +498,7 @@ namespace YouTubeListManager.Test
 
             context = container.Resolve<IYouTubeListManagerService>();
 
-            var playList = context.GetPlaylist(expectedHash);
+            var playList = await context.GetPlaylistAsync(expectedHash);
 
             Assert.IsNotNull(playList);
             Assert.AreEqual(dummyPlayList.Hash, playList.Hash);
@@ -530,7 +530,7 @@ namespace YouTubeListManager.Test
         }
 
         [TestMethod]
-        public void TestReturnSynchronizedPlayListItems()
+        public async Task TestReturnSynchronizedPlayListItems()
         {
             var dummyVideo1 = new VideoInfoTestObject
             {
@@ -668,7 +668,7 @@ namespace YouTubeListManager.Test
             });
             repositoryStore.SaveChangesAsync();
 
-            var playListItems = context.GetPlaylistItems(string.Empty, expectedHash).Response;
+            var playListItems = (await context.GetPlaylistItemsAsync(string.Empty, expectedHash)).Response;
             Assert.AreEqual(3, playListItems.Count);
             var foundPlayListItem = playListItems.FirstOrDefault();
             Assert.AreEqual(dummyPlayListItem1.Position, foundPlayListItem.Position);

@@ -10,5 +10,13 @@
         public virtual VideoInfo VideoInfo { get; set; }
         public int PlaylistId { get; set; }
         public virtual Playlist Playlist { get; set; }
+
+        public PlaylistItem() {}
+
+        public PlaylistItem(PlaylistItem playlistItem)
+        {
+            Playlist = null;
+            VideoInfo = new VideoInfo(playlistItem.VideoInfo);
+        }
     }
 }

@@ -16,33 +16,20 @@ namespace YouTubeListManager.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetAllAsync(string requestToken)
+        public async Task<JsonResult> GetAllAsync(string requestToken, bool isOffline = true)
         {
-            ServiceResponse<List<Playlist>> response = await youTubeListManagerService.GetPlaylistsAsync(requestToken);
+            ServiceResponse<List<Playlist>> response = await youTubeListManagerService.GetPlaylistsAsync(requestToken, isOffline);
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        public JsonResult GetAll(string requestToken)
-        {
-            ServiceResponse<List<Playlist>> response = youTubeListManagerService.GetPlaylists(requestToken);
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
 
         [HttpGet]
-        public async Task<JsonResult> GetAsync(string hash)
+        public async Task<JsonResult> GetAsync(string hash, bool isOffline = true, bool withPlaylistItems = false)
         {
-            Playlist PlayList = await youTubeListManagerService.GetPlaylistAsync(hash);
+            Playlist PlayList = await youTubeListManagerService.GetPlaylistAsync(hash, isOffline, withPlaylistItems);
             return Json(PlayList, JsonRequestBehavior.AllowGet);
         }
 
-
-        [HttpGet]
-        public JsonResult Get(string hash)
-        {
-            Playlist Playlist = youTubeListManagerService.GetPlaylist(hash);
-            return Json(Playlist, JsonRequestBehavior.AllowGet);
-        }
 
         [HttpPost]
         public ActionResult Save(Playlist playlist)

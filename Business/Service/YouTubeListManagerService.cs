@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListManager.BusinessContracts;
 using YouTubeListManager.BusinessContracts.Service;
@@ -14,7 +13,7 @@ using YouTubeListManager.CrossCutting.Extensions;
 using YouTubeListManager.CrossCutting.Request;
 using YouTubeListManager.CrossCutting.Response;
 using YouTubeListManager.DataContracts.Repository;
-
+using YouTubeListManager.Logger;
 using Playlist = YouTubeListManager.CrossCutting.Domain.Playlist;
 using PlaylistItem = YouTubeListManager.CrossCutting.Domain.PlaylistItem;
 
@@ -25,6 +24,8 @@ namespace YouTubeListAPI.Business.Service
 {
     public class YouTubeListManagerManagerService : IYouTubeListManagerService
     {
+        private const string QuotaLimitError = "daily limit exceeded";
+
         private IRepositoryStore repositoryStore;
         private IYouTubeApiListServiceWrapper youTubeApiListServiceWrapper;
         private IYouTubeApiUpdateServiceWrapper youTubeApiUpdateServiceWrapper;
@@ -32,6 +33,7 @@ namespace YouTubeListAPI.Business.Service
         private IPlaylistItemResponseService playlistItemResponseService;
         private ISearchListResponseService searchListResponseService;
         private IYouTubeListManagerCache youTubeListManagerCache;
+        private INlogLogger logger;
 
         public YouTubeListManagerManagerService(
             IYouTubeListManagerCache youTubeListManagerCache,
@@ -40,7 +42,8 @@ namespace YouTubeListAPI.Business.Service
             ISearchListResponseService searchListResponseService,
             IYouTubeApiListServiceWrapper youTubeApiListServiceWrapper,
             IYouTubeApiUpdateServiceWrapper youTubeApiUpdateServiceWrapper,
-            IRepositoryStore repositoryStore
+            IRepositoryStore repositoryStore,
+            INlogLogger logger
             )
         {
             this.youTubeListManagerCache = youTubeListManagerCache;
@@ -50,26 +53,74 @@ namespace YouTubeListAPI.Business.Service
             this.youTubeApiListServiceWrapper = youTubeApiListServiceWrapper;
             this.youTubeApiUpdateServiceWrapper = youTubeApiUpdateServiceWrapper;
             this.repositoryStore = repositoryStore;
+            this.logger = logger;
 
             this.youTubeApiUpdateServiceWrapper.PlaylistUpdated += PlaylistUpdated;
             this.youTubeApiUpdateServiceWrapper.PlaylistItemUpdated += PlaylistItemUpdated;
         }
 
-        public async Task<ServiceResponse<List<PlaylistItem>>> GetPlaylistItemsAsync(string requestToken, string playlistId)
+        public async Task<ServiceResponse<List<PlaylistItem>>> GetPlaylistItemsAsync(string requestToken, string playlistId, bool onlyOfflineUsage = false)
         {
-            PlaylistItemListResponse playlistItemListResponse = await playlistItemResponseService.GetResponse(requestToken, playlistId);
+            if (onlyOfflineUsage)
+            {
+                return GetOfflinePlaylistitems(playlistId);
+            }
 
-            return GetPlaylistItemsServiceResponse(playlistId, playlistItemListResponse);
+            try
+            {
+                PlaylistItemListResponse playlistItemListResponse = await playlistItemResponseService.GetResponse(requestToken, playlistId);
+
+                return await GetPlaylistItemsServiceResponse(playlistId, playlistItemListResponse);
+            }
+            catch (Exception exception)
+            {
+                if (!exception.Message.ToLower().Contains(QuotaLimitError))
+                    throw;
+
+                return GetOfflinePlaylistitems(playlistId);
+            }
+
+            return GetOfflinePlaylistitems(playlistId);
         }
 
-        public ServiceResponse<List<PlaylistItem>> GetPlaylistItems(string requestToken, string playListId)
-        {
-            Task<PlaylistItemListResponse> taskResponse = playlistItemResponseService.GetResponse(requestToken, playListId);
+        //public ServiceResponse<List<PlaylistItem>> GetPlaylistItems(string requestToken, string playlistId, bool onlyOfflineUsage = false)
+        //{
+        //    if (onlyOfflineUsage)
+        //    {
+        //        return GetOfflinePlaylistitems(playlistId);
+        //    }
 
-            return GetPlaylistItemsServiceResponse(playListId, taskResponse.Result);
+        //    try
+        //    {
+        //        Task<PlaylistItemListResponse> taskResponse = playlistItemResponseService.GetResponse(requestToken, playlistId);
+
+        //        return GetPlaylistItemsServiceResponse(playlistId, taskResponse.Result);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        if (!exception.Message.ToLower().Contains(QuotaLimitError))
+        //            throw;
+
+        //        return GetOfflinePlaylistitems(playlistId);
+        //    }
+        //}
+
+        private ServiceResponse<List<PlaylistItem>> GetOfflinePlaylistitems(string hash)
+        {
+            try
+            {
+                var offlinePlaylists = repositoryStore.PlaylistItemRepository.FindBy(x => x.Playlist.Hash.ToLower() == hash.ToLower()).ToList();
+                return new ServiceResponse<List<PlaylistItem>>(null, offlinePlaylists.Select(x => new PlaylistItem(x)).ToList());
+            }
+            catch (Exception exception)
+            {
+                var error = string.Format("Could not fetch offline playlist items from datastore for hash: {hash}");
+                logger.LogError(error, exception);
+                return new ServiceResponse<List<PlaylistItem>>(null, new List<PlaylistItem>());
+            }
         }
 
-        private ServiceResponse<List<PlaylistItem>> GetPlaylistItemsServiceResponse(string playListId, PlaylistItemListResponse playlistItemListResponse)
+        private async Task<ServiceResponse<List<PlaylistItem>>> GetPlaylistItemsServiceResponse(string playListId, PlaylistItemListResponse playlistItemListResponse)
         {
             var uniqueTrackHashes = youTubeListManagerCache.Get<Playlist>(playListId).Select(t => t.Hash).Distinct();
             var currentPlayListItems = playlistItemListResponse.Items
@@ -77,7 +128,7 @@ namespace YouTubeListAPI.Business.Service
                 .Select(CreatePlayListItem)
                 .OrderBy(i => i.Position);
 
-            var syncronizedList = SynchronizeItems(currentPlayListItems);
+            var syncronizedList = await SynchronizeItems(currentPlayListItems);
             var serviceResponse = new ServiceResponse<List<PlaylistItem>>(playlistItemListResponse.NextPageToken, syncronizedList);
 
             youTubeListManagerCache.Add(playListId, syncronizedList);
@@ -103,8 +154,51 @@ namespace YouTubeListAPI.Business.Service
             };
         }
 
-        private List<PlaylistItem> SynchronizeItems(IEnumerable<PlaylistItem> playListItems)
+        private async Task<List<PlaylistItem>> SynchronizeItems(IEnumerable<PlaylistItem> playListItems)
         {
+            //var playlistItemList = playlistItems.ToList();
+            ////var videoHashes = playlistItemList.Select(pl => pl.VideoInfo.Hash)
+            ////var currentMaxPosition = playlistItemList.Max(pl => pl.Position);
+            //var currentMinPosition = playlistItems.Min(pl => pl.Position);
+
+            //var localPlaylistItems = repositoryStore.PlaylistItemRepository.FindBy(pl => pl.Playlist.Hash == playlistHash && pl.Position <= currentMinPosition + 50 && currentMinPosition >= pl.Position).ToList();
+
+            //var unavailableVideoHashList = playlistItemList.Where(i => !i.VideoInfo.Live).Select(i => i.VideoInfo.Hash);
+            //var localVideoHashList = playlistItemList.Select(i => i.VideoInfo.Hash);
+
+            //var removedVideoHashList = localPlaylistItems.Where(i =>
+            //    !localVideoHashList.Contains(i.VideoInfo.Hash) || unavailableVideoHashList.Contains(i.VideoInfo.Hash)).Select(i => i.VideoInfo.Hash).ToList();
+
+            //if (!removedVideoHashList.Any())
+            //    return playlistItemList;
+
+            //var foundMissingVideoList = repositoryStore.VideoInfoRepository.FindBy(v => removedVideoHashList.Contains(v.Hash));
+            //if (!foundMissingVideoList.Any())
+            //    return GetCleanPlaylist(playlistItems);
+            //else
+            //{
+            //    foreach (var videoInfo in foundMissingVideoList)
+            //    {
+            //        videoInfo.Live = false;
+            //    }
+            //    await repositoryStore.SaveChangesAsync();
+            //}
+
+            //Dictionary<string, PlaylistItem> playListDictionary = localPlaylistItems.Select(i => new KeyValuePair<string, PlaylistItem>(i.VideoInfo.Hash, i))
+            //    .ToDictionary(i => i.Key, i => i.Value);
+
+            //foreach (VideoInfo video in foundMissingVideoList)
+            //    playListDictionary[video.Hash].VideoInfo.Title = video.Title;
+
+            //var synchronizedItems = playListDictionary.Select(d => d.Value).ToList();
+            //synchronizedItems.ForEach(pi =>
+            //{
+            //    pi.Playlist = null;
+            //    pi.VideoInfo.PlaylistItems = new List<PlaylistItem>();
+            //}
+            //);
+            //return synchronizedItems;
+
             var unavailableVideoHashList = playListItems.Where(i => !i.VideoInfo.Live).Select(i => i.VideoInfo.Hash);
 
             if (!unavailableVideoHashList.Any())
@@ -112,7 +206,7 @@ namespace YouTubeListAPI.Business.Service
 
             var foundVideoList = repositoryStore.VideoInfoRepository.FindBy(v => unavailableVideoHashList.Contains(v.Hash));
             if (!foundVideoList.Any())
-                return GetCleanPlaylist(playListItems);
+                return await GetCleanPlaylist(playListItems);
 
             Dictionary<string, PlaylistItem> playListDictionary = playListItems.Select(i => new KeyValuePair<string, PlaylistItem>(i.VideoInfo.Hash, i))
                 .ToDictionary(i => i.Key, i => i.Value);
@@ -123,7 +217,7 @@ namespace YouTubeListAPI.Business.Service
             return playListDictionary.Select(d => d.Value).ToList();
         }
 
-        private List<PlaylistItem> GetCleanPlaylist(IEnumerable<PlaylistItem> playListItems)
+        private async Task<List<PlaylistItem>> GetCleanPlaylist(IEnumerable<PlaylistItem> playListItems)
         {
             int indexReduction = 0;
             var cleanedPlayListItems = new List<PlaylistItem>();
@@ -132,7 +226,7 @@ namespace YouTubeListAPI.Business.Service
                 if (!playListItem.VideoInfo.Live)
                 {
                     indexReduction++;
-                    youTubeApiUpdateServiceWrapper.DeletePlaylistItem(playListItem.Hash);
+                    await youTubeApiUpdateServiceWrapper.DeletePlaylistItem(playListItem.Hash);
                 }
                 else
                 {
@@ -152,25 +246,14 @@ namespace YouTubeListAPI.Business.Service
                 && (PrivacyStatus)Enum.Parse(typeof(PrivacyStatus), privacyStatus, true) != PrivacyStatus.Private;
         }
 
-        public async Task<Playlist> GetPlaylistAsync(string playlistId)
+        public async Task<Playlist> GetPlaylistAsync(string playlistId, bool onlyOfflineUsage = false, bool withPlaylistItems = true)
         {
-            return (await GetPlaylistsAsync(string.Empty, true, playlistId)).Response.FirstOrDefault();
+            return (await GetPlaylistsAsync(string.Empty, withPlaylistItems, playlistId, onlyOfflineUsage)).Response.FirstOrDefault();
         }
 
-
-        public Playlist GetPlaylist(string playlistId)
+        public async Task<ServiceResponse<List<Playlist>>> GetPlaylistsAsync(string requestToken, bool onlyOfflineUsage = false)
         {
-            return GetPlayLists(string.Empty, true, playlistId).Response.FirstOrDefault();
-        }
-
-        public async Task<ServiceResponse<List<Playlist>>> GetPlaylistsAsync(string requestToken)
-        {
-            return await GetPlaylistsAsync(requestToken, false);
-        }
-
-        public ServiceResponse<List<Playlist>> GetPlaylists(string requestToken)
-        {
-            return GetPlayLists(requestToken, false, string.Empty);
+            return await GetPlaylistsAsync(requestToken, false, onlyOfflineUsage: onlyOfflineUsage);
         }
 
         public ServiceResponse<List<VideoInfo>> SearchSuggestions(SearchRequest searchRequest)
@@ -189,21 +272,43 @@ namespace YouTubeListAPI.Business.Service
             return serviceResponse;
         }
 
-        private async Task<ServiceResponse<List<Playlist>>> GetPlaylistsAsync(string requestToken, bool withPlayListItems, string playListId = null)
+        private async Task<ServiceResponse<List<Playlist>>> GetPlaylistsAsync(string requestToken, bool withPlayListItems, string playListId = null, bool onlyOfflineUsage = false)
         {
-            PlaylistListResponse taskResponse = await playlistResponseService.GetResponse(requestToken, playListId);
+            if (onlyOfflineUsage)
+            {
+                return GetOfflinePlaylists();
+            }
+            try
+            {
+                PlaylistListResponse taskResponse = await playlistResponseService.GetResponse(requestToken, playListId);
 
-            return GetPlaylistServiceResponse(withPlayListItems, playListId, taskResponse);
+                return await GetPlaylistServiceResponse(withPlayListItems, playListId, taskResponse);
+            }
+            catch (Exception exception)
+            {
+                if (!exception.Message.ToLower().Contains(QuotaLimitError))
+                    throw;
+
+                return GetOfflinePlaylists();
+            }
         }
 
-        private ServiceResponse<List<Playlist>> GetPlayLists(string requestToken, bool withPlayListItems, string playListId)
+        private ServiceResponse<List<Playlist>> GetOfflinePlaylists()
         {
-            Task<PlaylistListResponse> taskResponse = playlistResponseService.GetResponse(requestToken, playListId);
-
-            return GetPlaylistServiceResponse(withPlayListItems, playListId, taskResponse.Result);
+            try
+            {
+                var playlists = repositoryStore.PlaylistRepository.GetAll().ToList().Select(x => new Playlist(x)).ToList();
+                return new ServiceResponse<List<Playlist>>(null, playlists);
+            }
+            catch (Exception exception)
+            {
+                var error = "Could not fetch offline playlist from datastore";
+                logger.LogError(error, exception);
+                return new ServiceResponse<List<Playlist>>(null, new List<Playlist>());
+            }
         }
 
-        private ServiceResponse<List<Playlist>> GetPlaylistServiceResponse(bool withPlayListItems, string playListId, PlaylistListResponse playlistListResponse)
+        private async Task<ServiceResponse<List<Playlist>>> GetPlaylistServiceResponse(bool withPlayListItems, string playListId, PlaylistListResponse playlistListResponse)
         {
             var playListIds = youTubeListManagerCache.GetPlaylists(null).Select(pl => pl.Hash).Distinct();
             var currentPlayLists = playlistListResponse.Items
@@ -211,22 +316,24 @@ namespace YouTubeListAPI.Business.Service
                 .Select(playList => CreatePlaylist(playList, withPlayListItems)).ToList();
             youTubeListManagerCache.AddPlayLists(currentPlayLists);
 
-            currentPlayLists = GetCachedIfNotAny(withPlayListItems, playListId, currentPlayLists);
+            currentPlayLists = await GetCachedIfNotAny(withPlayListItems, playListId, currentPlayLists);
 
             return new ServiceResponse<List<Playlist>>(playlistListResponse.NextPageToken, currentPlayLists);
         }
 
-        private List<Playlist> GetCachedIfNotAny(bool withPlayListItems, string playListId, List<Playlist> currentPlayLists)
+        private async Task<List<Playlist>> GetCachedIfNotAny(bool withPlayListItems, string playListId, List<Playlist> currentPlayLists)
         {
             if (!currentPlayLists.Any())
+            {
                 if (withPlayListItems && !string.IsNullOrEmpty(playListId))
                 {
                     currentPlayLists = youTubeListManagerCache.GetPlaylists(p => p.Hash == playListId);
-                    currentPlayLists.ForEach(PopulatePlayListWithPlaylistItems);
+                    var tasks = currentPlayLists.Select(PopulatePlayListWithPlaylistItemsAsync);
+                    await Task.WhenAll(tasks);
                 }
                 else
                     currentPlayLists = youTubeListManagerCache.GetPlaylists(null);
-
+            }
             return currentPlayLists;
         }
 
@@ -242,19 +349,19 @@ namespace YouTubeListAPI.Business.Service
             };
 
             if (withPlayListItems)
-                PopulatePlayListWithPlaylistItems(playList);
+                PopulatePlayListWithPlaylistItemsAsync(playList);
 
             return playList;
         }
 
-        private void PopulatePlayListWithPlaylistItems(Playlist playlist)
+        private async Task PopulatePlayListWithPlaylistItemsAsync(Playlist playlist)
         {
-            ServiceResponse<List<PlaylistItem>> playlistItemResponse = GetPlaylistItems(string.Empty, playlist.Hash);
+            ServiceResponse<List<PlaylistItem>> playlistItemResponse = await GetPlaylistItemsAsync(string.Empty, playlist.Hash);
             playlist.PlaylistItemsNextPageToken = playlistItemResponse.NextPageToken;
             playlist.PlaylistItems = playlistItemResponse.Response;
         }
 
-        
+
 
         private ServiceResponse<List<VideoInfo>> GetSearchServiceResponse(SearchRequest searchRequest, SearchListResponse searchListResponse)
         {

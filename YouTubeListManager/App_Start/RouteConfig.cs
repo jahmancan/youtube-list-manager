@@ -9,41 +9,32 @@ namespace YouTubeListManager
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-                "PlayListGet",
-                "api/playlist/get/{hash}",
-                new { controller = "Playlist", action = "Get" }
-            );
 
             routes.MapRoute(
                 "PlayListGetAsync",
-                "api/playlist/getasync/{hash}",
-                new { controller = "Playlist", action = "GetAsync" }
+                "api/playlist/getasync/{hash}/{isOffline}/{withPlaylistItems}",
+                new { controller = "Playlist", action = "GetAsync", isOffline = UrlParameter.Optional, withPlaylistItems = UrlParameter.Optional }
             );
 
-            routes.MapRoute(
-                "PlayListGetAll",
-                "api/playlist/getall/{requestToken}",
-                new { controller = "Playlist", action = "GetAll", requestToken = UrlParameter.Optional }
-            );
 
             routes.MapRoute(
                "PlayListGetAllAsync",
-               "playlist/getallasync/{requestToken}",
-               new { controller = "Playlist", action = "GetAllAsync", requestToken = UrlParameter.Optional }
+               "playlist/getallasync/{requestToken}/{isOffline}",
+               new { controller = "Playlist", action = "GetAllAsync", requestToken = UrlParameter.Optional, isOffline = UrlParameter.Optional }
            );
 
-            routes.MapRoute(
-                "PlayListItemGet",
-                "api/playlistitem/get/{playListId}/{requestToken}",
-                new { controller = "PlaylistItem", action = "Get", requestToken = UrlParameter.Optional }
-            );
 
             routes.MapRoute(
                "PlayListItemGetAsync",
-               "api/playlistitem/getasync/{playListId}/{requestToken}",
-               new { controller = "PlaylistItem", action = "GetAsync", requestToken = UrlParameter.Optional }
+               "api/playlistitem/getasync/{playListId}/{requestToken}/{isOffline}",
+               new { controller = "PlaylistItem", action = "GetAsync", requestToken = UrlParameter.Optional, isOffline = UrlParameter.Optional }
            );
+
+            routes.MapRoute(
+                "SearchVideo",
+                "video/post",
+                new { controller = "Video", action = "Post" }
+            );
 
             routes.MapRoute(
                 name: "angular",

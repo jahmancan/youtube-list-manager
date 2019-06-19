@@ -6,9 +6,9 @@
       </h2>
     </div>
     <ul class="item-list" *ngIf="playlists">
-      <li *ngFor="let playlist of playlists | async" (click)="selectPlaylist(playlist.Hash)" class="item">
-        <div class="item-wrapper">
-          <div class="image-wrapper ">
+      <li *ngFor="let playlist of playlists | async"  class="item">
+        <div class="item-wrapper" (click)="selectPlaylist(playlist.Hash)">
+          <div class="image-wrapper">
             <img src="{{playlist.ThumbnailUrl}}" class="image"/>
             <div class="extra-info"><span>{{playlist.ItemCount}}</span></div>
             <div class="item-footer">

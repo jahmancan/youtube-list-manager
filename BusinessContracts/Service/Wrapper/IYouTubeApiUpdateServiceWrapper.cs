@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.CrossCutting.EventArgs;
 
@@ -12,6 +13,6 @@ namespace YouTubeListManager.BusinessContracts.Service.Wrapper
 
         void UpdatePlaylists(IEnumerable<Playlist> playLists);
         void UpdatePlaylistItems(Playlist playlist, IEnumerable<PlaylistItem> playListItems);
-        void DeletePlaylistItem(string playlistItemId);
+        Task DeletePlaylistItem(string playlistItemId);
     }
 }

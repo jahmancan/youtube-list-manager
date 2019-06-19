@@ -50,12 +50,12 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        public void DeletePlaylistItem(string playlistItemId)
+        public async Task DeletePlaylistItem(string playlistItemId)
         {
             PlaylistItemsResource.DeleteRequest request = YouTubeService.PlaylistItems.Delete(playlistItemId);
             try
             {
-                request.ExecuteAsync();
+                await request.ExecuteAsync();
             }
             catch (Exception exception)
             {

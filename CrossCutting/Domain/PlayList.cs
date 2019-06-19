@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using YouTubeListManager.CrossCutting.Extensions;
 using YouTubePlayList = Google.Apis.YouTube.v3.Data.Playlist;
@@ -24,6 +25,17 @@ namespace YouTubeListManager.CrossCutting.Domain
         public Playlist()
         {
             PrivacyStatus = PrivacyStatus.Public;
+            PlaylistItems = new List<PlaylistItem>();
+        }
+
+        public Playlist(Playlist playlist)
+        {
+            Hash = playlist.Hash;
+            Title = playlist.Title;
+            ItemCount = playlist.PlaylistItems.Count;
+            ThumbnailUrl = playlist.ThumbnailUrl;
+            PrivacyStatus = playlist.PrivacyStatus;
+
             PlaylistItems = new List<PlaylistItem>();
         }
 

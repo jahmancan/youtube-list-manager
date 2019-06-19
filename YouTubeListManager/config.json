@@ -1,11 +1,11 @@
 ﻿{
-    "installed": {
-        "client_id": "1013088238674-9ntn7g2m5ahpk2hnql6uvrvhio8u05j1.apps.googleusercontent.com",
-        "project_id": "youtubelist-1470482232577",
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://accounts.google.com/o/oauth2/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_secret": "LwPKLP6q-of4DeAGE9iW3bfY",
-        "redirect_uris": [ "urn:ietf:wg:oauth:2.0:oob", "http://localhost" ]
-    }
+  "installed": {
+    "client_id": "239758856164-fv5kam3tgndehiag6bajjs7c1lg65st9.apps.googleusercontent.com",
+    "project_id": "you-tube-list-242002",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://accounts.google.com/o/oauth2/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "ewNzWfnjELmkxGa2xHcN0N0r",
+    "redirect_uris": [ "urn:ietf:wg:oauth:2.0:oob", "http://localhost" ]
+  }
 }

@@ -19,8 +19,8 @@ namespace YouTubeListAPI.Business.Service.Response
         {
             try
             {
-                youTubeApiListServiceWrapper.ExecuteAsyncRequestSearch(searchRequest);
-                return await response;
+                return await youTubeApiListServiceWrapper.ExecuteAsyncRequestSearch(searchRequest);
+                //return await response;
             }
             finally
             {

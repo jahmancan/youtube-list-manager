@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+//using System.Web.Http;
+//using System.Web.Mvc;
 using YouTubeListManager.BusinessContracts.Service;
 using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.CrossCutting.Request;
@@ -14,9 +17,10 @@ namespace YouTubeListManager.Controllers.Api
         }
 
         [HttpPost]
-        public JsonResult Post(SearchRequest searchRequest)
+        [Route("video/post")]
+        public async Task<JsonResult> Post(SearchRequest searchRequest)
         {
-            ServiceResponse<List<VideoInfo>> suggestions = youTubeListManagerService.SearchSuggestions(searchRequest);
+            ServiceResponse<List<VideoInfo>> suggestions = await youTubeListManagerService.SearchSuggestionsAsync(searchRequest);
             return Json(suggestions, JsonRequestBehavior.DenyGet);
         }
     }
