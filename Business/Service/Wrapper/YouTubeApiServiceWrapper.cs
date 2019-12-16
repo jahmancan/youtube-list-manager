@@ -7,6 +7,7 @@ using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
 using YouTubeListManager.Logger;
 
 namespace YouTubeListAPI.Business.Service.Wrapper

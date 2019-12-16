@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data.Entity.Validation;
-using YouTubeListManager.Data.Domain;
+using System.Threading.Tasks;
+using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.Data.Extension;
+using YouTubeListManager.DataContracts.Repository;
 
 namespace YouTubeListManager.Data.Repository
 {
@@ -21,11 +23,11 @@ namespace YouTubeListManager.Data.Repository
         public IRepository<User> UserRepository { get; private set; }
         public IRepository<VideoInfo> VideoInfoRepository { get; private set; }
 
-        public void SaveChanges()
+        public async Task SaveChangesAsync()
         {
             try
             {
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
             catch (DbEntityValidationException entityValidationException)
             {

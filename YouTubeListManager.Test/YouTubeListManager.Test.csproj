@@ -136,9 +136,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusinessContracts\BusinessContracts.csproj">
+      <Project>{71210960-BCB7-4444-B5BC-A51B6C93BC70}</Project>
+      <Name>BusinessContracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Business\Business.csproj">
       <Project>{8AFCDE18-D184-4AD8-826A-AF05CB762B56}</Project>
       <Name>Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CrossCutting\CrossCutting.csproj">
+      <Project>{943257D1-71E4-4F99-8953-36425EEB9256}</Project>
+      <Name>CrossCutting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataContracts\DataContracts.csproj">
+      <Project>{3195C9C9-87A7-4AFD-BF7E-C4635D0289D7}</Project>
+      <Name>DataContracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{13327070-7592-496C-8BC2-3F31854E3CD8}</Project>

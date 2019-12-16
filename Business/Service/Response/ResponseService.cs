@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Google.Apis.Requests;
-using YouTubeListAPI.Business.Service.Wrapper;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
 
 namespace YouTubeListAPI.Business.Service.Response
 {

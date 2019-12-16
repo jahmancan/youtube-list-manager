@@ -1,4 +1,4 @@
-﻿using YouTubeListManager.Data.Domain;
+﻿using Playlist = YouTubeListManager.CrossCutting.Domain.Playlist;
 
 namespace YouTubeListManager.Test.Common.TestDomain
 {

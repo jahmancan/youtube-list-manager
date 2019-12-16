@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
-using YouTubeListAPI.Business.Service.Wrapper;
+using YouTubeListManager.BusinessContracts.Service.Response;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
+using YouTubeListManager.CrossCutting.EventArgs;
+using YouTubeListManager.CrossCutting.Request;
 
 namespace YouTubeListAPI.Business.Service.Response
 {
@@ -13,12 +15,12 @@ namespace YouTubeListAPI.Business.Service.Response
             youTubeApiListServiceWrapper.SearchResultsFetched += SearchResultsFetched;
         }
 
-        public Task<SearchListResponse> GetResponse(SearchRequest searchRequest)
+        public async Task<SearchListResponse> GetResponseAsync(SearchRequest searchRequest)
         {
             try
             {
-                youTubeApiListServiceWrapper.ExecuteAsyncRequestSearch(searchRequest.NextPageRequestToken, searchRequest.SearchKey, searchRequest.VideoDuration);
-                return response;
+                return await youTubeApiListServiceWrapper.ExecuteAsyncRequestSearch(searchRequest);
+                //return await response;
             }
             finally
             {

@@ -1,5 +1,5 @@
 ﻿using System.Data.Entity;
-using System.Data.Entity.Migrations.Model;
+using YouTubeListManager.CrossCutting.Domain;
 using YouTubeListManager.Data.Domain;
 using YouTubeListManager.Data.Domain.Mapping;
 

@@ -36,6 +36,12 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis">
+      <HintPath>..\packages\Google.Apis.1.15.0\lib\net45\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.YouTube.v3">
+      <HintPath>..\packages\Google.Apis.YouTube.v3.1.15.0.574\lib\portable-net45+netcore45+wpa81+wp8\Google.Apis.YouTube.v3.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -48,21 +54,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Mapping\PlayListItemMap.cs" />
-    <Compile Include="Domain\PrivacyStatus.cs" />
-    <Compile Include="Domain\User.cs" />
-    <Compile Include="Domain\PlayList.cs" />
-    <Compile Include="Domain\PlayListItem.cs" />
-    <Compile Include="Domain\VideoInfo.cs" />
     <Compile Include="Extension\DbEntityValidationExceptionExtension.cs" />
     <Compile Include="Domain\Mapping\UserMap.cs" />
     <Compile Include="Domain\Mapping\PlayListMap.cs" />
     <Compile Include="Domain\Mapping\VideoInfoMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\IRepository.cs" />
-    <Compile Include="Repository\IRepositoryStore.cs" />
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="Repository\RepositoryStore.cs" />
     <Compile Include="YouTubeListManagerContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrossCutting\CrossCutting.csproj">
+      <Project>{943257d1-71e4-4f99-8953-36425eeb9256}</Project>
+      <Name>CrossCutting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataContracts\DataContracts.csproj">
+      <Project>{3195c9c9-87a7-4afd-bf7e-c4635d0289d7}</Project>
+      <Name>DataContracts</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

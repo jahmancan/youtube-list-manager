@@ -10,19 +10,19 @@
 
             getPlayListItems: function(requestToken, playlistId) {
                 var deferred = $q.defer();
-                $http.get('/api/playlistitem/get/' + playlistId + '/' + requestToken).success(deferred.resolve).error(deferred.reject);
+                $http.get('/api/playlistitem/getasync/' + playlistId + '/' + requestToken).success(deferred.resolve).error(deferred.reject);
                 return deferred.promise;
             },
 
             getPlayList: function (playlistId) {
                 var deferred = $q.defer();
-                $http.get('/api/playlist/get/' + playlistId).success(deferred.resolve).error(deferred.reject);
+                $http.get('/api/playlist/getasync/' + playlistId).success(deferred.resolve).error(deferred.reject);
                 return deferred.promise;
             },
 
             getAllPlaylists: function (requestToken) {
                 var deferred = $q.defer();
-                $http.get('/playlist/getall' + (requestToken !== "" && requestToken !== null && !angular.isUndefined(requestToken) ? "/" + requestToken : "")).success(deferred.resolve).error(deferred.reject);
+                $http.get('/playlist/getallasync' + (requestToken !== "" && requestToken !== null && !angular.isUndefined(requestToken) ? "/" + requestToken : "")).success(deferred.resolve).error(deferred.reject);
                 return deferred.promise;
             },
 

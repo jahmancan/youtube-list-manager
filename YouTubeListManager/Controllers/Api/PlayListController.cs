@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using YouTubeListAPI.Business.Service;
-using YouTubeListManager.Data.Domain;
+using YouTubeListManager.BusinessContracts.Service;
+using YouTubeListManager.CrossCutting.Domain;
+using YouTubeListManager.CrossCutting.Response;
 using YouTubeListManager.Request;
 
 namespace YouTubeListManager.Controllers.Api
@@ -14,23 +16,25 @@ namespace YouTubeListManager.Controllers.Api
         }
 
         [HttpGet]
-        public JsonResult GetAll(string requestToken)
+        public async Task<JsonResult> GetAllAsync(string requestToken, bool isOffline = true)
         {
-            ServiceResponse<List<Playlist>> response = youTubeListManagerService.GetPlaylists(requestToken);
+            ServiceResponse<List<Playlist>> response = await youTubeListManagerService.GetPlaylistsAsync(requestToken, isOffline);
             return Json(response, JsonRequestBehavior.AllowGet);
-        } 
+        }
+
 
         [HttpGet]
-        public JsonResult Get(string hash)
+        public async Task<JsonResult> GetAsync(string hash, bool isOffline = true, bool withPlaylistItems = false)
         {
-            Playlist Playlist = youTubeListManagerService.GetPlayList(hash);
-            return Json(Playlist, JsonRequestBehavior.AllowGet);
+            Playlist PlayList = await youTubeListManagerService.GetPlaylistAsync(hash, isOffline, withPlaylistItems);
+            return Json(PlayList, JsonRequestBehavior.AllowGet);
         }
+
 
         [HttpPost]
         public ActionResult Save(Playlist playlist)
         {
-            youTubeListManagerService.UpdatePlayLists(new List<Playlist> {playlist});
+            youTubeListManagerService.UpdatePlaylists(new List<Playlist> {playlist});
             return Json("Playlist has been saved successfully", JsonRequestBehavior.DenyGet);
         }
 

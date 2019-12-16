@@ -82,24 +82,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\ThumbnailDetailsExtension.cs" />
-    <Compile Include="Extensions\TitleExtension.cs" />
-    <Compile Include="Extensions\VideoExtension.cs" />
-    <Compile Include="IYouTubeListManagerCache.cs" />
-    <Compile Include="Service\Response\SearchRequest.cs" />
-    <Compile Include="Service\ServiceResponse.cs" />
-    <Compile Include="Service\Response\IPlayListItemResponseService.cs" />
-    <Compile Include="Service\Response\ISearchListResponseService.cs" />
-    <Compile Include="Service\Response\ResponseEventArgs.cs" />
     <Compile Include="Service\Response\PlaylistItemResponseService.cs" />
     <Compile Include="Service\Response\SearchListResponseService.cs" />
-    <Compile Include="Service\Wrapper\IYouTubeApiUpdateServiceWrapper.cs" />
-    <Compile Include="Service\Wrapper\UpdateEventArgs.cs" />
     <Compile Include="YouTubeListManagerCache.cs" />
-    <Compile Include="Service\Wrapper\IYouTubeApiListServiceWrapper.cs" />
-    <Compile Include="Service\Wrapper\IYouTubeApiServiceWrapper.cs" />
-    <Compile Include="Service\IYouTubeListManagerService.cs" />
-    <Compile Include="Service\Response\IPlaylistResponseService.cs" />
     <Compile Include="Service\Response\PlaylistResponseService.cs" />
     <Compile Include="Service\Response\ResponseService.cs" />
     <Compile Include="Service\Wrapper\YouTubeApiServiceWrapper.cs" />
@@ -115,9 +100,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Data\Data.csproj">
-      <Project>{13327070-7592-496c-8bc2-3f31854e3cd8}</Project>
-      <Name>Data</Name>
+    <ProjectReference Include="..\BusinessContracts\BusinessContracts.csproj">
+      <Project>{71210960-bcb7-4444-b5bc-a51b6c93bc70}</Project>
+      <Name>BusinessContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CrossCutting\CrossCutting.csproj">
+      <Project>{943257d1-71e4-4f99-8953-36425eeb9256}</Project>
+      <Name>CrossCutting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataContracts\DataContracts.csproj">
+      <Project>{3195c9c9-87a7-4afd-bf7e-c4635d0289d7}</Project>
+      <Name>DataContracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Logger\Logger.csproj">
       <Project>{E43AEBAF-CBDF-4EE7-B8A7-87E57DF7DF68}</Project>

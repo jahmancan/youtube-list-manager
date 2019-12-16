@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListAPI.Business.Service.Wrapper;
+using YouTubeListManager.BusinessContracts.Service.Response;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
+using YouTubeListManager.CrossCutting.EventArgs;
 
 namespace YouTubeListAPI.Business.Service.Response
 {
@@ -16,8 +19,8 @@ namespace YouTubeListAPI.Business.Service.Response
         {
             try
             {
-                youTubeApiListServiceWrapper.ExecuteAsyncRequestPlayListItems(requestToken, playListId);
-                return response;
+                return youTubeApiListServiceWrapper.ExecuteAsyncRequestPlayListItems(requestToken, playListId);
+                //return response;
             }
             finally
             {

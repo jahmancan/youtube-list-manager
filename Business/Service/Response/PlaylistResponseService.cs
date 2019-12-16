@@ -1,6 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Google.Apis.YouTube.v3.Data;
 using YouTubeListAPI.Business.Service.Wrapper;
+using YouTubeListManager.BusinessContracts.Service.Response;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
+using YouTubeListManager.CrossCutting.EventArgs;
+using YouTubeListManager.DataContracts.Repository;
 
 namespace YouTubeListAPI.Business.Service.Response
 {
@@ -11,16 +17,16 @@ namespace YouTubeListAPI.Business.Service.Response
             youTubeApiListServiceWrapper.PlaylistFetched += PlayListFetched;
         }
 
-        public Task<PlaylistListResponse> GetResponse(string requestToken, string playListId)
+        public async Task<PlaylistListResponse> GetResponse(string requestToken, string playListId)
         {
             try
             {
                 if (string.IsNullOrEmpty(playListId))
-                    youTubeApiListServiceWrapper.ExcuteAsyncRequestPlayLists(requestToken);
+                    return await youTubeApiListServiceWrapper.ExcuteAsyncRequestPlayLists(requestToken);
                 else
-                    youTubeApiListServiceWrapper.ExecuteAsyncRequestPlayList(requestToken, playListId);
+                    return await youTubeApiListServiceWrapper.ExecuteAsyncRequestPlayList(requestToken, playListId);
 
-                return response;
+                //return response;
             }
             finally
             {

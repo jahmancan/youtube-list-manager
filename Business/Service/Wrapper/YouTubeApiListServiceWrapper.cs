@@ -3,8 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
-using YouTubeListAPI.Business.Extensions;
-using YouTubeListAPI.Business.Service.Response;
+using YouTubeListManager.BusinessContracts.Service.Wrapper;
+using YouTubeListManager.CrossCutting.EventArgs;
+using YouTubeListManager.CrossCutting.Extensions;
+using YouTubeListManager.CrossCutting.Request;
 using YouTubeListManager.Logger;
 
 namespace YouTubeListAPI.Business.Service.Wrapper
@@ -17,7 +19,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         private const string VideoType = "video";
 
         public event EventHandler<ResponseEventArgs<PlaylistListResponse>> PlaylistFetched;
-        private void OnPlayListFetched(Task<PlaylistListResponse> response) 
+        private void OnPlayListFetched(Task<PlaylistListResponse> response)
         {
             //if (PlaylistFetched == null) return;
 
@@ -45,7 +47,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
         }
 
 
-        public void ExecuteAsyncRequestPlayListItems(string requestToken, string playListId)
+        public async Task<PlaylistItemListResponse> ExecuteAsyncRequestPlayListItems(string requestToken, string playListId)
         {
             if (string.IsNullOrEmpty(playListId))
                 throw new ApplicationException("PlayListId can not be empty");
@@ -56,9 +58,10 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             request.PageToken = requestToken;
             try
             {
-                Task<PlaylistItemListResponse> taskResponse = request.ExecuteAsync(CancellationToken.None);
-
-                OnPlayLlistItemFetched(taskResponse);
+                return await request.ExecuteAsync(CancellationToken.None); //.ContinueWith(taskResponse =>
+                //{
+                //    OnPlayLlistItemFetched(taskResponse);
+                //});
             }
             catch (Exception exception)
             {
@@ -68,30 +71,32 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        public void ExecuteAsyncRequestPlayList(string requestToken, string playListId)
+        public async Task<PlaylistListResponse> ExecuteAsyncRequestPlayList(string requestToken, string playListId)
         {
-            ExecuteAsyncRequestPlayLists(requestToken, playListId);
+            return await ExecuteAsyncRequestPlaylists(requestToken, playListId);
         }
 
-        public void ExcuteAsyncRequestPlayLists(string requestToken)
+        public async Task<PlaylistListResponse> ExcuteAsyncRequestPlayLists(string requestToken)
         {
-            ExecuteAsyncRequestPlayLists(requestToken, string.Empty);
+            return await ExecuteAsyncRequestPlaylists(requestToken, string.Empty);
         }
 
-        public void ExecuteAsyncRequestSearch(string requestToken, string searchKey, SearchResource.ListRequest.VideoDurationEnum videoDuration)
+        public async Task<SearchListResponse> ExecuteAsyncRequestSearch(SearchRequest searchRequest)
         {
             SearchResource.ListRequest request = YouTubeService.Search.List("id, snippet");
             request.MaxResults = MaxResults;
-            request.Q = searchKey.CleanTitle();
-            request.VideoDuration = videoDuration;
-            request.PageToken = requestToken;
+            request.Q = searchRequest.SearchKey.CleanTitle();
+            request.VideoDuration = searchRequest.VideoDuration;
+            request.PageToken = searchRequest.NextPageRequestToken;
             request.Type = VideoType;
 
             try
             {
-                Task<SearchListResponse> taskResponse = request.ExecuteAsync(CancellationToken.None);
-                
-                OnSearchResultsFetched(taskResponse);
+                return await request.ExecuteAsync(CancellationToken.None);
+                //await request.ExecuteAsync(CancellationToken.None).ContinueWith(taskResponse =>
+                //{
+                //    OnSearchResultsFetched(taskResponse);
+                //});
             }
             catch (Exception exception)
             {
@@ -101,7 +106,7 @@ namespace YouTubeListAPI.Business.Service.Wrapper
             }
         }
 
-        private void ExecuteAsyncRequestPlayLists(string requestToken, string playListId)
+        private async Task<PlaylistListResponse> ExecuteAsyncRequestPlaylists(string requestToken, string playListId)
         {
             PlaylistsResource.ListRequest request = YouTubeService.Playlists.List("snippet, status, contentDetails");
             request.MaxResults = MaxResults;
@@ -114,8 +119,11 @@ namespace YouTubeListAPI.Business.Service.Wrapper
 
             try
             {
-                Task<PlaylistListResponse> taskResponse = request.ExecuteAsync(CancellationToken.None);
-                OnPlayListFetched(taskResponse);
+                return await request.ExecuteAsync(CancellationToken.None);
+                //await request.ExecuteAsync(CancellationToken.None).ContinueWith(taskResponse =>
+                //{
+                //    OnPlayListFetched(taskResponse);
+                //});
             }
             catch (Exception exception)
             {

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule }    from '@angular/http';
 
 import { AppRoutingModule }     from './app-routing.module';
-import { DragulaModule}         from 'ng2-dragula';
+import { DragulaModule}         from 'ng2-dragula'; 
 
 import { DurationFormatterPipe} from './Filters/DurationFormatter';
 

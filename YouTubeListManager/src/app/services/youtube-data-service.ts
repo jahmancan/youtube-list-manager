@@ -24,7 +24,7 @@ export class YouTubeDataService {
   }
 
   getPlaylist(id: string): Promise<Playlist> {
-    const url = `${this.serverUrl}/api/playlist/get/${id}`;
+    const url = `${this.serverUrl}/api/playlist/getasync/${id}`;
     return this.http.get(url).toPromise()
       .then(response => response.json() as Playlist)
       .catch(this.handleError);
@@ -42,15 +42,15 @@ export class YouTubeDataService {
 
   getPlaylists(requestToken?: string): Observable<Response<Playlist[]>> {
     const url = (requestToken === null || requestToken === undefined || requestToken.length === 0)
-      ? `${this.serverUrl}/playlist/getall`
-      : `${this.serverUrl}/playlist/getall?requestToken=${requestToken}`;
+      ? `${this.serverUrl}/playlist/getallasync`
+      : `${this.serverUrl}/playlist/getallasync?requestToken=${requestToken}`;
     console.log(url);
     return this.http.get(url)
       .map(response => response.json() as Response<Playlist[]>);
   }
 
   getPlaylistItems(requestToken: string, playlistId: string): Observable<Response<PlaylistItem[]>> {
-    const url = `${this.serverUrl}/api/playlistitem/get/${playlistId}/${requestToken}`;
+    const url = `${this.serverUrl}/api/playlistitem/getasync/${playlistId}/${requestToken}`;
     console.log(url);
     return this.http.get(url)
       .map(response => response.json() as Response<PlaylistItem[]>);
